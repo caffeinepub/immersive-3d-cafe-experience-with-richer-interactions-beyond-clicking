@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Make the existing 3D cafe scene feel more like a real cafe by upgrading placeholder furniture, improving the “Menu” coffee cup prop readability, and adding richer non-interactive scene dressing while keeping the warm contour/topographic style.
+**Goal:** Restore reliable visibility of the 3D cafe room after the latest deploy so the scene never appears blank, and provide clear recovery/error feedback when scene startup fails.
 
 **Planned changes:**
-- Replace the most primitive-looking furniture (counter, tables, seating) with more believable cafe furniture geometry/materials that match the current warm palette and contour/topographic identity.
-- Improve the in-scene “Menu” coffee cup prop so it clearly reads as a cup and the label text “Menu” is legible from normal viewing angles, while preserving existing click/tap behavior to open the Menu panel.
-- Add at least 5 additional non-interactive cafe props (scene dressing) placed in plausible locations (counter/back wall/seating area) to make the space feel lived-in, without adding new UI panels, routes, or backend changes.
-- Ensure the scene continues to render without runtime errors and does not introduce an obvious performance regression.
+- Ensure the Canvas scene always renders visible fallback geometry (at minimum floor and walls) independent of async/Suspense-loaded elements (e.g., Environment preset, textures, physics children), with basic lighting if Environment fails.
+- Add a timed scene startup watchdog that switches from loading overlay to an error overlay if first successful render is not signaled within a timeout, including a “Retry Loading Scene” action that remounts the Canvas/scene.
+- Improve failure diagnostics by logging categorized scene startup/load/render stages and showing a concise details section in the error overlay with the latest stage + message, refreshed on each retry.
 
-**User-visible outcome:** The cafe environment looks more realistic and detailed with proper furniture and additional decor/props, and the “Menu” coffee cup is clearly visible and still opens the Menu panel when clicked/tapped.
+**User-visible outcome:** On fresh load, the user always sees at least a basic 3D room behind the UI (never a blank scene). If the scene doesn’t finish loading, they see an error overlay with clear details and a Retry action that attempts to reload the 3D scene.

@@ -43,7 +43,7 @@ export default function OnboardingOverlay({ open, onClose }: OnboardingOverlayPr
               <div>
                 <h3 className="font-semibold">Look Around</h3>
                 <p className="text-sm text-muted-foreground">
-                  Click to lock pointer, then move mouse to look
+                  Drag on the 3D scene to look around (or double-click for pointer lock)
                 </p>
               </div>
             </div>

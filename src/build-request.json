@@ -1,84 +1,73 @@
 {
   "kind": "build_request",
-  "title": "Enhance 3D cafe realism with proper furniture and richer in-scene props (Menu coffee cup + more)",
-  "priority": "normal",
+  "title": "Fix regression: 3D cafe room no longer visible after latest deploy",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-21",
-      "text": "Upgrade the main 3D cafe environment so it feels more like an actual cafe by replacing the most placeholder-looking primitive furniture (e.g., simple cylinders/boxes for tables, stools, counter) with more believable cafe furniture geometry and materials, while preserving the existing warm cafe + contour/topographic visual identity.",
+      "id": "REQ-29",
+      "text": "Restore the visible 3D cafe room by ensuring the main scene always renders some geometry (at minimum: a floor and walls) even if async scene elements (Environment preset, textures, Physics children, or other Suspense content) are still loading or fail.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "recent-messages"
         ],
         "quotes": [
-          "Make the cafe more like an actual cafe with proper furniture and add that coffee cup named menu and other things"
+          "3d room is gone"
         ]
       },
       "acceptanceCriteria": [
-        "In the 3D scene, the counter, tables, and seating read as recognizable cafe furniture (not just basic primitive shapes) via improved geometry detail and/or multi-part meshes and materials.",
-        "The upgraded furniture remains consistent with the current warm palette and contour/topographic styling already used in the scene (no jarring art-style mismatch).",
-        "The scene still renders without runtime errors and maintains stable frame rate comparable to before (no obvious performance regression from excessive geometry/material complexity)."
+        "On a fresh load, the user never sees an empty/blank view where the 3D room should be; at minimum a basic floor/walls render behind the UI while remaining assets load.",
+        "If the Drei Environment preset fails to load, the scene still renders with basic lights and visible geometry (no blank 3D view).",
+        "If any async scene element throws/blocks, the app still shows a visible fallback 3D room rather than only the header/UI over a flat background."
       ]
     },
     {
-      "id": "REQ-22",
-      "text": "Improve the in-scene “Menu” coffee cup prop so it looks clearly like a coffee cup placed on/near the counter and is clearly labeled with the exact text \"Menu\" from normal viewing angles, while keeping existing click/tap behavior to open the Menu panel.",
+      "id": "REQ-30",
+      "text": "Add a timed “scene startup watchdog” in the app shell so that if the 3D scene does not signal first successful render within a defined timeout, the app switches from the loading overlay to a user-visible error overlay with clear English text and a Retry action that remounts the Canvas/scene.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "recent-messages"
         ],
         "quotes": [
-          "add that coffee cup named menu"
+          "3d room is gone"
         ]
       },
       "acceptanceCriteria": [
-        "A 3D coffee-cup-shaped prop is present on/near the counter area in the cafe scene and is visually distinct as a cup (body + handle and coherent material).",
-        "The label text is exactly \"Menu\" and is legible at typical camera distance when approaching the counter.",
-        "Clicking/tapping the cup opens the Menu panel; hover/press feedback continues to work."
+        "If `onFirstRender` is not called within the timeout, the loading overlay is replaced by an error overlay explaining the scene did not finish loading and offering “Retry Loading Scene”.",
+        "Clicking Retry clears the error, remounts the Canvas (new key), and re-attempts loading the scene.",
+        "If the scene later renders successfully, the loading/error overlays are removed and the 3D room is visible."
       ]
     },
     {
-      "id": "REQ-23",
-      "text": "Add additional cafe “proper furniture and other things” as non-interactive scene dressing (e.g., barista/coffee equipment, display items, decor) placed in sensible cafe locations (counter/back wall/seating area) to make the space feel lived-in, without adding new UI panels or new navigation concepts.",
+      "id": "REQ-31",
+      "text": "Improve scene failure diagnostics so it is easier to determine why the 3D room disappeared after deploy: log and categorize failures for environment loading, asset/texture loading, and scene render, and include a concise ‘details’ section in the error overlay that shows the latest stage + message.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "recent-messages"
         ],
         "quotes": [
-          "and other things"
+          "3d room is gone"
         ]
       },
       "acceptanceCriteria": [
-        "At least 5 new non-interactive props/furniture pieces are added to the 3D environment (beyond the current counter, tables, stools, shelving, wall art, rug, plant), and they are placed in plausible cafe positions.",
-        "New props match the existing lighting and material style and do not visually clip through major surfaces in an obvious way.",
-        "No new overlay panels, routes, or backend data models are introduced as part of adding these props."
+        "When a scene failure occurs, console logs include a clearly labeled stage (e.g., webgl-init, environment-load, texture-load, asset-load, scene-render) and the error message/stack when available.",
+        "The error overlay includes a readable details area showing the most recent failure stage and message (in English).",
+        "The displayed diagnostic details update after a Retry attempt (i.e., old error details do not persist if the new attempt fails differently)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files in frontend immutablePaths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
-    "Backend must remain a single Motoko actor; only add backend changes if strictly required for this request (this request should be achievable frontend-only)."
+    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or anything in frontend/src/components/ui (compose instead).",
+    "Keep all backend logic in the existing single Motoko actor (backend changes are not required for this fix unless a direct cause is discovered)."
   ],
   "nonGoals": [
-    "Adding new UI panels beyond the existing Menu/About/Contact/Export panels.",
-    "Adding new backend APIs or persistence for furniture/props.",
-    "Implementing real-time/multiplayer interactions or chat."
+    "Adding new 3D interactions, new panels/pages, or changing the cafe layout/design beyond what is necessary to make the 3D room reliably visible again.",
+    "Introducing any new backend storage/schema changes."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

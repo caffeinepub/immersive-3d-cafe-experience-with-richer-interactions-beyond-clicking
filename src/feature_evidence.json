@@ -2,12 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-upgrade-the-main-3d-cafe-environment-so-it-feels-more-like-an-actual-cafe-by-replacing-the-most-placeholder-looking-primitive-furniture-e-g-simple-cylinders-boxes-for-tables-stools-counter-with-more-believable-cafe-furniture-geometry-and-materials-while-preserving-the-existing-warm-cafe-contour-topographic-visual-identity",
-      "featureTitle": "Upgrade the main 3D cafe environment so it feels more like an actual cafe by replacing the most placeholder-looking primitive furniture (e.g., simple cylinders/boxes for tables, stools, counter) with more believable cafe furniture geometry and materials, while preserving the existing warm cafe + contour/topographic visual identity.",
+      "featureId": "feature-restore-the-visible-3d-cafe-room-by-ensuring-the-main-scene-always-renders-some-geometry-at-minimum-a-floor-and-walls-even-if-async-scene-elements-environment-preset-textures-physics-children-or-other-suspense-content-are-still-loading-or-fail",
+      "featureTitle": "Restore the visible 3D cafe room by ensuring the main scene always renders some geometry (at minimum: a floor and walls) even if async scene elements (Environment preset, textures, Physics children, or other Suspense content) are still loading or fail.",
       "files": [
-        "frontend/src/scene/environment/CafeEnvironment.tsx",
-        "frontend/src/scene/environment/CafeFurniture.tsx",
-        "frontend/src/scene/materials/contourStyle.ts"
+        "frontend/src/scene/CafeScene.tsx",
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,16 +16,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-21"
+        "REQ-29"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-improve-the-in-scene-menu-coffee-cup-prop-so-it-looks-clearly-like-a-coffee-cup-placed-on-near-the-counter-and-is-clearly-labeled-with-the-exact-text-menu-from-normal-viewing-angles-while-keeping-existing-click-tap-behavior-to-open-the-menu-panel",
-      "featureTitle": "Improve the in-scene “Menu” coffee cup prop so it looks clearly like a coffee cup placed on/near the counter and is clearly labeled with the exact text \"Menu\" from normal viewing angles, while keeping existing click/tap behavior to open the Menu panel.",
+      "featureId": "feature-add-a-timed-scene-startup-watchdog-in-the-app-shell-so-that-if-the-3d-scene-does-not-signal-first-successful-render-within-a-defined-timeout-the-app-switches-from-the-loading-overlay-to-a-user-visible-error-overlay-with-clear-english-text-and-a-retry-action-that-remounts-the-canvas-scene",
+      "featureTitle": "Add a timed “scene startup watchdog” in the app shell so that if the 3D scene does not signal first successful render within a defined timeout, the app switches from the loading overlay to a user-visible error overlay with clear English text and a Retry action that remounts the Canvas/scene.",
       "files": [
-        "frontend/src/scene/interactions/PanelProp.tsx",
-        "frontend/src/scene/interactions/ScenePanelProps.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/scene/hooks/useSceneStartupWatchdog.ts",
+        "frontend/src/scene/ui/SceneErrorOverlay.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -36,16 +36,19 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-22"
+        "REQ-30"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-additional-cafe-proper-furniture-and-other-things-as-non-interactive-scene-dressing-e-g-barista-coffee-equipment-display-items-decor-placed-in-sensible-cafe-locations-counter-back-wall-seating-area-to-make-the-space-feel-lived-in-without-adding-new-ui-panels-or-new-navigation-concepts",
-      "featureTitle": "Add additional cafe “proper furniture and other things” as non-interactive scene dressing (e.g., barista/coffee equipment, display items, decor) placed in sensible cafe locations (counter/back wall/seating area) to make the space feel lived-in, without adding new UI panels or new navigation concepts.",
+      "featureId": "feature-improve-scene-failure-diagnostics-so-it-is-easier-to-determine-why-the-3d-room-disappeared-after-deploy-log-and-categorize-failures-for-environment-loading-asset-texture-loading-and-scene-render-and-include-a-concise-details-section-in-the-error-overlay-that-shows-the-latest-stage-message",
+      "featureTitle": "Improve scene failure diagnostics so it is easier to determine why the 3D room disappeared after deploy: log and categorize failures for environment loading, asset/texture loading, and scene render, and include a concise ‘details’ section in the error overlay that shows the latest stage + message.",
       "files": [
-        "frontend/src/scene/environment/CafeEnvironment.tsx",
-        "frontend/src/scene/environment/CafeSceneDressing.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/scene/CafeScene.tsx",
+        "frontend/src/scene/hooks/useNonBlockingTexture.ts",
+        "frontend/src/scene/ui/SceneErrorOverlay.tsx",
+        "frontend/src/scene/utils/sceneDiagnostics.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -55,7 +58,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-23"
+        "REQ-31"
       ],
       "confidence": "high"
     }

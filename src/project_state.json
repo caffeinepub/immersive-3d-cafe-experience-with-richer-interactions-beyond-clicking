@@ -1,16 +1,19 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 13,
+  "projectStateVersion": 19,
   "summary": "Interactive 3D cafe website with contour-line topographic theme, now including clickable furniture items and a more realistic/scan-like 3D cafe environment (beyond simple clicking), plus menu/about/contact pages and a downloadable package for WordPress Elementor use.",
   "architectural_notes": [
     "Clickable/interactable furniture objects should have distinct visual states (default/hover/active) consistent with contour-line theme.",
     "Consider pipeline/asset approach for scan-like environment (photogrammetry or scan-inspired modeling) balanced against web performance constraints.",
-    "In-scene navigation props (menu card/coffee cup) should be clearly labeled (Menu/About/Contact) and support click/tap to open corresponding site sections/pages."
+    "In-scene navigation props (menu card/coffee cup) should be clearly labeled (Menu/About/Contact) and support click/tap to open corresponding site sections/pages.",
+    "Ensure the 3D scene initializes/starts immediately on page load (no click-to-activate overlay). If any browser restrictions apply (e.g., pointer lock/audio), degrade gracefully without blocking rendering/interaction."
   ],
   "known_issues": [
-    "Deployment/build process failed during deployment (\"Something went wrong with the deployment\")."
+    "Deployment/build process failed during deployment (\"Something went wrong with the deployment\").",
+    "App renders as a brown screen with only the header visible (3D scene/content not loading or not displayed).",
+    "3D room/scene is gone (3D cafe environment no longer visible after latest deploy)."
   ],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-implement-immersive-3d-navigation-controls-in-the-main-3d-cafe-scene-so-users-can-move-through-the-space-not-just-click-support-keyboard-movement-wasd-arrow-keys-mouse-touch-look-and-smooth-camera-transitions-between-navigation-modes-e-g-orbit-overview-to-walk-through",
@@ -179,6 +182,70 @@
         "REQ-23"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-ensure-the-3d-cafe-scene-never-renders-as-a-blank-brown-screen-while-assets-are-loading-replace-the-current-suspense-fallback-null-behavior-in-frontend-src-scene-cafescene-tsx-with-a-visible-loading-ui-shown-over-the-canvas-until-the-first-successful-render-of-the-scene",
+      "title": "Ensure the 3D cafe scene never renders as a blank/brown screen while assets are loading: replace the current `Suspense fallback={null}` behavior in `frontend/src/scene/CafeScene.tsx` with a visible loading UI shown over the canvas until the first successful render of the scene.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-user-visible-error-state-for-3d-rendering-failures-webgl-unavailable-drei-three-runtime-error-asset-load-error-so-users-do-not-get-stuck-with-only-the-header-the-error-state-must-show-clear-english-text-and-offer-an-in-app-action-to-retry-rendering-e-g-remount-the-canvas-scene",
+      "title": "Add a user-visible error state for 3D rendering failures (WebGL unavailable, Drei/Three runtime error, asset load error) so users do not get stuck with only the header. The error state must show clear English text and offer an in-app action to retry rendering (e.g., remount the canvas/scene).",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-scene-critical-texture-environment-loading-non-blocking-if-assets-generated-contour-texture-warm-dim-2048x2048-png-or-the-environment-preset-warehouse-load-is-slow-or-fails-the-scene-must-still-render-using-a-safe-fallback-e-g-a-solid-color-floor-material-and-no-hdri-environment-rather-than-remaining-blank",
+      "title": "Make scene-critical texture/environment loading non-blocking: if `/assets/generated/contour-texture-warm.dim_2048x2048.png` or the `Environment preset=\"warehouse\"` load is slow or fails, the scene must still render using a safe fallback (e.g., a solid-color floor material and no HDRI environment) rather than remaining blank.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-current-global-click-to-activate-behavior-for-3d-navigation-so-users-do-not-need-to-click-the-page-to-make-the-3d-scene-feel-active-keyboard-navigation-wasd-arrow-keys-must-work-immediately-once-the-scene-is-rendered-without-requiring-any-prior-click-on-the-window",
+      "title": "Remove the current global click-to-activate behavior for 3D navigation so users do not need to click the page to make the 3D scene feel “active”; keyboard navigation (WASD/arrow keys) must work immediately once the scene is rendered, without requiring any prior click on the window.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-change-mouse-look-behavior-so-it-does-not-require-pointer-lock-to-be-requested-on-a-generic-click-keep-pointer-lock-as-an-optional-enhancement-only-when-the-user-intentionally-interacts-with-the-3d-canvas-area-and-only-when-navigation-is-enabled-and-provide-a-non-pointer-lock-mouse-look-fallback-e-g-click-and-drag-on-the-canvas-so-users-can-look-around-without-needing-to-activate-the-3d-scene-first",
+      "title": "Change mouse-look behavior so it does not require pointer lock to be requested on a generic click: keep pointer lock as an optional enhancement only when the user intentionally interacts with the 3D canvas area (and only when navigation is enabled), and provide a non-pointer-lock mouse look fallback (e.g., click-and-drag on the canvas) so users can look around without needing to “activate” the 3D scene first.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restore-the-visible-3d-cafe-room-by-ensuring-the-main-scene-always-renders-some-geometry-at-minimum-a-floor-and-walls-even-if-async-scene-elements-environment-preset-textures-physics-children-or-other-suspense-content-are-still-loading-or-fail",
+      "title": "Restore the visible 3D cafe room by ensuring the main scene always renders some geometry (at minimum: a floor and walls) even if async scene elements (Environment preset, textures, Physics children, or other Suspense content) are still loading or fail.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-timed-scene-startup-watchdog-in-the-app-shell-so-that-if-the-3d-scene-does-not-signal-first-successful-render-within-a-defined-timeout-the-app-switches-from-the-loading-overlay-to-a-user-visible-error-overlay-with-clear-english-text-and-a-retry-action-that-remounts-the-canvas-scene",
+      "title": "Add a timed “scene startup watchdog” in the app shell so that if the 3D scene does not signal first successful render within a defined timeout, the app switches from the loading overlay to a user-visible error overlay with clear English text and a Retry action that remounts the Canvas/scene.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-scene-failure-diagnostics-so-it-is-easier-to-determine-why-the-3d-room-disappeared-after-deploy-log-and-categorize-failures-for-environment-loading-asset-texture-loading-and-scene-render-and-include-a-concise-details-section-in-the-error-overlay-that-shows-the-latest-stage-message",
+      "title": "Improve scene failure diagnostics so it is easier to determine why the 3D room disappeared after deploy: log and categorize failures for environment loading, asset/texture loading, and scene render, and include a concise ‘details’ section in the error overlay that shows the latest stage + message.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -255,6 +322,12 @@
     {
       "id": "AR-17",
       "summary": "Remove the front/initial popup shown on site load (disable or delete the front popup overlay).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Remove any click-to-activate/start requirement so the 3D cafe scene becomes active immediately on load (no extra user click needed).",
       "reqIds": [],
       "status": "pending"
     }

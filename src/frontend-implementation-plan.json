@@ -1,78 +1,88 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Contour Cafe 3D scene: upgraded furniture, improved Menu cup prop, and richer scene dressing",
+  "title": "Fix regression: ensure 3D cafe room always visible with watchdog + diagnostics",
   "requirements": [
     {
-      "id": "REQ-21",
-      "summary": "Replace placeholder primitive counter/tables/seating with more believable cafe furniture geometry + materials while preserving the warm contour/topographic style and performance.",
+      "id": "REQ-29",
+      "summary": "Ensure the 3D cafe scene always renders a visible fallback room (floor + walls) even if async scene elements suspend, fail, or throw.",
       "acceptanceCriteria": [
-        "In the 3D scene, the counter, tables, and seating read as recognizable cafe furniture (not just basic primitive shapes) via improved geometry detail and/or multi-part meshes and materials.",
-        "The upgraded furniture remains consistent with the current warm palette and contour/topographic styling already used in the scene (no jarring art-style mismatch).",
-        "The scene still renders without runtime errors and maintains stable frame rate comparable to before (no obvious performance regression from excessive geometry/material complexity)."
+        "On a fresh load, the user never sees an empty/blank view where the 3D room should be; at minimum a basic floor/walls render behind the UI while remaining assets load.",
+        "If the Drei Environment preset fails to load, the scene still renders with basic lights and visible geometry (no blank 3D view).",
+        "If any async scene element throws/blocks, the app still shows a visible fallback 3D room rather than only the header/UI over a flat background."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/scene/environment/CafeFurniture.tsx",
+          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "create",
-          "description": "Add a dedicated furniture module exporting composed, low-poly-friendly meshes/material presets for the counter, tables, and seating (multi-part silhouettes, wood/metal accents) aligned to the existing warm contour aesthetic."
-        },
-        {
-          "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
-          "operation": "modify",
-          "description": "Refactor environment assembly to use the new CafeFurniture components in place of the most placeholder primitive counter/tables/stools; reuse materials/textures and keep geometry complexity modest to avoid performance regressions."
-        },
-        {
-          "path": "frontend/src/scene/materials/contourStyle.ts",
-          "operation": "modify",
-          "description": "Extend contour-style material helpers/presets (e.g., warm wood/metal variants) to ensure the upgraded furniture remains consistent with the scene’s existing palette and contour identity."
-        }
-      ]
-    },
-    {
-      "id": "REQ-22",
-      "summary": "Improve the in-scene Menu coffee cup so it reads clearly as a labeled cup from normal angles while preserving existing interaction behavior and feedback.",
-      "acceptanceCriteria": [
-        "A 3D coffee-cup-shaped prop is present on/near the counter area in the cafe scene and is visually distinct as a cup (body + handle and coherent material).",
-        "The label text is exactly \"Menu\" and is legible at typical camera distance when approaching the counter.",
-        "Clicking/tapping the cup opens the Menu panel; hover/press feedback continues to work."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/scene/interactions/PanelProp.tsx",
-          "operation": "modify",
-          "description": "Upgrade the 'cup' propType to a clearer coffee-cup silhouette (body + handle + optional saucer/foam surface) and implement a more legible in-world label treatment that still renders the exact text \"Menu\"; keep hover/press feedback and click handling intact."
-        },
-        {
-          "path": "frontend/src/scene/interactions/ScenePanelProps.tsx",
-          "operation": "modify",
-          "description": "Adjust the Menu cup placement (position/orientation/height) relative to the counter so it reads as placed on/near the counter and the \"Menu\" label is visible from typical approach angles; do not change which panel activates."
-        }
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "summary": "Add at least 5 additional non-interactive cafe props as scene dressing in sensible locations without introducing new UI panels/routes or backend work.",
-      "acceptanceCriteria": [
-        "At least 5 new non-interactive props/furniture pieces are added to the 3D environment (beyond the current counter, tables, stools, shelving, wall art, rug, plant), and they are placed in plausible cafe positions.",
-        "New props match the existing lighting and material style and do not visually clip through major surfaces in an obvious way.",
-        "No new overlay panels, routes, or backend data models are introduced as part of adding these props."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
-          "operation": "create",
-          "description": "Create a non-interactive dressing module that adds at least five plausible cafe props (e.g., espresso machine, grinder, pastry case, stacked cups, wall menu board, pendant lights, small decor items) using the existing warm/contour material language and careful placement to avoid obvious clipping."
-        },
-        {
-          "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
-          "operation": "modify",
-          "description": "Wire the CafeSceneDressing group into the environment so the new props appear in sensible locations (counter/back wall/seating area) without adding any new UI panels, routes, or navigation concepts."
+          "description": "Create a minimal always-available fallback room (floor + 3 walls) using simple R3F meshes/materials (no Physics, no Suspense dependencies) so some geometry is always visible."
         },
         {
           "path": "frontend/src/scene/CafeScene.tsx",
           "operation": "modify",
-          "description": "If needed, make minor lighting/environment tweaks to ensure the added dressing props read well (consistent warmth/contrast) while keeping rendering stable and avoiding noticeable performance regressions."
+          "description": "Render the new BasicCafeRoomFallback outside any Suspense/Physics blocks so it appears immediately and remains visible even if Environment/Physics children suspend or error; keep basic lights active regardless of Environment availability."
+        }
+      ]
+    },
+    {
+      "id": "REQ-30",
+      "summary": "Add a timed scene startup watchdog that swaps the loading overlay for an error overlay if first render does not occur in time, with Retry remounting the Canvas/scene.",
+      "acceptanceCriteria": [
+        "If `onFirstRender` is not called within the timeout, the loading overlay is replaced by an error overlay explaining the scene did not finish loading and offering “Retry Loading Scene”.",
+        "Clicking Retry clears the error, remounts the Canvas (new key), and re-attempts loading the scene.",
+        "If the scene later renders successfully, the loading/error overlays are removed and the 3D room is visible."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/scene/hooks/useSceneStartupWatchdog.ts",
+          "operation": "create",
+          "description": "Add a small hook that starts a timeout per scene mount attempt and triggers a provided callback if onFirstRender hasn’t occurred before the timeout; supports resetting per retry/remount."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Integrate the startup watchdog into the app shell: on each sceneKey change start the timer; if it fires, replace the loading overlay with the error overlay and enable a Retry action that increments the Canvas key to remount."
+        },
+        {
+          "path": "frontend/src/scene/ui/SceneErrorOverlay.tsx",
+          "operation": "modify",
+          "description": "Ensure the overlay messaging clearly indicates the scene did not finish loading within the timeout and keeps the existing “Retry Loading Scene” action (compose using existing shadcn-ui Button; verify the component's usage instructions before implementing)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-31",
+      "summary": "Improve scene failure diagnostics by categorizing failures by stage and showing latest stage+message in the error overlay details area, updating across retries.",
+      "acceptanceCriteria": [
+        "When a scene failure occurs, console logs include a clearly labeled stage (e.g., webgl-init, environment-load, texture-load, asset-load, scene-render) and the error message/stack when available.",
+        "The error overlay includes a readable details area showing the most recent failure stage and message (in English).",
+        "The displayed diagnostic details update after a Retry attempt (i.e., old error details do not persist if the new attempt fails differently)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/scene/utils/sceneDiagnostics.ts",
+          "operation": "modify",
+          "description": "Export the failure stage type and extend logging utilities to support consistent stage labeling (including startup/watchdog-related failures) and standardized message formatting for environment/texture/asset/render stages."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Track and reset the latest diagnostic stage+message per scene attempt; wire this into SceneErrorOverlay as a ‘details’ section source, and clear/update it on Retry and on subsequent failures/success."
+        },
+        {
+          "path": "frontend/src/scene/CafeScene.tsx",
+          "operation": "modify",
+          "description": "Add stage-specific failure reporting hooks for environment loading and scene render errors so failures are categorized (environment-load, scene-render, asset-load where applicable) and forwarded to the app shell diagnostics state."
+        },
+        {
+          "path": "frontend/src/scene/hooks/useNonBlockingTexture.ts",
+          "operation": "modify",
+          "description": "Augment texture-load failure/success logging to optionally report the latest stage+message to the app shell diagnostics state (while preserving current non-blocking behavior and fallbacks)."
+        },
+        {
+          "path": "frontend/src/scene/ui/SceneErrorOverlay.tsx",
+          "operation": "modify",
+          "description": "Add a concise, readable ‘details’ area that displays the most recent diagnostic stage + message, and ensure it reflects the latest attempt after Retry (compose using existing shadcn-ui primitives such as Button; verify the component's usage instructions before implementing)."
         }
       ]
     }

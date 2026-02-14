@@ -1,12 +1,12 @@
 import { useRef } from 'react';
 import { Mesh } from 'three';
-import { useTexture } from '@react-three/drei';
 import { usePlane } from '@react-three/cannon';
 import { Counter, CafeTable, WoodenChair, BarStool } from './CafeFurniture';
 import CafeSceneDressing from './CafeSceneDressing';
+import { useNonBlockingTexture } from '../hooks/useNonBlockingTexture';
 
 export default function CafeEnvironment() {
-  const contourTexture = useTexture('/assets/generated/contour-texture-warm.dim_2048x2048.png');
+  const contourTexture = useNonBlockingTexture('/assets/generated/contour-texture-warm.dim_2048x2048.png');
   
   // Floor
   const [floorRef] = usePlane<Mesh>(() => ({
@@ -16,11 +16,12 @@ export default function CafeEnvironment() {
 
   return (
     <group>
-      {/* Floor */}
+      {/* Floor - renders immediately with fallback color */}
       <mesh ref={floorRef} receiveShadow>
         <planeGeometry args={[30, 30]} />
         <meshStandardMaterial
           map={contourTexture}
+          color="#3d3228"
           roughness={0.8}
           metalness={0.1}
         />
@@ -45,17 +46,17 @@ export default function CafeEnvironment() {
       {/* UPGRADED FURNITURE */}
       
       {/* Counter with detailed construction */}
-      <Counter />
+      <Counter contourTexture={contourTexture} />
 
       {/* Left table with chairs */}
-      <CafeTable position={[-3, 0, 2]} />
+      <CafeTable position={[-3, 0, 2]} contourTexture={contourTexture} />
       <WoodenChair position={[-3.7, 0, 1.3]} rotation={0} />
       <WoodenChair position={[-2.3, 0, 1.3]} rotation={Math.PI} />
       <WoodenChair position={[-3.7, 0, 2.7]} rotation={0} />
       <WoodenChair position={[-2.3, 0, 2.7]} rotation={Math.PI} />
 
       {/* Right table with chairs */}
-      <CafeTable position={[3, 0, 2]} />
+      <CafeTable position={[3, 0, 2]} contourTexture={contourTexture} />
       <WoodenChair position={[3.7, 0, 1.3]} rotation={0} />
       <WoodenChair position={[2.3, 0, 1.3]} rotation={Math.PI} />
       <WoodenChair position={[3.7, 0, 2.7]} rotation={0} />

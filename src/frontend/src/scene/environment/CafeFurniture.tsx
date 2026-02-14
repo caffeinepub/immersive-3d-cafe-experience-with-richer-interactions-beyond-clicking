@@ -1,9 +1,11 @@
-import { useTexture } from '@react-three/drei';
+import { Texture } from 'three';
+
+interface FurnitureProps {
+  contourTexture?: Texture;
+}
 
 // Counter with multi-part construction
-export function Counter() {
-  const contourTexture = useTexture('/assets/generated/contour-texture-warm.dim_2048x2048.png');
-  
+export function Counter({ contourTexture }: FurnitureProps) {
   return (
     <group position={[0, 0, -5]}>
       {/* Main counter body */}
@@ -39,9 +41,7 @@ export function Counter() {
 }
 
 // Cafe table with pedestal base
-export function CafeTable({ position }: { position: [number, number, number] }) {
-  const contourTexture = useTexture('/assets/generated/contour-texture-warm.dim_2048x2048.png');
-  
+export function CafeTable({ position, contourTexture }: { position: [number, number, number] } & FurnitureProps) {
   return (
     <group position={position}>
       {/* Table top */}
