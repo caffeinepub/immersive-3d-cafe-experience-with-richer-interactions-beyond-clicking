@@ -1,63 +1,50 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T20:56:14.755Z",
-  "summary": "Diff adds degraded-mode overlay UI, a startup watchdog timeout path, and new diagnostics stages/logging for fallback render vs full environment mount. CafeSceneDressing switches to a non-blocking texture hook. However, the diff evidence is insufficient to confirm that the loading overlay is strictly gated on full-environment mount (sceneReady) and that failed dressing texture loads are logged at stage `texture-load` via existing diagnostics.",
+  "generatedAt": "2026-02-14T22:14:22.277Z",
+  "summary": "REQ-42 appears partially implemented by updating code references to a 1024x1024 contour texture path in the environment/dressing, and REQ-43/REQ-44 appear implemented via reduced geometry segment counts and a more conservative Canvas configuration. However, the diff shows no new smaller texture asset being added, which is an explicit acceptance criterion for REQ-42. Additionally, the diff suggests some unrelated feature/documentation expansion in a summary file that is not part of the optimization request.",
   "missing_requirements": [
     {
-      "id": "REQ-32",
-      "requirement": "Keep the loading overlay visible until the full café environment has mounted successfully, and only then set `sceneReady` in `frontend/src/App.tsx` (not when only fallback room renders).",
-      "reason": "Although `handleFullEnvironmentMounted` sets `sceneReady` and fallback render is logged separately, the provided `frontend/src/App.tsx` diff is truncated before the render/overlay logic, so it cannot be verified that the loading overlay visibility is actually tied to full-environment mount (and not to fallback render or other conditions).",
+      "id": "REQ-42",
+      "requirement": "Include a smaller contour texture file in `frontend/public/assets/generated/` (1024x1024) and ensure the scene loads it instead of the 2048x2048 version without runtime missing-asset errors.",
+      "reason": "Code references were updated to `/assets/generated/contour-texture-warm.dim_1024x1024.png`, but the diff shows no added asset file. This risks runtime 404/missing texture unless the file already existed (not evidenced in the diff).",
       "evidence": [
-        "frontend/src/App.tsx (truncated)",
-        "frontend/src/scene/CafeScene.tsx"
-      ]
-    },
-    {
-      "id": "REQ-33",
-      "requirement": "Log a failed dressing texture load via existing scene diagnostics (stage `texture-load`) and ensure it does not crash the scene.",
-      "reason": "CafeSceneDressing was changed to use `useNonBlockingTexture`, but there is no evidence in the shown diff that a failed load is logged specifically with stage `texture-load` (logging behavior would need to be inside the hook, which is not shown).",
-      "evidence": [
-        "frontend/src/scene/environment/CafeSceneDressing.tsx (truncated)",
-        "frontend/src/scene/utils/sceneDiagnostics.ts"
-      ]
-    },
-    {
-      "id": "REQ-34",
-      "requirement": "Show a user-visible degraded-mode message with Retry when the full café environment does not appear within the startup timeout, and ensure it is cleared on retry and auto-disappears once full environment loads.",
-      "reason": "The degraded overlay component and timeout state exist, but `frontend/src/App.tsx` is truncated before the JSX that would conditionally render `SceneDegradedOverlay`, so it cannot be verified that the degraded-mode UI is actually shown/hidden under the specified conditions.",
-      "evidence": [
-        "frontend/src/App.tsx (truncated)",
-        "frontend/src/scene/ui/SceneDegradedOverlay.tsx"
+        "File diff summary: \"Added: 0\" (no new asset file added)",
+        "frontend/src/scene/environment/CafeEnvironment.tsx (references `/assets/generated/contour-texture-warm.dim_1024x1024.png`)",
+        "frontend/src/scene/environment/CafeSceneDressing.tsx (references `/assets/generated/contour-texture-warm.dim_1024x1024.png`)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Significant expansion/upgrade of café environment geometry and furnishings beyond resiliency/tracking changes (e.g., multiple tables/chairs/bar stools, shelving, plant props, etc.).",
-      "reason": "The BuildRequest explicitly focuses on scene loading resiliency, readiness tracking, degraded-mode UI, and diagnostics; adding substantial new environment content is not requested and risks violating the stated non-goal of adding new 3D gameplay/mechanics/UI beyond the degraded-mode message and retry flow.",
+      "description": "Expanded/added interaction systems and related scene features (POI markers, proximity zones, door controller, inspectable prop, new scene panel props, immersive navigation controls) referenced in the project’s frontend file summaries.",
+      "reason": "The BuildRequest is optimization-only (reduce scene heaviness) and explicitly lists non-goals such as not adding new UI panels/navigation concepts; these interaction feature additions are not requested by REQ-42/43/44. Evidence is limited to the modified `frontend-file-summaries.txt` content, not direct code diffs for those modules.",
       "evidence": [
-        "frontend/src/scene/environment/CafeEnvironment.tsx (truncated)  // comments like \"UPGRADED FURNITURE\" and many added props"
+        "frontend-file-summaries.txt (mentions InteractionManager, POIMarkers, ProximityZones, DoorController, InspectableProp, useCafeNavigation, etc.)"
       ]
     },
     {
-      "description": "Added custom try/catch error handling wrapper around the Drei `Environment` preset load.",
-      "reason": "Not explicitly requested (REQ-32..35 focus on full-environment mount tracking, non-blocking dressing texture loading, degraded-mode UI, and diagnostics). This may be acceptable but is still additional behavior beyond the requested changes.",
+      "description": "Added/expanded theme/design system token and motion system documentation (theme/tokens.ts and theme/motion.ts) in summaries.",
+      "reason": "Not requested by REQ-42/43/44 (performance optimization of texture/geometry/Canvas). Evidence is limited to the modified summary file, not direct code diffs for the theme files.",
       "evidence": [
-        "frontend/src/scene/CafeScene.tsx  // EnvironmentWrapper with try/catch and logSceneFailure('environment-load', ...)"
+        "frontend-file-summaries.txt (mentions `frontend/src/theme/tokens.ts` and `frontend/src/theme/motion.ts`)"
+      ]
+    },
+    {
+      "description": "Contact message React Query hook changes with diagnostics/normalization described in summaries (`frontend/src/hooks/useQueries.ts`).",
+      "reason": "Not requested by REQ-42/43/44 and the BuildRequest non-goals state not to change backend contact message API/storage as part of this optimization-only request. Evidence is limited to the modified summary file, not a shown code diff for `useQueries.ts`.",
+      "evidence": [
+        "frontend-file-summaries.txt (mentions `frontend/src/hooks/useQueries.ts` changes)"
       ]
     }
   ],
-  "confidence": 0.62,
+  "confidence": 0.66,
   "changed_files": [
     "frontend-file-summaries.txt",
     "frontend/src/App.tsx",
-    "frontend/src/scene/CafeScene.tsx",
     "frontend/src/scene/environment/CafeEnvironment.tsx",
+    "frontend/src/scene/environment/CafeFurniture.tsx",
     "frontend/src/scene/environment/CafeSceneDressing.tsx",
-    "frontend/src/scene/ui/SceneDegradedOverlay.tsx",
-    "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
-    "frontend/src/scene/utils/sceneDiagnostics.ts",
     "project_state.json"
   ]
 }

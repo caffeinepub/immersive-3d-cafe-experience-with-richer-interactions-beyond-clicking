@@ -46,7 +46,7 @@ export function CafeTable({ position, contourTexture }: { position: [number, num
     <group position={position}>
       {/* Table top */}
       <mesh position={[0, 0.75, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.65, 0.65, 0.05, 24]} />
+        <cylinderGeometry args={[0.65, 0.65, 0.05, 12]} />
         <meshStandardMaterial 
           map={contourTexture}
           color="#4a3f32" 
@@ -56,13 +56,13 @@ export function CafeTable({ position, contourTexture }: { position: [number, num
       
       {/* Pedestal */}
       <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.08, 0.12, 0.7, 16]} />
+        <cylinderGeometry args={[0.08, 0.12, 0.7, 8]} />
         <meshStandardMaterial color="#3d3228" roughness={0.7} />
       </mesh>
       
       {/* Base */}
       <mesh position={[0, 0.05, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.4, 0.4, 0.1, 24]} />
+        <cylinderGeometry args={[0.4, 0.4, 0.1, 12]} />
         <meshStandardMaterial color="#2a2420" roughness={0.8} metalness={0.2} />
       </mesh>
     </group>
@@ -87,25 +87,25 @@ export function WoodenChair({ position, rotation = 0 }: { position: [number, num
       
       {/* Legs - front left */}
       <mesh position={[-0.15, 0.22, 0.15]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.02, 0.025, 0.44, 8]} />
+        <cylinderGeometry args={[0.02, 0.025, 0.44, 6]} />
         <meshStandardMaterial color="#3d3228" roughness={0.7} />
       </mesh>
       
       {/* Legs - front right */}
       <mesh position={[0.15, 0.22, 0.15]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.02, 0.025, 0.44, 8]} />
+        <cylinderGeometry args={[0.02, 0.025, 0.44, 6]} />
         <meshStandardMaterial color="#3d3228" roughness={0.7} />
       </mesh>
       
       {/* Legs - back left */}
       <mesh position={[-0.15, 0.45, -0.15]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.02, 0.025, 0.9, 8]} />
+        <cylinderGeometry args={[0.02, 0.025, 0.9, 6]} />
         <meshStandardMaterial color="#3d3228" roughness={0.7} />
       </mesh>
       
       {/* Legs - back right */}
       <mesh position={[0.15, 0.45, -0.15]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.02, 0.025, 0.9, 8]} />
+        <cylinderGeometry args={[0.02, 0.025, 0.9, 6]} />
         <meshStandardMaterial color="#3d3228" roughness={0.7} />
       </mesh>
     </group>
@@ -118,25 +118,25 @@ export function BarStool({ position }: { position: [number, number, number] }) {
     <group position={position}>
       {/* Seat */}
       <mesh position={[0, 0.65, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.2, 0.18, 0.08, 16]} />
+        <cylinderGeometry args={[0.2, 0.18, 0.08, 8]} />
         <meshStandardMaterial color="#4a3f32" roughness={0.6} />
       </mesh>
       
       {/* Center post */}
       <mesh position={[0, 0.35, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.04, 0.05, 0.6, 12]} />
+        <cylinderGeometry args={[0.04, 0.05, 0.6, 8]} />
         <meshStandardMaterial color="#3d3228" roughness={0.7} metalness={0.2} />
       </mesh>
       
       {/* Footrest ring */}
       <mesh position={[0, 0.25, 0]} castShadow receiveShadow>
-        <torusGeometry args={[0.15, 0.015, 8, 16]} />
+        <torusGeometry args={[0.15, 0.015, 6, 8]} />
         <meshStandardMaterial color="#5a4a3a" roughness={0.6} metalness={0.3} />
       </mesh>
       
       {/* Base */}
       <mesh position={[0, 0.03, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.25, 0.25, 0.06, 16]} />
+        <cylinderGeometry args={[0.25, 0.25, 0.06, 8]} />
         <meshStandardMaterial color="#2a2420" roughness={0.8} metalness={0.2} />
       </mesh>
     </group>

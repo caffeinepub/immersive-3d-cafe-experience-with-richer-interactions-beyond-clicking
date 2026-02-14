@@ -11,7 +11,7 @@ interface CafeEnvironmentProps {
 }
 
 export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
-  const contourTexture = useNonBlockingTexture('/assets/generated/contour-texture-warm.dim_2048x2048.png');
+  const contourTexture = useNonBlockingTexture('/assets/generated/contour-texture-warm.dim_1024x1024.png');
   const hasMounted = useRef(false);
   
   // Signal when full environment has mounted
@@ -85,17 +85,17 @@ export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
 
       {/* Small side table near left wall */}
       <mesh position={[-6, 0.35, -2]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.4, 0.4, 0.7, 16]} />
+        <cylinderGeometry args={[0.4, 0.4, 0.7, 8]} />
         <meshStandardMaterial color="#4a3f32" roughness={0.6} />
       </mesh>
 
       {/* Plant on side table */}
       <mesh position={[-6, 0.75, -2]} castShadow>
-        <coneGeometry args={[0.15, 0.3, 8]} />
+        <coneGeometry args={[0.15, 0.3, 6]} />
         <meshStandardMaterial color="#2d4a2b" roughness={0.8} />
       </mesh>
       <mesh position={[-6, 0.65, -2]} castShadow>
-        <cylinderGeometry args={[0.12, 0.12, 0.15, 12]} />
+        <cylinderGeometry args={[0.12, 0.12, 0.15, 8]} />
         <meshStandardMaterial color="#5a4a3a" roughness={0.7} />
       </mesh>
 
@@ -116,7 +116,7 @@ export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
 
       {/* Decorative items on shelves */}
       <mesh position={[3.3, 1.8, -7.8]} castShadow>
-        <cylinderGeometry args={[0.08, 0.08, 0.25, 12]} />
+        <cylinderGeometry args={[0.08, 0.08, 0.25, 8]} />
         <meshStandardMaterial color="#5a4a3a" roughness={0.6} />
       </mesh>
       <mesh position={[4.7, 1.8, -7.8]} castShadow>

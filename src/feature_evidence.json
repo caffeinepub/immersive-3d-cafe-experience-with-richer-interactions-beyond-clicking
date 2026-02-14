@@ -2,29 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-prevent-the-app-from-marking-the-scene-as-ready-when-only-the-minimal-fallback-room-has-rendered-keep-the-loading-overlay-visible-until-the-full-caf-environment-furniture-dressing-has-mounted-successfully-and-only-then-set-sceneready-in-frontend-src-app-tsx",
-      "featureTitle": "Prevent the app from marking the scene as “ready” when only the minimal fallback room has rendered; keep the loading overlay visible until the full café environment (furniture + dressing) has mounted successfully, and only then set `sceneReady` in `frontend/src/App.tsx`.",
+      "featureId": "feature-reduce-the-size-of-the-contour-floor-furniture-texture-used-by-the-3d-scene-by-switching-the-app-from-assets-generated-contour-texture-warm-dim-2048x2048-png-to-a-smaller-generated-texture-and-update-all-references-in-the-3d-scene-to-use-the-new-filename",
+      "featureTitle": "Reduce the size of the contour floor/furniture texture used by the 3D scene by switching the app from `/assets/generated/contour-texture-warm.dim_2048x2048.png` to a smaller generated texture, and update all references in the 3D scene to use the new filename.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/scene/CafeScene.tsx",
-        "frontend/src/scene/environment/CafeEnvironment.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-32"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-make-frontend-src-scene-environment-cafescenedressing-tsx-non-blocking-and-non-suspending-by-removing-suspense-based-texture-loading-usetexture-for-assets-generated-contour-texture-warm-dim-2048x2048-png-and-instead-use-the-existing-non-blocking-texture-loader-hook-so-that-missing-slow-textures-cannot-prevent-the-rest-of-the-caf-props-from-rendering",
-      "featureTitle": "Make `frontend/src/scene/environment/CafeSceneDressing.tsx` non-blocking and non-suspending by removing Suspense-based texture loading (`useTexture`) for `/assets/generated/contour-texture-warm.dim_2048x2048.png`, and instead use the existing non-blocking texture loader hook so that missing/slow textures cannot prevent the rest of the café props from rendering.",
-      "files": [
+        "frontend/src/scene/environment/CafeEnvironment.tsx",
         "frontend/src/scene/environment/CafeSceneDressing.tsx"
       ],
       "components": [
@@ -35,17 +16,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-33"
+        "REQ-42"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-user-visible-degraded-mode-state-for-when-the-full-caf-environment-the-content-inside-the-physics-suspense-block-in-frontend-src-scene-cafescene-tsx-does-not-appear-within-the-startup-timeout-show-clear-english-text-indicating-that-only-a-basic-room-could-be-loaded-and-provide-an-in-app-action-to-retry-loading-remounting-the-scene",
-      "featureTitle": "Add a user-visible degraded-mode state for when the full café environment (the content inside the `Physics` + Suspense block in `frontend/src/scene/CafeScene.tsx`) does not appear within the startup timeout: show clear English text indicating that only a basic room could be loaded and provide an in-app action to retry loading/remounting the scene.",
+      "featureId": "feature-reduce-geometric-complexity-in-the-3d-cafe-environment-by-lowering-segment-counts-for-high-segment-primitives-e-g-cylindergeometry-torusgeometry-spheregeometry-conegeometry-within-frontend-src-scene-environment-cafeenvironment-tsx-frontend-src-scene-environment-cafescenedressing-tsx-and-frontend-src-scene-environment-cafefurniture-tsx-while-preserving-overall-shapes-and-layout",
+      "featureTitle": "Reduce geometric complexity in the 3D cafe environment by lowering segment counts for high-segment primitives (e.g., `cylinderGeometry`, `torusGeometry`, `sphereGeometry`, `coneGeometry`) within `frontend/src/scene/environment/CafeEnvironment.tsx`, `frontend/src/scene/environment/CafeSceneDressing.tsx`, and `frontend/src/scene/environment/CafeFurniture.tsx`, while preserving overall shapes and layout.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/scene/ui/SceneDegradedOverlay.tsx",
-        "frontend/src/scene/ui/SceneLoadingOverlay.tsx"
+        "frontend/src/scene/environment/CafeEnvironment.tsx",
+        "frontend/src/scene/environment/CafeFurniture.tsx",
+        "frontend/src/scene/environment/CafeSceneDressing.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -55,17 +36,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-34"
+        "REQ-43"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-improve-scene-diagnostics-to-explicitly-distinguish-fallback-room-rendered-vs-full-caf-environment-mounted-and-record-a-diagnostic-event-when-the-full-environment-mount-does-not-occur-so-deploy-regressions-blank-room-can-be-identified-from-console-logs",
-      "featureTitle": "Improve scene diagnostics to explicitly distinguish “fallback room rendered” vs “full café environment mounted,” and record a diagnostic event when the full environment mount does not occur so deploy regressions (blank room) can be identified from console logs.",
+      "featureId": "feature-reduce-gpu-rendering-workload-for-the-3d-canvas-by-adjusting-the-react-three-fiber-canvas-configuration-in-frontend-src-app-tsx-to-use-a-more-conservative-device-pixel-ratio-dpr-and-to-avoid-expensive-rendering-features-when-not-required-for-functionality",
+      "featureTitle": "Reduce GPU/rendering workload for the 3D canvas by adjusting the React Three Fiber `Canvas` configuration in `frontend/src/App.tsx` to use a more conservative device pixel ratio (DPR) and to avoid expensive rendering features when not required for functionality.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/scene/CafeScene.tsx",
-        "frontend/src/scene/utils/sceneDiagnostics.ts"
+        "frontend/src/App.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -75,7 +54,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-35"
+        "REQ-44"
       ],
       "confidence": "high"
     }

@@ -1,20 +1,24 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 21,
+  "projectStateVersion": 27,
   "summary": "Interactive 3D cafe website with contour-line topographic theme, now including clickable furniture items and a more realistic/scan-like 3D cafe environment (beyond simple clicking), plus menu/about/contact pages and a downloadable package for WordPress Elementor use.",
   "architectural_notes": [
     "Clickable/interactable furniture objects should have distinct visual states (default/hover/active) consistent with contour-line theme.",
     "Consider pipeline/asset approach for scan-like environment (photogrammetry or scan-inspired modeling) balanced against web performance constraints.",
     "In-scene navigation props (menu card/coffee cup) should be clearly labeled (Menu/About/Contact) and support click/tap to open corresponding site sections/pages.",
-    "Ensure the 3D scene initializes/starts immediately on page load (no click-to-activate overlay). If any browser restrictions apply (e.g., pointer lock/audio), degrade gracefully without blocking rendering/interaction."
+    "Ensure the 3D scene initializes/starts immediately on page load (no click-to-activate overlay). If any browser restrictions apply (e.g., pointer lock/audio), degrade gracefully without blocking rendering/interaction.",
+    "Degraded-mode fallback is persisting: full café environment never mounts and in-app Retry/remount does not recover; investigate full-environment mount failure vs timeout and ensure Retry truly reinitializes/reloads required assets.",
+    "Consider performance/weight reduction: optimize models, textures, and initial payload to avoid timeouts/degraded mode and improve scene mount reliability."
   ],
   "known_issues": [
     "Deployment/build process failed during deployment (\"Something went wrong with the deployment\").",
     "App renders as a brown screen with only the header visible (3D scene/content not loading or not displayed).",
     "3D room/scene is gone (3D cafe environment no longer visible after latest deploy).",
-    "After latest deployment, scene shows only a blank room (missing expected cafe content/assets)."
+    "After latest deployment, scene shows only a blank room (missing expected cafe content/assets).",
+    "App repeatedly shows \"Café Details Not Loaded / Only the basic room could be loaded\"; full café environment never appears and Retry does not resolve (stuck in degraded mode)."
   ],
   "isFixRequest": true,
+  "imageRequirements": "## Edit Images\n- Downscale the contour texture to a smaller size (contour-texture-warm.dim_2048x2048.png > contour-texture-warm.dim_1024x1024.png)",
   "existing_features": [
     {
       "id": "feature-implement-immersive-3d-navigation-controls-in-the-main-3d-cafe-scene-so-users-can-move-through-the-space-not-just-click-support-keyboard-movement-wasd-arrow-keys-mouse-touch-look-and-smooth-camera-transitions-between-navigation-modes-e-g-orbit-overview-to-walk-through",
@@ -279,6 +283,70 @@
         "REQ-35"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-fix-the-3d-scene-boot-sequence-so-the-full-caf-environment-furniture-decorations-reliably-mounts-instead-of-timing-out-into-the-degraded-mode-overlay-caf-details-not-loaded-only-the-basic-room-could-be-loaded-ensure-cafeenvironment-and-cafescenedressing-are-not-blocked-from-mounting-by-suspense-physics-boundaries-and-that-the-full-environment-appears-without-requiring-repeated-retries",
+      "title": "Fix the 3D scene boot sequence so the full café environment (furniture + decorations) reliably mounts instead of timing out into the degraded-mode overlay (“Café Details Not Loaded / Only the basic room could be loaded”). Ensure `CafeEnvironment` and `CafeSceneDressing` are not blocked from mounting by Suspense/Physics boundaries, and that the full environment appears without requiring repeated retries.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-degraded-mode-diagnostics-to-explicitly-indicate-why-the-full-environment-did-not-mount-distinguishing-between-a-suspense-async-blocking-b-physics-subtree-not-rendering-and-c-runtime-errors-that-are-being-swallowed-add-a-concise-user-visible-diagnostic-details-section-to-the-degraded-mode-overlay-similar-to-the-error-overlay-using-the-existing-scenediagnostics-utilities",
+      "title": "Improve degraded-mode diagnostics to explicitly indicate why the full environment did not mount, distinguishing between (a) Suspense/async blocking, (b) Physics subtree not rendering, and (c) runtime errors that are being swallowed. Add a concise, user-visible diagnostic details section to the degraded-mode overlay, similar to the error overlay, using the existing `sceneDiagnostics` utilities.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-in-app-retry-action-actually-performs-a-clean-remount-and-re-attempts-full-environment-loading-verify-that-after-clicking-retry-loading-full-caf-the-watchdog-resets-and-the-app-can-recover-to-a-fully-loaded-caf-when-the-underlying-cause-is-transient",
+      "title": "Ensure the in-app Retry action actually performs a clean remount and re-attempts full environment loading. Verify that after clicking “Retry Loading Full Café”, the watchdog resets and the app can recover to a fully loaded café when the underlying cause is transient.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-frontend-build-completes-cleanly-against-the-updated-backend-candid-types-and-that-the-contact-form-flow-still-works-end-to-end-via-the-existing-react-query-hooks",
+      "title": "Ensure the frontend build completes cleanly against the updated backend Candid/types and that the contact form flow still works end-to-end via the existing React Query hooks.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-adjust-deployment-time-diagnostics-so-that-when-deployment-fails-backend-deploy-or-frontend-build-the-logs-surfaced-to-the-console-include-an-actionable-error-summary-and-the-failing-step-backend-deploy-vs-frontend-build-using-the-existing-deployment-diagnostics-utilities",
+      "title": "Add/adjust deployment-time diagnostics so that when deployment fails (backend deploy or frontend build), the logs surfaced to the console include an actionable error summary and the failing step (backend deploy vs frontend build) using the existing deployment diagnostics utilities.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-reduce-the-size-of-the-contour-floor-furniture-texture-used-by-the-3d-scene-by-switching-the-app-from-assets-generated-contour-texture-warm-dim-2048x2048-png-to-a-smaller-generated-texture-and-update-all-references-in-the-3d-scene-to-use-the-new-filename",
+      "title": "Reduce the size of the contour floor/furniture texture used by the 3D scene by switching the app from `/assets/generated/contour-texture-warm.dim_2048x2048.png` to a smaller generated texture, and update all references in the 3D scene to use the new filename.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-reduce-geometric-complexity-in-the-3d-cafe-environment-by-lowering-segment-counts-for-high-segment-primitives-e-g-cylindergeometry-torusgeometry-spheregeometry-conegeometry-within-frontend-src-scene-environment-cafeenvironment-tsx-frontend-src-scene-environment-cafescenedressing-tsx-and-frontend-src-scene-environment-cafefurniture-tsx-while-preserving-overall-shapes-and-layout",
+      "title": "Reduce geometric complexity in the 3D cafe environment by lowering segment counts for high-segment primitives (e.g., `cylinderGeometry`, `torusGeometry`, `sphereGeometry`, `coneGeometry`) within `frontend/src/scene/environment/CafeEnvironment.tsx`, `frontend/src/scene/environment/CafeSceneDressing.tsx`, and `frontend/src/scene/environment/CafeFurniture.tsx`, while preserving overall shapes and layout.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-reduce-gpu-rendering-workload-for-the-3d-canvas-by-adjusting-the-react-three-fiber-canvas-configuration-in-frontend-src-app-tsx-to-use-a-more-conservative-device-pixel-ratio-dpr-and-to-avoid-expensive-rendering-features-when-not-required-for-functionality",
+      "title": "Reduce GPU/rendering workload for the 3D canvas by adjusting the React Three Fiber `Canvas` configuration in `frontend/src/App.tsx` to use a more conservative device pixel ratio (DPR) and to avoid expensive rendering features when not required for functionality.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -361,6 +429,20 @@
     {
       "id": "AR-18",
       "summary": "Remove any click-to-activate/start requirement so the 3D cafe scene becomes active immediately on load (no extra user click needed).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Fix the Motoko backend so it compiles and deploys successfully by replacing the current `List.empty`-based `contactMessages` storage with a mutable structure compatible with Motoko (and stable across upgrades if appropriate), while preserving the existing public API shape (`submitContactMessage(name, email, message)` and `getContactMessages()`).",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Reduce overall scene/app heaviness (optimize asset sizes/polycount/textures and loading) to improve reliability and potentially resolve the scene load/degraded-mode issues.",
       "reqIds": [],
       "status": "pending"
     }

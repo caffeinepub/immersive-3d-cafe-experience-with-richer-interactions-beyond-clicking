@@ -13,6 +13,7 @@ export function useGetContactMessages() {
         {
           module: 'useQueries',
           operation: 'getContactMessages',
+          step: 'runtime',
           additionalInfo: {
             actorInitialized: !!actor
           }
@@ -65,6 +66,7 @@ export function useSubmitContactMessage() {
         {
           module: 'useQueries',
           operation: 'submitContactMessage',
+          step: 'runtime',
           additionalInfo: {
             actorInitialized: !!actor,
             nameLength: name.length,
@@ -94,6 +96,7 @@ export function useSubmitContactMessage() {
       logDeploymentError({
         module: 'useQueries',
         operation: 'submitContactMessage.onError',
+        step: 'runtime',
         error,
       });
     },

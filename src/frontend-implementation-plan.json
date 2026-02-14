@@ -1,100 +1,73 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Resilient 3D cafe loading: track full environment mount, non-blocking textures, degraded-mode retry, and clearer diagnostics",
+  "title": "Optimize 3D cafe scene assets and rendering for more reliable startup",
   "requirements": [
     {
-      "id": "REQ-32",
-      "summary": "Keep loading overlay visible until the full café environment (furniture + dressing) mounts; do not set sceneReady on minimal fallback render.",
+      "id": "REQ-42",
+      "summary": "Swap the 3D scene contour texture to a smaller generated file and update scene references to the new filename.",
       "acceptanceCriteria": [
-        "When the app first loads, the loading overlay remains visible until the full cafe environment content (e.g., counter/tables/scene dressing) is present, not just the basic fallback floor/walls.",
-        "If the full cafe environment never mounts, the app does not permanently hide the loading overlay without showing a user-visible status/error state (see REQ-34).",
-        "No changes are made to immutable paths listed in SYSTEM_CONTEXT."
+        "The project includes a smaller contour texture file in `frontend/public/assets/generated/` and the 3D scene loads it instead of the 2048x2048 version.",
+        "No runtime errors occur due to missing texture assets; if the texture fails to load, the scene still renders with the existing safe material fallback behavior (texture undefined).",
+        "The frontend build completes successfully with the updated asset path(s)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Change readiness tracking so `sceneReady` is set only when the full café environment reports a successful mount (new callback from `CafeScene`). Ensure the loading overlay remains visible until that signal, and ensure readiness is cleared on retry/remount. Also move watchdog cancellation to the full-environment-mounted signal (not the first rendered frame)."
-        },
-        {
-          "path": "frontend/src/scene/CafeScene.tsx",
-          "operation": "modify",
-          "description": "Add explicit signals to distinguish (1) minimal fallback room rendered vs (2) full café environment mounted. Keep the fallback room always rendering immediately, but do not treat first frame as full readiness; instead, accept an `onFullEnvironmentMounted` callback and invoke it when the `Physics + Suspense` environment subtree finishes mounting."
+          "path": "frontend/public/assets/generated/contour-texture-warm.dim_1024x1024.png",
+          "operation": "create",
+          "description": "Add the downscaled contour texture asset so the 3D scene can load `frontend/public/assets/generated/contour-texture-warm.dim_1024x1024.png` instead of the 2048x2048 version."
         },
         {
           "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
           "operation": "modify",
-          "description": "Add an optional `onMounted` (or similarly named) callback prop and invoke it via a one-time React effect after the full environment mounts, so the app shell can set `sceneReady` only when furniture + dressing are actually present."
-        }
-      ]
-    },
-    {
-      "id": "REQ-33",
-      "summary": "Make CafeSceneDressing non-blocking by removing Suspense-based `useTexture` and using the existing non-blocking texture loader hook.",
-      "acceptanceCriteria": [
-        "The cafe scene dressing props (espresso machine, grinder, pastry case, lights, etc.) still render even if `/assets/generated/contour-texture-warm.dim_2048x2048.png` is slow to load or fails to load.",
-        "A failed texture load is logged via existing scene diagnostics (stage `texture-load`) and does not crash the scene.",
-        "No React Suspense stall occurs solely due to the dressing texture."
-      ],
-      "file_operations": [
+          "description": "Update the contour texture load path to use `/assets/generated/contour-texture-warm.dim_1024x1024.png` and ensure existing safe fallback behavior remains unchanged if the texture fails to load."
+        },
         {
           "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
           "operation": "modify",
-          "description": "Remove `useTexture` (Suspense-driven) usage for `/assets/generated/contour-texture-warm.dim_2048x2048.png` and replace with `useNonBlockingTexture('/assets/generated/contour-texture-warm.dim_2048x2048.png')` so dressing renders regardless of texture load outcome. Ensure materials handle `undefined` texture safely (render with base colors if texture is missing)."
+          "description": "Update the contour texture load path to use `/assets/generated/contour-texture-warm.dim_1024x1024.png` and ensure existing safe fallback behavior remains unchanged if the texture fails to load."
         }
       ]
     },
     {
-      "id": "REQ-34",
-      "summary": "Add a user-visible degraded-mode state when the full café environment does not appear within the startup timeout, with a Retry action that remounts the scene.",
+      "id": "REQ-43",
+      "summary": "Lower geometric segment counts for high-segment primitives in the cafe environment, dressing, and furniture while preserving overall shape and layout.",
       "acceptanceCriteria": [
-        "If the app renders only the fallback room and the full cafe environment does not become visible within the configured startup timeout window, the user sees an overlay or banner with clear English text indicating the cafe details did not load.",
-        "The degraded-mode UI includes a Retry action that remounts the scene (reuses the existing retry/remount mechanism in `frontend/src/App.tsx`).",
-        "Retrying clears the degraded-mode UI and attempts to load the full cafe environment again.",
-        "This degraded-mode state does not block interaction when the full environment eventually loads successfully; once loaded, the degraded-mode UI disappears automatically."
+        "Segment counts are reduced across the environment/furniture/dressing components (visible in code changes) without breaking the scene layout or interactivity.",
+        "The scene renders successfully and the environment still looks like a café (no missing meshes, no obviously broken geometry).",
+        "The scene reaches the “full-environment-mount” success path under normal conditions (i.e., does not consistently fall into degraded mode due to timeouts)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
+          "operation": "modify",
+          "description": "Reduce segment counts on high-segment primitives (e.g., cylinderGeometry/coneGeometry) used in the environment while keeping positions, scales, and layout intact."
+        },
+        {
+          "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
+          "operation": "modify",
+          "description": "Reduce segment counts on high-segment primitives (e.g., cylinderGeometry/torusGeometry/sphereGeometry/coneGeometry) used in scene dressing props while keeping the prop placement and silhouette consistent."
+        },
+        {
+          "path": "frontend/src/scene/environment/CafeFurniture.tsx",
+          "operation": "modify",
+          "description": "Reduce segment counts on furniture primitives (e.g., table cylinders, stool torus/cylinders, chair legs) while preserving furniture shapes and scene layout."
+        }
+      ]
+    },
+    {
+      "id": "REQ-44",
+      "summary": "Adjust React Three Fiber Canvas configuration to reduce rendering workload by capping DPR and disabling expensive rendering features not required for functionality.",
+      "acceptanceCriteria": [
+        "The `Canvas` in `frontend/src/App.tsx` is configured with a capped DPR (e.g., a lower max DPR than the browser default).",
+        "The 3D scene remains functional (navigation, panel props, interactions still work), and user-facing overlays continue to display English text as they do now.",
+        "On typical modern browsers, the scene is less likely to hit the startup watchdog timeout compared to before these changes."
       ],
       "file_operations": [
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Implement a degraded-mode UI state that triggers when the startup watchdog expires without receiving the full-environment-mounted signal. Show the degraded-mode overlay/banner with clear English copy indicating only a basic room could be loaded, plus a Retry button that calls the existing retry/remount mechanism (sceneKey increment). Ensure degraded-mode clears automatically if the full environment mounts later, and clears immediately on retry."
-        },
-        {
-          "path": "frontend/src/scene/ui/SceneDegradedOverlay.tsx",
-          "operation": "create",
-          "description": "Create a lightweight degraded-mode overlay/banner component with clear English text and a Retry action. Reuse existing UI primitives (e.g., the existing shadcn Button in the project) and optionally the existing `ContourFrame` styling container for visual consistency."
-        },
-        {
-          "path": "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
-          "operation": "modify",
-          "description": "Update loading overlay behavior (if needed) to support the new state machine: loading shown until full environment mounts, but replaced/hidden when degraded-mode activates so the user sees a clear status + retry action instead of an indefinite spinner."
-        }
-      ]
-    },
-    {
-      "id": "REQ-35",
-      "summary": "Improve scene diagnostics to distinguish fallback room rendered vs full environment mounted, and log when full mount does not occur.",
-      "acceptanceCriteria": [
-        "Console diagnostics include an explicit success log when the full cafe environment mounts (separate from the first frame render).",
-        "If the full cafe environment fails to mount, diagnostics include a clear stage + message indicating the full environment did not mount (without requiring a thrown exception).",
-        "Existing error overlay ‘Technical Details’ remains compatible and displays the latest relevant stage/message when applicable."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/scene/utils/sceneDiagnostics.ts",
-          "operation": "modify",
-          "description": "Extend diagnostic stage typing/labels to support clear reporting for: (a) fallback room rendered, (b) full café environment mounted, and (c) full environment mount timeout/failure. Keep `formatDiagnosticStage` compatible so overlays can show readable stage names."
-        },
-        {
-          "path": "frontend/src/scene/CafeScene.tsx",
-          "operation": "modify",
-          "description": "Emit explicit diagnostics distinguishing fallback vs full environment: log a success event when the fallback room has rendered (first frame), and a separate success event when the full café environment subtree mounts (via the new mount callback from `CafeEnvironment`)."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "When the full environment mount does not occur within the startup timeout, record a diagnostic failure event with a clear stage/message (separate from generic startup timeout). Ensure the latest relevant stage/message is stored in `diagnostics` so existing overlays’ ‘Technical Details’ remain compatible when shown."
+          "description": "Update the React Three Fiber `Canvas` to use a capped DPR (e.g., `dpr={[1, 1.5]}`) and apply more conservative WebGL settings (e.g., disable antialiasing and other non-essential features) to reduce GPU/rendering cost without changing UI overlays or interaction behavior."
         }
       ]
     }

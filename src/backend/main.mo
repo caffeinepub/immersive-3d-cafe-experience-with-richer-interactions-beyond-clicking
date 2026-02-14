@@ -1,6 +1,7 @@
 import Text "mo:core/Text";
-import List "mo:core/List";
+import VarArray "mo:core/VarArray";
 import Runtime "mo:core/Runtime";
+
 
 
 
@@ -11,10 +12,10 @@ actor {
     message : Text;
   };
 
-  let contactMessages = List.empty<ContactMessage>();
+  var contactMessages : [var ContactMessage] = [var];
 
   public shared ({ caller }) func submitContactMessage(name : Text, email : Text, message : Text) : async () {
-    if (name.size() <= 0) {
+    if (name.size() == 0) {
       Runtime.trap("Name cannot be empty");
     };
 
@@ -24,7 +25,8 @@ actor {
       message;
     };
 
-    contactMessages.add(contactMessage);
+    let newContactMessages = VarArray.tabulate<ContactMessage>(contactMessages.size() + 1, func(i) { if (i == contactMessages.size()) { contactMessage } else { contactMessages[i] } });
+    contactMessages := newContactMessages;
   };
 
   public query ({ caller }) func getContactMessages() : async [ContactMessage] {

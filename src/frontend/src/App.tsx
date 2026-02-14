@@ -118,11 +118,19 @@ export default function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <div className="relative h-screen w-screen overflow-hidden bg-background">
-        {/* 3D Canvas */}
+        {/* 3D Canvas - optimized with capped DPR and conservative settings */}
         <Canvas
           key={sceneKey}
           camera={{ position: [0, 1.6, 5], fov: 60 }}
           className="absolute inset-0"
+          dpr={[1, 1.5]}
+          gl={{
+            antialias: false,
+            powerPreference: 'high-performance',
+            alpha: false,
+            stencil: false,
+            depth: true,
+          }}
         >
           <SceneErrorBoundary onError={handleSceneError} onReset={handleRetry}>
             <CafeScene 

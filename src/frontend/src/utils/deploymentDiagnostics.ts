@@ -3,10 +3,13 @@
  * across actor initialization, React Query calls, and build-time failures.
  */
 
+export type DeploymentStep = 'backend-deploy' | 'frontend-build' | 'runtime';
+
 export interface DiagnosticContext {
   module: string;
   operation: string;
   error: unknown;
+  step?: DeploymentStep;
   additionalInfo?: Record<string, unknown>;
 }
 
@@ -18,28 +21,70 @@ export function logDeploymentError(context: DiagnosticContext): void {
     ? context.error.message 
     : String(context.error);
 
+  const step = context.step || 'runtime';
+  const stepLabel = formatStepLabel(step);
+
   console.error(
-    `[${context.module}] ${context.operation} failed:`,
-    errorMessage
+    `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`
   );
+  console.error(`❌ DEPLOYMENT ERROR - ${stepLabel}`);
+  console.error(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+  console.error(`Module: ${context.module}`);
+  console.error(`Operation: ${context.operation}`);
+  console.error(`Step: ${stepLabel}`);
+  console.error(`Error: ${errorMessage}`);
 
   if (context.additionalInfo) {
-    console.error('Additional context:', context.additionalInfo);
+    console.error(`\nAdditional context:`, context.additionalInfo);
   }
 
   // Provide remediation hints based on error patterns
-  const hints = getRemediationHints(errorMessage, context.module);
+  const hints = getRemediationHints(errorMessage, context.module, step);
   if (hints.length > 0) {
-    console.error('💡 Remediation hints:');
+    console.error(`\n💡 Remediation hints:`);
     hints.forEach(hint => console.error(`  - ${hint}`));
+  }
+
+  console.error(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
+}
+
+/**
+ * Format deployment step label for display
+ */
+function formatStepLabel(step: DeploymentStep): string {
+  switch (step) {
+    case 'backend-deploy':
+      return 'Backend Deploy';
+    case 'frontend-build':
+      return 'Frontend Build';
+    case 'runtime':
+      return 'Runtime';
+    default:
+      return 'Unknown';
   }
 }
 
 /**
  * Get actionable remediation hints based on error patterns
  */
-function getRemediationHints(errorMessage: string, module: string): string[] {
+function getRemediationHints(errorMessage: string, module: string, step: DeploymentStep): string[] {
   const hints: string[] = [];
+
+  // Backend deploy failures
+  if (step === 'backend-deploy') {
+    hints.push('Check Motoko compilation: dfx build backend');
+    hints.push('Verify canister status: dfx canister status backend');
+    hints.push('Review backend/main.mo for syntax errors');
+    hints.push('Check stable variable migrations if upgrading');
+  }
+
+  // Frontend build failures
+  if (step === 'frontend-build') {
+    hints.push('Regenerate backend types: dfx generate backend');
+    hints.push('Check TypeScript compilation: npm run typescript-check');
+    hints.push('Verify all imports resolve correctly');
+    hints.push('Review frontend/src/backend.d.ts for type mismatches');
+  }
 
   // Actor initialization failures
   if (module === 'useActor' || errorMessage.includes('actor')) {
