@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 19,
+  "projectStateVersion": 21,
   "summary": "Interactive 3D cafe website with contour-line topographic theme, now including clickable furniture items and a more realistic/scan-like 3D cafe environment (beyond simple clicking), plus menu/about/contact pages and a downloadable package for WordPress Elementor use.",
   "architectural_notes": [
     "Clickable/interactable furniture objects should have distinct visual states (default/hover/active) consistent with contour-line theme.",
@@ -11,7 +11,8 @@
   "known_issues": [
     "Deployment/build process failed during deployment (\"Something went wrong with the deployment\").",
     "App renders as a brown screen with only the header visible (3D scene/content not loading or not displayed).",
-    "3D room/scene is gone (3D cafe environment no longer visible after latest deploy)."
+    "3D room/scene is gone (3D cafe environment no longer visible after latest deploy).",
+    "After latest deployment, scene shows only a blank room (missing expected cafe content/assets)."
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -244,6 +245,38 @@
       "title": "Improve scene failure diagnostics so it is easier to determine why the 3D room disappeared after deploy: log and categorize failures for environment loading, asset/texture loading, and scene render, and include a concise ‘details’ section in the error overlay that shows the latest stage + message.",
       "reqIds": [
         "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-prevent-the-app-from-marking-the-scene-as-ready-when-only-the-minimal-fallback-room-has-rendered-keep-the-loading-overlay-visible-until-the-full-caf-environment-furniture-dressing-has-mounted-successfully-and-only-then-set-sceneready-in-frontend-src-app-tsx",
+      "title": "Prevent the app from marking the scene as “ready” when only the minimal fallback room has rendered; keep the loading overlay visible until the full café environment (furniture + dressing) has mounted successfully, and only then set `sceneReady` in `frontend/src/App.tsx`.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-frontend-src-scene-environment-cafescenedressing-tsx-non-blocking-and-non-suspending-by-removing-suspense-based-texture-loading-usetexture-for-assets-generated-contour-texture-warm-dim-2048x2048-png-and-instead-use-the-existing-non-blocking-texture-loader-hook-so-that-missing-slow-textures-cannot-prevent-the-rest-of-the-caf-props-from-rendering",
+      "title": "Make `frontend/src/scene/environment/CafeSceneDressing.tsx` non-blocking and non-suspending by removing Suspense-based texture loading (`useTexture`) for `/assets/generated/contour-texture-warm.dim_2048x2048.png`, and instead use the existing non-blocking texture loader hook so that missing/slow textures cannot prevent the rest of the café props from rendering.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-user-visible-degraded-mode-state-for-when-the-full-caf-environment-the-content-inside-the-physics-suspense-block-in-frontend-src-scene-cafescene-tsx-does-not-appear-within-the-startup-timeout-show-clear-english-text-indicating-that-only-a-basic-room-could-be-loaded-and-provide-an-in-app-action-to-retry-loading-remounting-the-scene",
+      "title": "Add a user-visible degraded-mode state for when the full café environment (the content inside the `Physics` + Suspense block in `frontend/src/scene/CafeScene.tsx`) does not appear within the startup timeout: show clear English text indicating that only a basic room could be loaded and provide an in-app action to retry loading/remounting the scene.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-scene-diagnostics-to-explicitly-distinguish-fallback-room-rendered-vs-full-caf-environment-mounted-and-record-a-diagnostic-event-when-the-full-environment-mount-does-not-occur-so-deploy-regressions-blank-room-can-be-identified-from-console-logs",
+      "title": "Improve scene diagnostics to explicitly distinguish “fallback room rendered” vs “full café environment mounted,” and record a diagnostic event when the full environment mount does not occur so deploy regressions (blank room) can be identified from console logs.",
+      "reqIds": [
+        "REQ-35"
       ],
       "version": 1
     }

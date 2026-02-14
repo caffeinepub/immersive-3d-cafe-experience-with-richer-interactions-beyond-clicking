@@ -1,7 +1,7 @@
-import { useTexture } from '@react-three/drei';
+import { useNonBlockingTexture } from '../hooks/useNonBlockingTexture';
 
 export default function CafeSceneDressing() {
-  const contourTexture = useTexture('/assets/generated/contour-texture-warm.dim_2048x2048.png');
+  const contourTexture = useNonBlockingTexture('/assets/generated/contour-texture-warm.dim_2048x2048.png');
   
   return (
     <group>
@@ -88,171 +88,137 @@ export default function CafeSceneDressing() {
           <cylinderGeometry args={[0.08, 0.07, 0.1, 16]} />
           <meshStandardMaterial color="#e8d5c4" roughness={0.6} />
         </mesh>
-        <mesh position={[0, 0.1, 0]} castShadow receiveShadow>
+        <mesh position={[0, 0.11, 0]} castShadow>
           <cylinderGeometry args={[0.08, 0.07, 0.1, 16]} />
           <meshStandardMaterial color="#e8d5c4" roughness={0.6} />
         </mesh>
-        <mesh position={[0, 0.2, 0]} castShadow receiveShadow>
+        <mesh position={[0, 0.22, 0]} castShadow>
           <cylinderGeometry args={[0.08, 0.07, 0.1, 16]} />
           <meshStandardMaterial color="#e8d5c4" roughness={0.6} />
         </mesh>
       </group>
 
-      {/* 5. Wall Menu Board behind counter */}
-      <group position={[-2.5, 2.5, -7.9]}>
-        {/* Frame */}
-        <mesh castShadow receiveShadow>
+      {/* 5. Menu Board on back wall */}
+      <group position={[-2, 2.5, -7.9]}>
+        {/* Board frame */}
+        <mesh castShadow>
           <boxGeometry args={[1.5, 1.2, 0.05]} />
-          <meshStandardMaterial color="#2a2420" roughness={0.4} metalness={0.3} />
+          <meshStandardMaterial color="#1a1612" roughness={0.4} />
         </mesh>
-        
         {/* Board surface */}
         <mesh position={[0, 0, 0.03]}>
           <planeGeometry args={[1.4, 1.1]} />
-          <meshStandardMaterial color="#1a1612" roughness={0.9} />
-        </mesh>
-        
-        {/* Menu text lines (decorative) */}
-        <mesh position={[0, 0.3, 0.04]}>
-          <boxGeometry args={[1.0, 0.05, 0.01]} />
-          <meshStandardMaterial color="#e8d5c4" roughness={0.8} />
-        </mesh>
-        <mesh position={[0, 0.15, 0.04]}>
-          <boxGeometry args={[0.9, 0.04, 0.01]} />
-          <meshStandardMaterial color="#e8d5c4" roughness={0.8} />
-        </mesh>
-        <mesh position={[0, 0, 0.04]}>
-          <boxGeometry args={[0.95, 0.04, 0.01]} />
-          <meshStandardMaterial color="#e8d5c4" roughness={0.8} />
-        </mesh>
-        <mesh position={[0, -0.15, 0.04]}>
-          <boxGeometry args={[0.85, 0.04, 0.01]} />
-          <meshStandardMaterial color="#e8d5c4" roughness={0.8} />
+          <meshStandardMaterial color="#2a2420" roughness={0.8} />
         </mesh>
       </group>
 
-      {/* 6. Pendant Light above counter */}
-      <group position={[0, 3.5, -5]}>
-        {/* Cord */}
+      {/* 6. Pendant Lights */}
+      <group position={[0, 4.2, -5]}>
         <mesh castShadow>
-          <cylinderGeometry args={[0.01, 0.01, 1, 8]} />
-          <meshStandardMaterial color="#1a1612" roughness={0.8} />
+          <cylinderGeometry args={[0.15, 0.2, 0.3, 16]} />
+          <meshStandardMaterial color="#3d3228" roughness={0.4} metalness={0.3} />
         </mesh>
-        
-        {/* Shade */}
-        <mesh position={[0, -0.6, 0]} castShadow receiveShadow>
-          <coneGeometry args={[0.25, 0.3, 16, 1, true]} />
-          <meshStandardMaterial 
-            color="#3d3228" 
-            roughness={0.6} 
-            side={2}
-          />
-        </mesh>
-        
-        {/* Bulb glow */}
-        <pointLight position={[0, -0.7, 0]} intensity={0.6} color="#ffcc99" distance={6} />
+        <pointLight position={[0, -0.2, 0]} intensity={0.6} color="#ffcc99" distance={4} />
       </group>
 
-      {/* 7. Pendant Light above left table */}
-      <group position={[-3, 3, 2]}>
+      <group position={[-3, 4, 2]}>
         <mesh castShadow>
-          <cylinderGeometry args={[0.01, 0.01, 0.8, 8]} />
-          <meshStandardMaterial color="#1a1612" roughness={0.8} />
+          <cylinderGeometry args={[0.15, 0.2, 0.3, 16]} />
+          <meshStandardMaterial color="#3d3228" roughness={0.4} metalness={0.3} />
         </mesh>
-        <mesh position={[0, -0.5, 0]} castShadow receiveShadow>
-          <coneGeometry args={[0.2, 0.25, 16, 1, true]} />
-          <meshStandardMaterial color="#3d3228" roughness={0.6} side={2} />
-        </mesh>
-        <pointLight position={[0, -0.6, 0]} intensity={0.4} color="#ffcc99" distance={4} />
+        <pointLight position={[0, -0.2, 0]} intensity={0.5} color="#ffcc99" distance={3.5} />
       </group>
 
-      {/* 8. Pendant Light above right table */}
-      <group position={[3, 3, 2]}>
+      <group position={[3, 4, 2]}>
         <mesh castShadow>
-          <cylinderGeometry args={[0.01, 0.01, 0.8, 8]} />
-          <meshStandardMaterial color="#1a1612" roughness={0.8} />
+          <cylinderGeometry args={[0.15, 0.2, 0.3, 16]} />
+          <meshStandardMaterial color="#3d3228" roughness={0.4} metalness={0.3} />
         </mesh>
-        <mesh position={[0, -0.5, 0]} castShadow receiveShadow>
-          <coneGeometry args={[0.2, 0.25, 16, 1, true]} />
-          <meshStandardMaterial color="#3d3228" roughness={0.6} side={2} />
-        </mesh>
-        <pointLight position={[0, -0.6, 0]} intensity={0.4} color="#ffcc99" distance={4} />
+        <pointLight position={[0, -0.2, 0]} intensity={0.5} color="#ffcc99" distance={3.5} />
       </group>
 
-      {/* 9. Small potted plant on left table */}
-      <group position={[-3.3, 0.78, 1.7]}>
+      {/* 7. Potted Plants */}
+      <group position={[-7, 0, -6]}>
         <mesh castShadow receiveShadow>
-          <cylinderGeometry args={[0.06, 0.05, 0.08, 12]} />
+          <cylinderGeometry args={[0.2, 0.15, 0.3, 16]} />
           <meshStandardMaterial color="#5a4a3a" roughness={0.7} />
         </mesh>
-        <mesh position={[0, 0.08, 0]} castShadow>
-          <sphereGeometry args={[0.05, 8, 8]} />
+        <mesh position={[0, 0.35, 0]} castShadow>
+          <sphereGeometry args={[0.25, 16, 16]} />
           <meshStandardMaterial color="#2d4a2b" roughness={0.8} />
         </mesh>
       </group>
 
-      {/* 10. Book/Magazine on right table */}
-      <group position={[3.2, 0.78, 2.2]} rotation={[0, 0.3, 0]}>
+      <group position={[7, 0, -6]}>
         <mesh castShadow receiveShadow>
-          <boxGeometry args={[0.15, 0.02, 0.2]} />
-          <meshStandardMaterial color="#4a3a2a" roughness={0.8} />
+          <cylinderGeometry args={[0.2, 0.15, 0.3, 16]} />
+          <meshStandardMaterial color="#5a4a3a" roughness={0.7} />
+        </mesh>
+        <mesh position={[0, 0.35, 0]} castShadow>
+          <sphereGeometry args={[0.25, 16, 16]} />
+          <meshStandardMaterial color="#2d4a2b" roughness={0.8} />
         </mesh>
       </group>
 
-      {/* 11. Coat rack near entrance */}
+      {/* 8. Magazine on left table */}
+      <mesh position={[-3.3, 0.71, 2.3]} rotation={[-Math.PI / 2, 0, 0.3]} castShadow receiveShadow>
+        <boxGeometry args={[0.2, 0.28, 0.01]} />
+        <meshStandardMaterial 
+          map={contourTexture}
+          color="#6a5a4a" 
+          roughness={0.7} 
+        />
+      </mesh>
+
+      {/* 9. Coat Rack near entrance */}
       <group position={[6, 0, 6]}>
         {/* Base */}
         <mesh castShadow receiveShadow>
-          <cylinderGeometry args={[0.3, 0.3, 0.05, 16]} />
-          <meshStandardMaterial color="#2a2420" roughness={0.8} metalness={0.2} />
-        </mesh>
-        
-        {/* Pole */}
-        <mesh position={[0, 0.9, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.03, 0.03, 1.8, 12]} />
+          <cylinderGeometry args={[0.3, 0.35, 0.1, 16]} />
           <meshStandardMaterial color="#3d3228" roughness={0.6} />
         </mesh>
-        
+        {/* Pole */}
+        <mesh position={[0, 1, 0]} castShadow>
+          <cylinderGeometry args={[0.04, 0.04, 2, 12]} />
+          <meshStandardMaterial color="#4a3f32" roughness={0.5} />
+        </mesh>
         {/* Hooks */}
-        <mesh position={[0.15, 1.5, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
-          <torusGeometry args={[0.05, 0.015, 8, 12, Math.PI]} />
-          <meshStandardMaterial color="#5a4a3a" roughness={0.5} metalness={0.4} />
+        <mesh position={[0.15, 1.8, 0]} rotation={[0, 0, Math.PI / 4]} castShadow>
+          <cylinderGeometry args={[0.02, 0.02, 0.15, 8]} />
+          <meshStandardMaterial color="#5a5a5a" roughness={0.3} metalness={0.6} />
         </mesh>
-        <mesh position={[-0.15, 1.5, 0]} rotation={[0, 0, -Math.PI / 2]} castShadow>
-          <torusGeometry args={[0.05, 0.015, 8, 12, Math.PI]} />
-          <meshStandardMaterial color="#5a4a3a" roughness={0.5} metalness={0.4} />
-        </mesh>
-      </group>
-
-      {/* 12. Trash bin near counter */}
-      <group position={[2.8, 0, -4.5]}>
-        <mesh castShadow receiveShadow>
-          <cylinderGeometry args={[0.15, 0.18, 0.4, 16]} />
-          <meshStandardMaterial color="#2a2420" roughness={0.7} />
+        <mesh position={[-0.15, 1.8, 0]} rotation={[0, 0, -Math.PI / 4]} castShadow>
+          <cylinderGeometry args={[0.02, 0.02, 0.15, 8]} />
+          <meshStandardMaterial color="#5a5a5a" roughness={0.3} metalness={0.6} />
         </mesh>
       </group>
 
-      {/* 13. Small side shelf with coffee supplies */}
-      <group position={[2.8, 1.2, -7.7]}>
+      {/* 10. Trash Bin near counter */}
+      <group position={[3.5, 0, -5.5]}>
         <mesh castShadow receiveShadow>
-          <boxGeometry args={[0.6, 0.8, 0.25]} />
-          <meshStandardMaterial color="#3d3228" roughness={0.7} />
+          <cylinderGeometry args={[0.2, 0.18, 0.5, 16]} />
+          <meshStandardMaterial color="#2a2420" roughness={0.6} />
         </mesh>
-        
-        {/* Shelf */}
-        <mesh position={[0, 0, 0.13]} castShadow>
-          <boxGeometry args={[0.55, 0.03, 0.23]} />
-          <meshStandardMaterial color="#4a3f32" roughness={0.6} />
+      </group>
+
+      {/* 11. Supply Shelf behind counter */}
+      <group position={[0, 1.2, -6.5]}>
+        <mesh castShadow receiveShadow>
+          <boxGeometry args={[1.5, 0.05, 0.4]} />
+          <meshStandardMaterial color="#3d3228" roughness={0.6} />
         </mesh>
-        
         {/* Items on shelf */}
-        <mesh position={[-0.15, 0.05, 0.13]} castShadow>
-          <cylinderGeometry args={[0.04, 0.04, 0.12, 12]} />
+        <mesh position={[-0.4, 0.1, 0]} castShadow>
+          <cylinderGeometry args={[0.06, 0.06, 0.15, 12]} />
           <meshStandardMaterial color="#5a4a3a" roughness={0.6} />
         </mesh>
-        <mesh position={[0.1, 0.05, 0.13]} castShadow>
-          <boxGeometry args={[0.08, 0.1, 0.06]} />
+        <mesh position={[0, 0.08, 0]} castShadow>
+          <boxGeometry args={[0.12, 0.12, 0.12]} />
           <meshStandardMaterial color="#6a5a4a" roughness={0.7} />
+        </mesh>
+        <mesh position={[0.4, 0.1, 0]} castShadow>
+          <cylinderGeometry args={[0.05, 0.05, 0.18, 12]} />
+          <meshStandardMaterial color="#4a3f32" roughness={0.6} />
         </mesh>
       </group>
     </group>

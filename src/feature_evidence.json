@@ -2,11 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-restore-the-visible-3d-cafe-room-by-ensuring-the-main-scene-always-renders-some-geometry-at-minimum-a-floor-and-walls-even-if-async-scene-elements-environment-preset-textures-physics-children-or-other-suspense-content-are-still-loading-or-fail",
-      "featureTitle": "Restore the visible 3D cafe room by ensuring the main scene always renders some geometry (at minimum: a floor and walls) even if async scene elements (Environment preset, textures, Physics children, or other Suspense content) are still loading or fail.",
+      "featureId": "feature-prevent-the-app-from-marking-the-scene-as-ready-when-only-the-minimal-fallback-room-has-rendered-keep-the-loading-overlay-visible-until-the-full-caf-environment-furniture-dressing-has-mounted-successfully-and-only-then-set-sceneready-in-frontend-src-app-tsx",
+      "featureTitle": "Prevent the app from marking the scene as “ready” when only the minimal fallback room has rendered; keep the loading overlay visible until the full café environment (furniture + dressing) has mounted successfully, and only then set `sceneReady` in `frontend/src/App.tsx`.",
       "files": [
+        "frontend/src/App.tsx",
         "frontend/src/scene/CafeScene.tsx",
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+        "frontend/src/scene/environment/CafeEnvironment.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -16,17 +17,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-29"
+        "REQ-32"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-timed-scene-startup-watchdog-in-the-app-shell-so-that-if-the-3d-scene-does-not-signal-first-successful-render-within-a-defined-timeout-the-app-switches-from-the-loading-overlay-to-a-user-visible-error-overlay-with-clear-english-text-and-a-retry-action-that-remounts-the-canvas-scene",
-      "featureTitle": "Add a timed “scene startup watchdog” in the app shell so that if the 3D scene does not signal first successful render within a defined timeout, the app switches from the loading overlay to a user-visible error overlay with clear English text and a Retry action that remounts the Canvas/scene.",
+      "featureId": "feature-make-frontend-src-scene-environment-cafescenedressing-tsx-non-blocking-and-non-suspending-by-removing-suspense-based-texture-loading-usetexture-for-assets-generated-contour-texture-warm-dim-2048x2048-png-and-instead-use-the-existing-non-blocking-texture-loader-hook-so-that-missing-slow-textures-cannot-prevent-the-rest-of-the-caf-props-from-rendering",
+      "featureTitle": "Make `frontend/src/scene/environment/CafeSceneDressing.tsx` non-blocking and non-suspending by removing Suspense-based texture loading (`useTexture`) for `/assets/generated/contour-texture-warm.dim_2048x2048.png`, and instead use the existing non-blocking texture loader hook so that missing/slow textures cannot prevent the rest of the café props from rendering.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/scene/hooks/useSceneStartupWatchdog.ts",
-        "frontend/src/scene/ui/SceneErrorOverlay.tsx"
+        "frontend/src/scene/environment/CafeSceneDressing.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -36,18 +35,36 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-30"
+        "REQ-33"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-improve-scene-failure-diagnostics-so-it-is-easier-to-determine-why-the-3d-room-disappeared-after-deploy-log-and-categorize-failures-for-environment-loading-asset-texture-loading-and-scene-render-and-include-a-concise-details-section-in-the-error-overlay-that-shows-the-latest-stage-message",
-      "featureTitle": "Improve scene failure diagnostics so it is easier to determine why the 3D room disappeared after deploy: log and categorize failures for environment loading, asset/texture loading, and scene render, and include a concise ‘details’ section in the error overlay that shows the latest stage + message.",
+      "featureId": "feature-add-a-user-visible-degraded-mode-state-for-when-the-full-caf-environment-the-content-inside-the-physics-suspense-block-in-frontend-src-scene-cafescene-tsx-does-not-appear-within-the-startup-timeout-show-clear-english-text-indicating-that-only-a-basic-room-could-be-loaded-and-provide-an-in-app-action-to-retry-loading-remounting-the-scene",
+      "featureTitle": "Add a user-visible degraded-mode state for when the full café environment (the content inside the `Physics` + Suspense block in `frontend/src/scene/CafeScene.tsx`) does not appear within the startup timeout: show clear English text indicating that only a basic room could be loaded and provide an in-app action to retry loading/remounting the scene.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/scene/ui/SceneDegradedOverlay.tsx",
+        "frontend/src/scene/ui/SceneLoadingOverlay.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-34"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-improve-scene-diagnostics-to-explicitly-distinguish-fallback-room-rendered-vs-full-caf-environment-mounted-and-record-a-diagnostic-event-when-the-full-environment-mount-does-not-occur-so-deploy-regressions-blank-room-can-be-identified-from-console-logs",
+      "featureTitle": "Improve scene diagnostics to explicitly distinguish “fallback room rendered” vs “full café environment mounted,” and record a diagnostic event when the full environment mount does not occur so deploy regressions (blank room) can be identified from console logs.",
       "files": [
         "frontend/src/App.tsx",
         "frontend/src/scene/CafeScene.tsx",
-        "frontend/src/scene/hooks/useNonBlockingTexture.ts",
-        "frontend/src/scene/ui/SceneErrorOverlay.tsx",
         "frontend/src/scene/utils/sceneDiagnostics.ts"
       ],
       "components": [
@@ -58,7 +75,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-31"
+        "REQ-35"
       ],
       "confidence": "high"
     }

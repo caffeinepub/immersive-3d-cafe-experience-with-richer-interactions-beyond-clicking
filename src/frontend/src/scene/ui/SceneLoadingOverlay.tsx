@@ -6,7 +6,7 @@ export default function SceneLoadingOverlay() {
       <div className="flex flex-col items-center gap-4 text-foreground">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
         <p className="text-lg font-medium">Loading café scene...</p>
-        <p className="text-sm text-muted-foreground">Preparing your virtual experience</p>
+        <p className="text-sm text-muted-foreground">Preparing furniture and decorations</p>
       </div>
     </div>
   );

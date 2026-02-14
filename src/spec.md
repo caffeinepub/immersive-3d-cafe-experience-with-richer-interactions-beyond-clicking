@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Restore reliable visibility of the 3D cafe room after the latest deploy so the scene never appears blank, and provide clear recovery/error feedback when scene startup fails.
+**Goal:** Fix the “blank room” startup regression by making full café environment loading resilient, correctly tracked, and user-visible when it fails.
 
 **Planned changes:**
-- Ensure the Canvas scene always renders visible fallback geometry (at minimum floor and walls) independent of async/Suspense-loaded elements (e.g., Environment preset, textures, physics children), with basic lighting if Environment fails.
-- Add a timed scene startup watchdog that switches from loading overlay to an error overlay if first successful render is not signaled within a timeout, including a “Retry Loading Scene” action that remounts the Canvas/scene.
-- Improve failure diagnostics by logging categorized scene startup/load/render stages and showing a concise details section in the error overlay with the latest stage + message, refreshed on each retry.
+- Update scene readiness tracking so `sceneReady` in `frontend/src/App.tsx` is set only after the full café environment (furniture + scene dressing) has mounted successfully, not when the minimal fallback room renders.
+- Make `frontend/src/scene/environment/CafeSceneDressing.tsx` non-blocking by removing Suspense-based `useTexture` loading for `/assets/generated/contour-texture-warm.dim_2048x2048.png` and switching to the existing non-blocking texture loader hook with diagnostic logging on failure.
+- Add a degraded-mode UI state when the full café environment (inside the `Physics` + Suspense block in `frontend/src/scene/CafeScene.tsx`) does not appear within the startup timeout, including clear English text and a Retry action that remounts the scene using the existing mechanism in `frontend/src/App.tsx`.
+- Improve scene diagnostics to explicitly distinguish “fallback room rendered” vs “full café environment mounted,” and log a clear event when the full environment mount does not occur (keeping compatibility with the existing error overlay technical details).
 
-**User-visible outcome:** On fresh load, the user always sees at least a basic 3D room behind the UI (never a blank scene). If the scene doesn’t finish loading, they see an error overlay with clear details and a Retry action that attempts to reload the 3D scene.
+**User-visible outcome:** On startup, the loading overlay stays up until the full café loads; if only the basic room appears for too long, the user sees an English message explaining the degraded mode plus a Retry button, and the message disappears automatically once the full café loads.

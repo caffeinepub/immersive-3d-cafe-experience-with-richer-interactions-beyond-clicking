@@ -1,88 +1,100 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix regression: ensure 3D cafe room always visible with watchdog + diagnostics",
+  "title": "Resilient 3D cafe loading: track full environment mount, non-blocking textures, degraded-mode retry, and clearer diagnostics",
   "requirements": [
     {
-      "id": "REQ-29",
-      "summary": "Ensure the 3D cafe scene always renders a visible fallback room (floor + walls) even if async scene elements suspend, fail, or throw.",
+      "id": "REQ-32",
+      "summary": "Keep loading overlay visible until the full café environment (furniture + dressing) mounts; do not set sceneReady on minimal fallback render.",
       "acceptanceCriteria": [
-        "On a fresh load, the user never sees an empty/blank view where the 3D room should be; at minimum a basic floor/walls render behind the UI while remaining assets load.",
-        "If the Drei Environment preset fails to load, the scene still renders with basic lights and visible geometry (no blank 3D view).",
-        "If any async scene element throws/blocks, the app still shows a visible fallback 3D room rather than only the header/UI over a flat background."
+        "When the app first loads, the loading overlay remains visible until the full cafe environment content (e.g., counter/tables/scene dressing) is present, not just the basic fallback floor/walls.",
+        "If the full cafe environment never mounts, the app does not permanently hide the loading overlay without showing a user-visible status/error state (see REQ-34).",
+        "No changes are made to immutable paths listed in SYSTEM_CONTEXT."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
-          "operation": "create",
-          "description": "Create a minimal always-available fallback room (floor + 3 walls) using simple R3F meshes/materials (no Physics, no Suspense dependencies) so some geometry is always visible."
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Change readiness tracking so `sceneReady` is set only when the full café environment reports a successful mount (new callback from `CafeScene`). Ensure the loading overlay remains visible until that signal, and ensure readiness is cleared on retry/remount. Also move watchdog cancellation to the full-environment-mounted signal (not the first rendered frame)."
         },
         {
           "path": "frontend/src/scene/CafeScene.tsx",
           "operation": "modify",
-          "description": "Render the new BasicCafeRoomFallback outside any Suspense/Physics blocks so it appears immediately and remains visible even if Environment/Physics children suspend or error; keep basic lights active regardless of Environment availability."
+          "description": "Add explicit signals to distinguish (1) minimal fallback room rendered vs (2) full café environment mounted. Keep the fallback room always rendering immediately, but do not treat first frame as full readiness; instead, accept an `onFullEnvironmentMounted` callback and invoke it when the `Physics + Suspense` environment subtree finishes mounting."
+        },
+        {
+          "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
+          "operation": "modify",
+          "description": "Add an optional `onMounted` (or similarly named) callback prop and invoke it via a one-time React effect after the full environment mounts, so the app shell can set `sceneReady` only when furniture + dressing are actually present."
         }
       ]
     },
     {
-      "id": "REQ-30",
-      "summary": "Add a timed scene startup watchdog that swaps the loading overlay for an error overlay if first render does not occur in time, with Retry remounting the Canvas/scene.",
+      "id": "REQ-33",
+      "summary": "Make CafeSceneDressing non-blocking by removing Suspense-based `useTexture` and using the existing non-blocking texture loader hook.",
       "acceptanceCriteria": [
-        "If `onFirstRender` is not called within the timeout, the loading overlay is replaced by an error overlay explaining the scene did not finish loading and offering “Retry Loading Scene”.",
-        "Clicking Retry clears the error, remounts the Canvas (new key), and re-attempts loading the scene.",
-        "If the scene later renders successfully, the loading/error overlays are removed and the 3D room is visible."
+        "The cafe scene dressing props (espresso machine, grinder, pastry case, lights, etc.) still render even if `/assets/generated/contour-texture-warm.dim_2048x2048.png` is slow to load or fails to load.",
+        "A failed texture load is logged via existing scene diagnostics (stage `texture-load`) and does not crash the scene.",
+        "No React Suspense stall occurs solely due to the dressing texture."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/scene/hooks/useSceneStartupWatchdog.ts",
-          "operation": "create",
-          "description": "Add a small hook that starts a timeout per scene mount attempt and triggers a provided callback if onFirstRender hasn’t occurred before the timeout; supports resetting per retry/remount."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
           "operation": "modify",
-          "description": "Integrate the startup watchdog into the app shell: on each sceneKey change start the timer; if it fires, replace the loading overlay with the error overlay and enable a Retry action that increments the Canvas key to remount."
-        },
-        {
-          "path": "frontend/src/scene/ui/SceneErrorOverlay.tsx",
-          "operation": "modify",
-          "description": "Ensure the overlay messaging clearly indicates the scene did not finish loading within the timeout and keeps the existing “Retry Loading Scene” action (compose using existing shadcn-ui Button; verify the component's usage instructions before implementing)."
+          "description": "Remove `useTexture` (Suspense-driven) usage for `/assets/generated/contour-texture-warm.dim_2048x2048.png` and replace with `useNonBlockingTexture('/assets/generated/contour-texture-warm.dim_2048x2048.png')` so dressing renders regardless of texture load outcome. Ensure materials handle `undefined` texture safely (render with base colors if texture is missing)."
         }
       ]
     },
     {
-      "id": "REQ-31",
-      "summary": "Improve scene failure diagnostics by categorizing failures by stage and showing latest stage+message in the error overlay details area, updating across retries.",
+      "id": "REQ-34",
+      "summary": "Add a user-visible degraded-mode state when the full café environment does not appear within the startup timeout, with a Retry action that remounts the scene.",
       "acceptanceCriteria": [
-        "When a scene failure occurs, console logs include a clearly labeled stage (e.g., webgl-init, environment-load, texture-load, asset-load, scene-render) and the error message/stack when available.",
-        "The error overlay includes a readable details area showing the most recent failure stage and message (in English).",
-        "The displayed diagnostic details update after a Retry attempt (i.e., old error details do not persist if the new attempt fails differently)."
+        "If the app renders only the fallback room and the full cafe environment does not become visible within the configured startup timeout window, the user sees an overlay or banner with clear English text indicating the cafe details did not load.",
+        "The degraded-mode UI includes a Retry action that remounts the scene (reuses the existing retry/remount mechanism in `frontend/src/App.tsx`).",
+        "Retrying clears the degraded-mode UI and attempts to load the full cafe environment again.",
+        "This degraded-mode state does not block interaction when the full environment eventually loads successfully; once loaded, the degraded-mode UI disappears automatically."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Implement a degraded-mode UI state that triggers when the startup watchdog expires without receiving the full-environment-mounted signal. Show the degraded-mode overlay/banner with clear English copy indicating only a basic room could be loaded, plus a Retry button that calls the existing retry/remount mechanism (sceneKey increment). Ensure degraded-mode clears automatically if the full environment mounts later, and clears immediately on retry."
+        },
+        {
+          "path": "frontend/src/scene/ui/SceneDegradedOverlay.tsx",
+          "operation": "create",
+          "description": "Create a lightweight degraded-mode overlay/banner component with clear English text and a Retry action. Reuse existing UI primitives (e.g., the existing shadcn Button in the project) and optionally the existing `ContourFrame` styling container for visual consistency."
+        },
+        {
+          "path": "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
+          "operation": "modify",
+          "description": "Update loading overlay behavior (if needed) to support the new state machine: loading shown until full environment mounts, but replaced/hidden when degraded-mode activates so the user sees a clear status + retry action instead of an indefinite spinner."
+        }
+      ]
+    },
+    {
+      "id": "REQ-35",
+      "summary": "Improve scene diagnostics to distinguish fallback room rendered vs full environment mounted, and log when full mount does not occur.",
+      "acceptanceCriteria": [
+        "Console diagnostics include an explicit success log when the full cafe environment mounts (separate from the first frame render).",
+        "If the full cafe environment fails to mount, diagnostics include a clear stage + message indicating the full environment did not mount (without requiring a thrown exception).",
+        "Existing error overlay ‘Technical Details’ remains compatible and displays the latest relevant stage/message when applicable."
       ],
       "file_operations": [
         {
           "path": "frontend/src/scene/utils/sceneDiagnostics.ts",
           "operation": "modify",
-          "description": "Export the failure stage type and extend logging utilities to support consistent stage labeling (including startup/watchdog-related failures) and standardized message formatting for environment/texture/asset/render stages."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Track and reset the latest diagnostic stage+message per scene attempt; wire this into SceneErrorOverlay as a ‘details’ section source, and clear/update it on Retry and on subsequent failures/success."
+          "description": "Extend diagnostic stage typing/labels to support clear reporting for: (a) fallback room rendered, (b) full café environment mounted, and (c) full environment mount timeout/failure. Keep `formatDiagnosticStage` compatible so overlays can show readable stage names."
         },
         {
           "path": "frontend/src/scene/CafeScene.tsx",
           "operation": "modify",
-          "description": "Add stage-specific failure reporting hooks for environment loading and scene render errors so failures are categorized (environment-load, scene-render, asset-load where applicable) and forwarded to the app shell diagnostics state."
+          "description": "Emit explicit diagnostics distinguishing fallback vs full environment: log a success event when the fallback room has rendered (first frame), and a separate success event when the full café environment subtree mounts (via the new mount callback from `CafeEnvironment`)."
         },
         {
-          "path": "frontend/src/scene/hooks/useNonBlockingTexture.ts",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Augment texture-load failure/success logging to optionally report the latest stage+message to the app shell diagnostics state (while preserving current non-blocking behavior and fallbacks)."
-        },
-        {
-          "path": "frontend/src/scene/ui/SceneErrorOverlay.tsx",
-          "operation": "modify",
-          "description": "Add a concise, readable ‘details’ area that displays the most recent diagnostic stage + message, and ensure it reflects the latest attempt after Retry (compose using existing shadcn-ui primitives such as Button; verify the component's usage instructions before implementing)."
+          "description": "When the full environment mount does not occur within the startup timeout, record a diagnostic failure event with a clear stage/message (separate from generic startup timeout). Ensure the latest relevant stage/message is stored in `diagnostics` so existing overlays’ ‘Technical Details’ remain compatible when shown."
         }
       ]
     }

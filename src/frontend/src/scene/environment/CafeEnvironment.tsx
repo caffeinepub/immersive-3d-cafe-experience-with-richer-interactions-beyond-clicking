@@ -1,13 +1,30 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Mesh } from 'three';
 import { usePlane } from '@react-three/cannon';
 import { Counter, CafeTable, WoodenChair, BarStool } from './CafeFurniture';
 import CafeSceneDressing from './CafeSceneDressing';
 import { useNonBlockingTexture } from '../hooks/useNonBlockingTexture';
+import { logSceneSuccess } from '../utils/sceneDiagnostics';
 
-export default function CafeEnvironment() {
+interface CafeEnvironmentProps {
+  onMounted?: () => void;
+}
+
+export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
   const contourTexture = useNonBlockingTexture('/assets/generated/contour-texture-warm.dim_2048x2048.png');
+  const hasMounted = useRef(false);
   
+  // Signal when full environment has mounted
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      logSceneSuccess('full-environment-mount', 'Full café environment mounted successfully');
+      if (onMounted) {
+        onMounted();
+      }
+    }
+  }, [onMounted]);
+
   // Floor
   const [floorRef] = usePlane<Mesh>(() => ({
     rotation: [-Math.PI / 2, 0, 0],

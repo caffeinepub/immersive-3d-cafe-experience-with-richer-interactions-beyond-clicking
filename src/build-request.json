@@ -1,70 +1,89 @@
 {
   "kind": "build_request",
-  "title": "Fix regression: 3D cafe room no longer visible after latest deploy",
+  "title": "Fix blank 3D cafe by making full environment load resilient and correctly tracked",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-29",
-      "text": "Restore the visible 3D cafe room by ensuring the main scene always renders some geometry (at minimum: a floor and walls) even if async scene elements (Environment preset, textures, Physics children, or other Suspense content) are still loading or fail.",
+      "id": "REQ-32",
+      "text": "Prevent the app from marking the scene as “ready” when only the minimal fallback room has rendered; keep the loading overlay visible until the full café environment (furniture + dressing) has mounted successfully, and only then set `sceneReady` in `frontend/src/App.tsx`.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages"
+          "msg-6"
         ],
         "quotes": [
-          "3d room is gone"
+          "now it is just blank room"
         ]
       },
       "acceptanceCriteria": [
-        "On a fresh load, the user never sees an empty/blank view where the 3D room should be; at minimum a basic floor/walls render behind the UI while remaining assets load.",
-        "If the Drei Environment preset fails to load, the scene still renders with basic lights and visible geometry (no blank 3D view).",
-        "If any async scene element throws/blocks, the app still shows a visible fallback 3D room rather than only the header/UI over a flat background."
+        "When the app first loads, the loading overlay remains visible until the full cafe environment content (e.g., counter/tables/scene dressing) is present, not just the basic fallback floor/walls.",
+        "If the full cafe environment never mounts, the app does not permanently hide the loading overlay without showing a user-visible status/error state (see REQ-34).",
+        "No changes are made to immutable paths listed in SYSTEM_CONTEXT."
       ]
     },
     {
-      "id": "REQ-30",
-      "text": "Add a timed “scene startup watchdog” in the app shell so that if the 3D scene does not signal first successful render within a defined timeout, the app switches from the loading overlay to a user-visible error overlay with clear English text and a Retry action that remounts the Canvas/scene.",
+      "id": "REQ-33",
+      "text": "Make `frontend/src/scene/environment/CafeSceneDressing.tsx` non-blocking and non-suspending by removing Suspense-based texture loading (`useTexture`) for `/assets/generated/contour-texture-warm.dim_2048x2048.png`, and instead use the existing non-blocking texture loader hook so that missing/slow textures cannot prevent the rest of the café props from rendering.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages"
+          "msg-6"
         ],
         "quotes": [
-          "3d room is gone"
+          "now it is just blank room"
         ]
       },
       "acceptanceCriteria": [
-        "If `onFirstRender` is not called within the timeout, the loading overlay is replaced by an error overlay explaining the scene did not finish loading and offering “Retry Loading Scene”.",
-        "Clicking Retry clears the error, remounts the Canvas (new key), and re-attempts loading the scene.",
-        "If the scene later renders successfully, the loading/error overlays are removed and the 3D room is visible."
+        "The cafe scene dressing props (espresso machine, grinder, pastry case, lights, etc.) still render even if `/assets/generated/contour-texture-warm.dim_2048x2048.png` is slow to load or fails to load.",
+        "A failed texture load is logged via existing scene diagnostics (stage `texture-load`) and does not crash the scene.",
+        "No React Suspense stall occurs solely due to the dressing texture."
       ]
     },
     {
-      "id": "REQ-31",
-      "text": "Improve scene failure diagnostics so it is easier to determine why the 3D room disappeared after deploy: log and categorize failures for environment loading, asset/texture loading, and scene render, and include a concise ‘details’ section in the error overlay that shows the latest stage + message.",
+      "id": "REQ-34",
+      "text": "Add a user-visible degraded-mode state for when the full café environment (the content inside the `Physics` + Suspense block in `frontend/src/scene/CafeScene.tsx`) does not appear within the startup timeout: show clear English text indicating that only a basic room could be loaded and provide an in-app action to retry loading/remounting the scene.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages"
+          "msg-6"
         ],
         "quotes": [
-          "3d room is gone"
+          "now it is just blank room"
         ]
       },
       "acceptanceCriteria": [
-        "When a scene failure occurs, console logs include a clearly labeled stage (e.g., webgl-init, environment-load, texture-load, asset-load, scene-render) and the error message/stack when available.",
-        "The error overlay includes a readable details area showing the most recent failure stage and message (in English).",
-        "The displayed diagnostic details update after a Retry attempt (i.e., old error details do not persist if the new attempt fails differently)."
+        "If the app renders only the fallback room and the full cafe environment does not become visible within the configured startup timeout window, the user sees an overlay or banner with clear English text indicating the cafe details did not load.",
+        "The degraded-mode UI includes a Retry action that remounts the scene (reuses the existing retry/remount mechanism in `frontend/src/App.tsx`).",
+        "Retrying clears the degraded-mode UI and attempts to load the full cafe environment again.",
+        "This degraded-mode state does not block interaction when the full environment eventually loads successfully; once loaded, the degraded-mode UI disappears automatically."
+      ]
+    },
+    {
+      "id": "REQ-35",
+      "text": "Improve scene diagnostics to explicitly distinguish “fallback room rendered” vs “full café environment mounted,” and record a diagnostic event when the full environment mount does not occur so deploy regressions (blank room) can be identified from console logs.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "now it is just blank room"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Console diagnostics include an explicit success log when the full cafe environment mounts (separate from the first frame render).",
+        "If the full cafe environment fails to mount, diagnostics include a clear stage + message indicating the full environment did not mount (without requiring a thrown exception).",
+        "Existing error overlay ‘Technical Details’ remains compatible and displays the latest relevant stage/message when applicable."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or anything in frontend/src/components/ui (compose instead).",
-    "Keep all backend logic in the existing single Motoko actor (backend changes are not required for this fix unless a direct cause is discovered)."
+    "Frontend immutable paths listed in SYSTEM_CONTEXT must not be edited; compose existing UI components instead.",
+    "All user-facing text introduced/changed by this request must be in English."
   ],
   "nonGoals": [
-    "Adding new 3D interactions, new panels/pages, or changing the cafe layout/design beyond what is necessary to make the 3D room reliably visible again.",
-    "Introducing any new backend storage/schema changes."
+    "Adding new 3D gameplay mechanics or new UI panels beyond a degraded-mode message and retry flow.",
+    "Backend/canister changes (this issue is treated as a frontend scene loading/resiliency problem unless a separate backend error is identified)."
   ],
   "imageRequirements": {
     "required": [],

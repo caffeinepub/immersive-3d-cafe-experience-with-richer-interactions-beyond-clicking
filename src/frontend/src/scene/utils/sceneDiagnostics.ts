@@ -4,7 +4,10 @@ export type FailureStage =
   | 'environment-load' 
   | 'scene-render'
   | 'asset-load'
-  | 'startup-timeout';
+  | 'startup-timeout'
+  | 'full-environment-timeout'
+  | 'fallback-render'
+  | 'full-environment-mount';
 
 export interface DiagnosticInfo {
   stage: FailureStage;
@@ -51,6 +54,9 @@ export function logSceneFailure(
     case 'startup-timeout':
       console.error('Scene startup timeout. First render did not occur within expected time.');
       break;
+    case 'full-environment-timeout':
+      console.error('Full environment mount timeout. Only fallback room rendered within expected time.');
+      break;
   }
 
   return { stage, message, timestamp };
@@ -73,6 +79,9 @@ export function formatDiagnosticStage(stage: FailureStage): string {
     'scene-render': 'Scene Rendering',
     'asset-load': 'Asset Loading',
     'startup-timeout': 'Scene Startup Timeout',
+    'full-environment-timeout': 'Full Environment Mount Timeout',
+    'fallback-render': 'Fallback Room Render',
+    'full-environment-mount': 'Full Environment Mount',
   };
   return stageLabels[stage] || stage;
 }

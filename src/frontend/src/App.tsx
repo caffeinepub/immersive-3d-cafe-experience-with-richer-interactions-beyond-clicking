@@ -12,6 +12,7 @@ import ContactPanel from './pages/ContactPanel';
 import ExportPanel from './pages/ExportPanel';
 import SceneLoadingOverlay from './scene/ui/SceneLoadingOverlay';
 import SceneErrorOverlay from './scene/ui/SceneErrorOverlay';
+import SceneDegradedOverlay from './scene/ui/SceneDegradedOverlay';
 import SceneErrorBoundary from './scene/SceneErrorBoundary';
 import { useUIOverlayStore } from './state/uiOverlayStore';
 import { useFirstVisitFlag } from './hooks/useFirstVisitFlag';
@@ -27,6 +28,7 @@ export default function App() {
   const [showOnboardingOverlay, setShowOnboardingOverlay] = useState(false);
   const [sceneReady, setSceneReady] = useState(false);
   const [sceneError, setSceneError] = useState<string | null>(null);
+  const [sceneDegraded, setSceneDegraded] = useState(false);
   const [sceneKey, setSceneKey] = useState(0);
   const [diagnostics, setDiagnostics] = useState<DiagnosticInfo | null>(null);
 
@@ -43,9 +45,11 @@ export default function App() {
     showOnboarding();
   };
 
-  const handleSceneReady = useCallback(() => {
+  const handleFullEnvironmentMounted = useCallback(() => {
+    cancelWatchdog();
     setSceneReady(true);
     setSceneError(null);
+    setSceneDegraded(false);
     setDiagnostics(null);
   }, []);
 
@@ -54,6 +58,7 @@ export default function App() {
     const diagnostic = logSceneFailure('scene-render', errorMessage, error);
     setSceneError(errorMessage);
     setSceneReady(false);
+    setSceneDegraded(false);
     setDiagnostics(diagnostic);
   }, []);
 
@@ -65,10 +70,10 @@ export default function App() {
 
   const handleStartupTimeout = useCallback(() => {
     const diagnostic = logSceneFailure(
-      'startup-timeout',
-      'Scene did not finish loading within the expected time'
+      'full-environment-timeout',
+      'Full café environment did not mount within the expected time'
     );
-    setSceneError('Scene startup timeout - the 3D environment did not load in time');
+    setSceneDegraded(true);
     setSceneReady(false);
     setDiagnostics(diagnostic);
   }, []);
@@ -76,22 +81,17 @@ export default function App() {
   const handleRetry = () => {
     setSceneError(null);
     setSceneReady(false);
+    setSceneDegraded(false);
     setDiagnostics(null);
     setSceneKey(prev => prev + 1);
   };
 
-  // Startup watchdog - triggers timeout if scene doesn't render
+  // Startup watchdog - triggers timeout if full environment doesn't mount
   const { cancel: cancelWatchdog } = useSceneStartupWatchdog({
     timeout: SCENE_STARTUP_TIMEOUT,
     onTimeout: handleStartupTimeout,
     sceneKey,
   });
-
-  // Cancel watchdog when scene renders successfully
-  const handleSceneReadyWithWatchdog = useCallback(() => {
-    cancelWatchdog();
-    handleSceneReady();
-  }, [cancelWatchdog, handleSceneReady]);
 
   const isOverlayOpen = activePanel !== null || showOnboardingOverlay;
 
@@ -127,15 +127,20 @@ export default function App() {
           <SceneErrorBoundary onError={handleSceneError} onReset={handleRetry}>
             <CafeScene 
               navigationEnabled={!isOverlayOpen} 
-              onFirstRender={handleSceneReadyWithWatchdog}
+              onFullEnvironmentMounted={handleFullEnvironmentMounted}
               onEnvironmentError={handleEnvironmentError}
             />
           </SceneErrorBoundary>
         </Canvas>
 
-        {/* Loading overlay - shown until scene is ready */}
-        {!sceneReady && !sceneError && (
+        {/* Loading overlay - shown until full environment is ready */}
+        {!sceneReady && !sceneError && !sceneDegraded && (
           <SceneLoadingOverlay />
+        )}
+
+        {/* Degraded mode overlay - shown when only fallback room loads */}
+        {sceneDegraded && !sceneError && (
+          <SceneDegradedOverlay onRetry={handleRetry} />
         )}
 
         {/* Error overlay - shown if scene fails to load */}

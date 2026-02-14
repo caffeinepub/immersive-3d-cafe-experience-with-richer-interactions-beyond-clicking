@@ -6,27 +6,27 @@ import BasicCafeRoomFallback from './environment/BasicCafeRoomFallback';
 import CafeEnvironment from './environment/CafeEnvironment';
 import InteractionManager from './interactions/InteractionManager';
 import { useCafeNavigation } from './controls/useCafeNavigation';
-import { logSceneFailure } from './utils/sceneDiagnostics';
+import { logSceneFailure, logSceneSuccess } from './utils/sceneDiagnostics';
 
 interface CafeSceneProps {
   navigationEnabled: boolean;
-  onFirstRender?: () => void;
+  onFullEnvironmentMounted?: () => void;
   onEnvironmentError?: (stage: string, message: string) => void;
 }
 
 export default function CafeScene({ 
   navigationEnabled, 
-  onFirstRender,
+  onFullEnvironmentMounted,
   onEnvironmentError 
 }: CafeSceneProps) {
   useCafeNavigation(navigationEnabled);
-  const hasRendered = useRef(false);
+  const hasLoggedFallback = useRef(false);
 
-  // Signal first successful render
+  // Log when fallback room renders (first frame)
   useFrame(() => {
-    if (!hasRendered.current && onFirstRender) {
-      hasRendered.current = true;
-      onFirstRender();
+    if (!hasLoggedFallback.current) {
+      hasLoggedFallback.current = true;
+      logSceneSuccess('fallback-render', 'Basic fallback room rendered successfully');
     }
   });
 
@@ -51,7 +51,7 @@ export default function CafeScene({
       {/* Full scene with Physics - renders on top of fallback */}
       <Physics gravity={[0, -9.81, 0]}>
         <Suspense fallback={null}>
-          <CafeEnvironment />
+          <CafeEnvironment onMounted={onFullEnvironmentMounted} />
           <InteractionManager navigationEnabled={navigationEnabled} />
         </Suspense>
       </Physics>
