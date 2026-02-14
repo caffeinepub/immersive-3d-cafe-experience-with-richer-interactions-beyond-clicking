@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.625rem;
+        
+        /* Warm monochrome contour palette - Light mode */
+        --background: 0.96 0.015 55;
+        --foreground: 0.25 0.03 50;
+        --card: 0.98 0.01 60;
+        --card-foreground: 0.25 0.03 50;
+        --popover: 0.98 0.01 60;
+        --popover-foreground: 0.25 0.03 50;
+        --primary: 0.45 0.08 45;
+        --primary-foreground: 0.98 0.01 60;
+        --secondary: 0.88 0.025 58;
+        --secondary-foreground: 0.30 0.04 48;
+        --muted: 0.90 0.02 57;
+        --muted-foreground: 0.50 0.04 52;
+        --accent: 0.75 0.10 50;
+        --accent-foreground: 0.98 0.01 60;
+        --destructive: 0.55 0.22 25;
+        --destructive-foreground: 0.98 0.01 60;
+        --border: 0.85 0.02 55;
+        --input: 0.85 0.02 55;
+        --ring: 0.45 0.08 45;
+        
+        --chart-1: 0.65 0.15 45;
+        --chart-2: 0.60 0.12 50;
+        --chart-3: 0.55 0.10 55;
+        --chart-4: 0.70 0.18 40;
+        --chart-5: 0.75 0.20 48;
+    }
+
+    .dark {
+        /* Warm monochrome contour palette - Dark mode */
+        --background: 0.18 0.03 48;
+        --foreground: 0.92 0.015 58;
+        --card: 0.22 0.035 50;
+        --card-foreground: 0.92 0.015 58;
+        --popover: 0.20 0.03 49;
+        --popover-foreground: 0.92 0.015 58;
+        --primary: 0.78 0.10 52;
+        --primary-foreground: 0.20 0.03 48;
+        --secondary: 0.30 0.04 50;
+        --secondary-foreground: 0.92 0.015 58;
+        --muted: 0.28 0.04 51;
+        --muted-foreground: 0.65 0.05 54;
+        --accent: 0.55 0.12 48;
+        --accent-foreground: 0.95 0.01 60;
+        --destructive: 0.60 0.20 22;
+        --destructive-foreground: 0.95 0.01 60;
+        --border: 0.30 0.04 50;
+        --input: 0.28 0.04 51;
+        --ring: 0.65 0.08 50;
+        
+        --chart-1: 0.55 0.18 48;
+        --chart-2: 0.60 0.15 52;
+        --chart-3: 0.65 0.12 55;
+        --chart-4: 0.50 0.20 45;
+        --chart-5: 0.70 0.22 50;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-family: 'Inter', system-ui, sans-serif;
+        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Space Grotesk', 'Inter', sans-serif;
+        font-weight: 600;
+    }
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}
+
+/* Smooth transitions for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

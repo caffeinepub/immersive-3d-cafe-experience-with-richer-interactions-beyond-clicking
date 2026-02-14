@@ -1,0 +1,41 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-14T18:48:33.358Z",
+  "summary": "The diff implements upgraded cafe furniture geometry/materials, improves the Menu prop into a clearer 3D coffee cup with a \"Menu\" label while preserving click/hover/press feedback, and adds multiple new non-interactive scene-dressing props (>=5) in plausible cafe locations. However, the diff summary also indicates several unrelated interaction/UI changes (onboarding behavior, help button, additional interaction systems) that were not requested.",
+  "missing_requirements": [],
+  "hallucinated_features": [
+    {
+      "description": "Onboarding overlay behavior changed so it no longer opens automatically on first visit; added ability to manually trigger via a help button.",
+      "reason": "The BuildRequest is focused on 3D cafe realism/furniture/props and explicitly lists non-goals around adding new UI concepts; onboarding/help behavior changes were not requested.",
+      "evidence": [
+        "frontend-file-summaries.txt (App.tsx summary mentions onboarding no longer opens automatically; HelpButton can manually trigger)"
+      ]
+    },
+    {
+      "description": "Added/expanded interaction systems such as POI markers with gaze-based dwell detection, proximity zones with contextual prompts, an auto-opening door controller, and an inspectable draggable prop.",
+      "reason": "The BuildRequest only asks for upgraded furniture and added scene dressing props, and does not request new interaction mechanics beyond maintaining the existing Menu cup click behavior.",
+      "evidence": [
+        "frontend-file-summaries.txt (InteractionManager.tsx, POIMarkers.tsx, ProximityZones.tsx, DoorController.tsx, InspectableProp.tsx summaries)"
+      ]
+    },
+    {
+      "description": "Enhanced React Query hooks for contact message operations with runtime normalization, deployment diagnostics, and detailed backend failure logging.",
+      "reason": "Not related to upgrading 3D furniture/props; BuildRequest also suggests backend changes are unnecessary for this request.",
+      "evidence": [
+        "frontend-file-summaries.txt (frontend/src/hooks/useQueries.ts summary)"
+      ]
+    }
+  ],
+  "confidence": 0.72,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/scene/environment/CafeEnvironment.tsx",
+    "frontend/src/scene/environment/CafeFurniture.tsx",
+    "frontend/src/scene/environment/CafeSceneDressing.tsx",
+    "frontend/src/scene/interactions/PanelProp.tsx",
+    "frontend/src/scene/interactions/ScenePanelProps.tsx",
+    "frontend/src/scene/materials/contourStyle.ts",
+    "project_state.json"
+  ]
+}

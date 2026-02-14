@@ -1,0 +1,84 @@
+{
+  "kind": "build_request",
+  "title": "Enhance 3D cafe realism with proper furniture and richer in-scene props (Menu coffee cup + more)",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-21",
+      "text": "Upgrade the main 3D cafe environment so it feels more like an actual cafe by replacing the most placeholder-looking primitive furniture (e.g., simple cylinders/boxes for tables, stools, counter) with more believable cafe furniture geometry and materials, while preserving the existing warm cafe + contour/topographic visual identity.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3"
+        ],
+        "quotes": [
+          "Make the cafe more like an actual cafe with proper furniture and add that coffee cup named menu and other things"
+        ]
+      },
+      "acceptanceCriteria": [
+        "In the 3D scene, the counter, tables, and seating read as recognizable cafe furniture (not just basic primitive shapes) via improved geometry detail and/or multi-part meshes and materials.",
+        "The upgraded furniture remains consistent with the current warm palette and contour/topographic styling already used in the scene (no jarring art-style mismatch).",
+        "The scene still renders without runtime errors and maintains stable frame rate comparable to before (no obvious performance regression from excessive geometry/material complexity)."
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "text": "Improve the in-scene “Menu” coffee cup prop so it looks clearly like a coffee cup placed on/near the counter and is clearly labeled with the exact text \"Menu\" from normal viewing angles, while keeping existing click/tap behavior to open the Menu panel.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3"
+        ],
+        "quotes": [
+          "add that coffee cup named menu"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A 3D coffee-cup-shaped prop is present on/near the counter area in the cafe scene and is visually distinct as a cup (body + handle and coherent material).",
+        "The label text is exactly \"Menu\" and is legible at typical camera distance when approaching the counter.",
+        "Clicking/tapping the cup opens the Menu panel; hover/press feedback continues to work."
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "text": "Add additional cafe “proper furniture and other things” as non-interactive scene dressing (e.g., barista/coffee equipment, display items, decor) placed in sensible cafe locations (counter/back wall/seating area) to make the space feel lived-in, without adding new UI panels or new navigation concepts.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3"
+        ],
+        "quotes": [
+          "and other things"
+        ]
+      },
+      "acceptanceCriteria": [
+        "At least 5 new non-interactive props/furniture pieces are added to the 3D environment (beyond the current counter, tables, stools, shelving, wall art, rug, plant), and they are placed in plausible cafe positions.",
+        "New props match the existing lighting and material style and do not visually clip through major surfaces in an obvious way.",
+        "No new overlay panels, routes, or backend data models are introduced as part of adding these props."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit files in frontend immutablePaths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Backend must remain a single Motoko actor; only add backend changes if strictly required for this request (this request should be achievable frontend-only)."
+  ],
+  "nonGoals": [
+    "Adding new UI panels beyond the existing Menu/About/Contact/Export panels.",
+    "Adding new backend APIs or persistence for furniture/props.",
+    "Implementing real-time/multiplayer interactions or chat."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-14T18:48:33.361Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 3,
+    "implemented": 3,
+    "items": [
+      {
+        "id": "REQ-21",
+        "summary": "Upgrade the main 3D cafe environment so it feels more like an actual cafe by replacing the most placeholder-looking primitive furniture (e.g., simple cylinders/boxes for tables, stools, counter) with more believable cafe furniture geometry and materials, while preserving the existing warm cafe + contour/topographic visual identity.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/scene/environment/CafeFurniture.tsx",
+          "frontend/src/scene/environment/CafeEnvironment.tsx",
+          "frontend/src/scene/materials/contourStyle.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/scene/environment/CafeFurniture.tsx",
+          "frontend/src/scene/environment/CafeEnvironment.tsx",
+          "frontend/src/scene/materials/contourStyle.ts"
+        ]
+      },
+      {
+        "id": "REQ-22",
+        "summary": "Improve the in-scene “Menu” coffee cup prop so it looks clearly like a coffee cup placed on/near the counter and is clearly labeled with the exact text \"Menu\" from normal viewing angles, while keeping existing click/tap behavior to open the Menu panel.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/scene/interactions/PanelProp.tsx",
+          "frontend/src/scene/interactions/ScenePanelProps.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/scene/interactions/PanelProp.tsx",
+          "frontend/src/scene/interactions/ScenePanelProps.tsx"
+        ]
+      },
+      {
+        "id": "REQ-23",
+        "summary": "Add additional cafe “proper furniture and other things” as non-interactive scene dressing (e.g., barista/coffee equipment, display items, decor) placed in sensible cafe locations (counter/back wall/seating area) to make the space feel lived-in, without adding new UI panels or new navigation concepts.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/scene/environment/CafeSceneDressing.tsx",
+          "frontend/src/scene/environment/CafeEnvironment.tsx",
+          "frontend/src/scene/CafeScene.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/scene/environment/CafeSceneDressing.tsx",
+          "frontend/src/scene/environment/CafeEnvironment.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/scene/environment/CafeEnvironment.tsx",
+    "frontend/src/scene/environment/CafeFurniture.tsx",
+    "frontend/src/scene/environment/CafeSceneDressing.tsx",
+    "frontend/src/scene/interactions/PanelProp.tsx",
+    "frontend/src/scene/interactions/ScenePanelProps.tsx",
+    "frontend/src/scene/materials/contourStyle.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

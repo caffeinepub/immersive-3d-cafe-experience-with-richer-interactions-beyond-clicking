@@ -1,0 +1,63 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-upgrade-the-main-3d-cafe-environment-so-it-feels-more-like-an-actual-cafe-by-replacing-the-most-placeholder-looking-primitive-furniture-e-g-simple-cylinders-boxes-for-tables-stools-counter-with-more-believable-cafe-furniture-geometry-and-materials-while-preserving-the-existing-warm-cafe-contour-topographic-visual-identity",
+      "featureTitle": "Upgrade the main 3D cafe environment so it feels more like an actual cafe by replacing the most placeholder-looking primitive furniture (e.g., simple cylinders/boxes for tables, stools, counter) with more believable cafe furniture geometry and materials, while preserving the existing warm cafe + contour/topographic visual identity.",
+      "files": [
+        "frontend/src/scene/environment/CafeEnvironment.tsx",
+        "frontend/src/scene/environment/CafeFurniture.tsx",
+        "frontend/src/scene/materials/contourStyle.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-21"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-improve-the-in-scene-menu-coffee-cup-prop-so-it-looks-clearly-like-a-coffee-cup-placed-on-near-the-counter-and-is-clearly-labeled-with-the-exact-text-menu-from-normal-viewing-angles-while-keeping-existing-click-tap-behavior-to-open-the-menu-panel",
+      "featureTitle": "Improve the in-scene “Menu” coffee cup prop so it looks clearly like a coffee cup placed on/near the counter and is clearly labeled with the exact text \"Menu\" from normal viewing angles, while keeping existing click/tap behavior to open the Menu panel.",
+      "files": [
+        "frontend/src/scene/interactions/PanelProp.tsx",
+        "frontend/src/scene/interactions/ScenePanelProps.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-22"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-additional-cafe-proper-furniture-and-other-things-as-non-interactive-scene-dressing-e-g-barista-coffee-equipment-display-items-decor-placed-in-sensible-cafe-locations-counter-back-wall-seating-area-to-make-the-space-feel-lived-in-without-adding-new-ui-panels-or-new-navigation-concepts",
+      "featureTitle": "Add additional cafe “proper furniture and other things” as non-interactive scene dressing (e.g., barista/coffee equipment, display items, decor) placed in sensible cafe locations (counter/back wall/seating area) to make the space feel lived-in, without adding new UI panels or new navigation concepts.",
+      "files": [
+        "frontend/src/scene/environment/CafeEnvironment.tsx",
+        "frontend/src/scene/environment/CafeSceneDressing.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-23"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

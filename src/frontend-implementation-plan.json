@@ -1,0 +1,80 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Contour Cafe 3D scene: upgraded furniture, improved Menu cup prop, and richer scene dressing",
+  "requirements": [
+    {
+      "id": "REQ-21",
+      "summary": "Replace placeholder primitive counter/tables/seating with more believable cafe furniture geometry + materials while preserving the warm contour/topographic style and performance.",
+      "acceptanceCriteria": [
+        "In the 3D scene, the counter, tables, and seating read as recognizable cafe furniture (not just basic primitive shapes) via improved geometry detail and/or multi-part meshes and materials.",
+        "The upgraded furniture remains consistent with the current warm palette and contour/topographic styling already used in the scene (no jarring art-style mismatch).",
+        "The scene still renders without runtime errors and maintains stable frame rate comparable to before (no obvious performance regression from excessive geometry/material complexity)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/scene/environment/CafeFurniture.tsx",
+          "operation": "create",
+          "description": "Add a dedicated furniture module exporting composed, low-poly-friendly meshes/material presets for the counter, tables, and seating (multi-part silhouettes, wood/metal accents) aligned to the existing warm contour aesthetic."
+        },
+        {
+          "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
+          "operation": "modify",
+          "description": "Refactor environment assembly to use the new CafeFurniture components in place of the most placeholder primitive counter/tables/stools; reuse materials/textures and keep geometry complexity modest to avoid performance regressions."
+        },
+        {
+          "path": "frontend/src/scene/materials/contourStyle.ts",
+          "operation": "modify",
+          "description": "Extend contour-style material helpers/presets (e.g., warm wood/metal variants) to ensure the upgraded furniture remains consistent with the scene’s existing palette and contour identity."
+        }
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "summary": "Improve the in-scene Menu coffee cup so it reads clearly as a labeled cup from normal angles while preserving existing interaction behavior and feedback.",
+      "acceptanceCriteria": [
+        "A 3D coffee-cup-shaped prop is present on/near the counter area in the cafe scene and is visually distinct as a cup (body + handle and coherent material).",
+        "The label text is exactly \"Menu\" and is legible at typical camera distance when approaching the counter.",
+        "Clicking/tapping the cup opens the Menu panel; hover/press feedback continues to work."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/scene/interactions/PanelProp.tsx",
+          "operation": "modify",
+          "description": "Upgrade the 'cup' propType to a clearer coffee-cup silhouette (body + handle + optional saucer/foam surface) and implement a more legible in-world label treatment that still renders the exact text \"Menu\"; keep hover/press feedback and click handling intact."
+        },
+        {
+          "path": "frontend/src/scene/interactions/ScenePanelProps.tsx",
+          "operation": "modify",
+          "description": "Adjust the Menu cup placement (position/orientation/height) relative to the counter so it reads as placed on/near the counter and the \"Menu\" label is visible from typical approach angles; do not change which panel activates."
+        }
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "summary": "Add at least 5 additional non-interactive cafe props as scene dressing in sensible locations without introducing new UI panels/routes or backend work.",
+      "acceptanceCriteria": [
+        "At least 5 new non-interactive props/furniture pieces are added to the 3D environment (beyond the current counter, tables, stools, shelving, wall art, rug, plant), and they are placed in plausible cafe positions.",
+        "New props match the existing lighting and material style and do not visually clip through major surfaces in an obvious way.",
+        "No new overlay panels, routes, or backend data models are introduced as part of adding these props."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
+          "operation": "create",
+          "description": "Create a non-interactive dressing module that adds at least five plausible cafe props (e.g., espresso machine, grinder, pastry case, stacked cups, wall menu board, pendant lights, small decor items) using the existing warm/contour material language and careful placement to avoid obvious clipping."
+        },
+        {
+          "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
+          "operation": "modify",
+          "description": "Wire the CafeSceneDressing group into the environment so the new props appear in sensible locations (counter/back wall/seating area) without adding any new UI panels, routes, or navigation concepts."
+        },
+        {
+          "path": "frontend/src/scene/CafeScene.tsx",
+          "operation": "modify",
+          "description": "If needed, make minor lighting/environment tweaks to ensure the added dressing props read well (consistent warmth/contrast) while keeping rendering stable and avoiding noticeable performance regressions."
+        }
+      ]
+    }
+  ]
+}
