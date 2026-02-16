@@ -1,36 +1,57 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Contour Cafe — Coffee machine prop in fallback counter scene",
+  "title": "Contour Cafe: larger Seven Balance wall-frame label + neon green frame edge glow",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add a visible shiny silver/chrome espresso machine prop on top of the counter in the always-rendered fallback room scene.",
+      "summary": "Make the \"Seven Balance\" WallFrameLabel text significantly larger and keep it crisp/centered in both BasicCafeRoomFallback and CafeSceneDressing.",
       "acceptanceCriteria": [
-        "In the default rendered scene (the basic fallback room), a coffee/espresso machine mesh is present on the counter surface (on top of the counter, not intersecting the counter body).",
-        "The coffee/espresso machine renders with a shiny silver/chrome look (high metalness, low roughness) consistent with the existing machine styling.",
-        "The prop casts/receives shadows consistently with the other countertop props (when shadows are enabled in the scene)."
+        "In the BasicCafeRoomFallback menu board label, the rendered \"Seven Balance\" text is visibly larger than before and remains crisp (not blurry/pixelated) when viewed from the default camera position.",
+        "In the CafeSceneDressing menu board label, the rendered \"Seven Balance\" text is visibly larger than before and remains crisp (not blurry/pixelated) when viewed from the default camera position.",
+        "The text remains centered on the label plane and does not clip outside the label area."
       ],
       "file_operations": [
         {
+          "path": "frontend/src/scene/components/WallFrameLabel.tsx",
+          "operation": "modify",
+          "description": "Improve label texture sharpness and fit: increase effective texture resolution for large text, add safe padding/margins, and ensure the canvas text rendering stays centered and does not clip when using a larger fontSize."
+        },
+        {
           "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Add an espresso machine prop group to the fallback countertop props, using meshStandardMaterial configured for a chrome look (high metalness, low roughness), and ensure meshes have castShadow/receiveShadow set consistently with existing props."
+          "description": "Increase the \"Seven Balance\" WallFrameLabel sizing for the fallback menu board (e.g., larger fontSize and/or label plane dimensions) while keeping the label centered and within the board area."
+        },
+        {
+          "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
+          "operation": "modify",
+          "description": "Increase the \"Seven Balance\" WallFrameLabel sizing for the full scene menu board (e.g., larger fontSize and/or label plane dimensions) while keeping the label centered and within the board area."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Position the fallback espresso machine so it aligns with the counter group (z aligned to the counter at z = -5), avoids overlapping existing fallback props, and is visible from the default camera view.",
+      "summary": "Add a neon green glow effect on the menu board frame edge in both BasicCafeRoomFallback and CafeSceneDressing without z-fighting.",
       "acceptanceCriteria": [
-        "The coffee/espresso machine is placed at a stable position on the counter top in the fallback scene and is not visually colliding with the fallback cups/to-go cups/syrup bottles.",
-        "The coffee/espresso machine remains visible from the default camera starting view without requiring navigation."
+        "In BasicCafeRoomFallback, the menu board frame edge shows a clearly visible neon green glow when viewed from the default camera position.",
+        "In CafeSceneDressing, the menu board frame edge shows a clearly visible neon green glow when viewed from the default camera position.",
+        "The glow effect is applied to the frame edge (not the whole wall/board surface) and does not introduce obvious z-fighting artifacts."
       ],
       "file_operations": [
         {
+          "path": "frontend/src/scene/components/MenuBoardFrameGlow.tsx",
+          "operation": "create",
+          "description": "Create a small reusable 3D helper component that renders a neon-green edge-glow around a rectangular frame (e.g., via an edge/outline render and/or a slightly offset emissive halo geometry) with parameters to avoid z-fighting."
+        },
+        {
           "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Set the espresso machine group's position so its z aligns with the counter placement (z = -5) while choosing x/z offsets that avoid the existing fallback prop clusters (cups/to-go cups/syrup bottles) and keep it in view from the default camera start."
+          "description": "Wire the new MenuBoardFrameGlow component into the fallback menu board group so only the frame edge gets a visible neon green glow, using slight positional/size offsets to prevent z-fighting."
+        },
+        {
+          "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
+          "operation": "modify",
+          "description": "Wire the new MenuBoardFrameGlow component into the full scene menu board group so only the frame edge gets a visible neon green glow, using slight positional/size offsets to prevent z-fighting."
         }
       ]
     }

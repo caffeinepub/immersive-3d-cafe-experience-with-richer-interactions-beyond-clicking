@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add a visible 3D coffee/espresso machine prop on the counter in the always-rendered fallback scene.
+**Goal:** Make the behind-counter wall-frame label (“Seven Balance”) clearly readable from across the room and add a neon green glow to the menu board frame edge in both the basic fallback room and the full scene dressing.
 
 **Planned changes:**
-- Add a new coffee/espresso machine mesh/group to the fallback room scene, placed on top of the counter surface (not intersecting the counter geometry).
-- Apply a shiny silver/chrome material to the machine (high metalness, low roughness) consistent with existing machine styling.
-- Position the machine aligned with the existing counter placement (z aligned with the counter group at z = -5), avoiding overlap with existing fallback countertop props (cups, to-go cups, syrup bottles), and ensure it’s visible from the default camera view.
-- Ensure the machine casts/receives shadows consistently with other countertop props when shadows are enabled.
+- Increase the 3D label text size for the “Seven Balance” WallFrameLabel in BasicCafeRoomFallback while keeping it crisp, centered, and unclipped.
+- Increase the 3D label text size for the “Seven Balance” WallFrameLabel in CafeSceneDressing while keeping it crisp, centered, and unclipped.
+- Add a neon green edge-glow effect to the menu board rectangular frame in BasicCafeRoomFallback, constrained to the frame edge and avoiding z-fighting.
+- Add a neon green edge-glow effect to the menu board rectangular frame in CafeSceneDressing, constrained to the frame edge and avoiding z-fighting.
 
-**User-visible outcome:** In normal app usage (default fallback room), users can see a chrome-looking espresso machine sitting on the counter without it colliding with other props.
+**User-visible outcome:** In both versions of the cafe room, the “Seven Balance” menu-board label is larger and readable from the default camera view, and the frame around it has a clearly visible neon green glow along its edge.

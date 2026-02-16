@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-16T23:06:42.908Z",
+  "generatedAt": "2026-02-16T23:35:47.942Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,24 +12,32 @@
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add a visible 3D coffee/espresso machine prop on top of the counter in the always-rendered fallback scene so users can see it on the counter during normal app usage.",
+        "summary": "Increase the 3D label text size for the behind-counter wall frame (the \"Seven Balance\" WallFrameLabel) so it is clearly readable from far away across the room in both the basic fallback room and the full scene dressing implementation.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+          "frontend/src/scene/components/WallFrameLabel.tsx",
+          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+          "frontend/src/scene/environment/CafeSceneDressing.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+          "frontend/src/scene/components/WallFrameLabel.tsx",
+          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+          "frontend/src/scene/environment/CafeSceneDressing.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Ensure the coffee/espresso machine prop position is aligned with the existing counter placement so it appears correctly on the counter (z aligned with the counter group at z = -5) and does not overlap existing fallback countertop props (cups, to-go cups, syrup bottles).",
+        "summary": "Add a neon green glow effect to the edge of the behind-counter rectangular frame (the menu board frame) in both the basic fallback room and the full scene dressing implementation.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+          "frontend/src/scene/components/MenuBoardFrameGlow.tsx",
+          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+          "frontend/src/scene/environment/CafeSceneDressing.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+          "frontend/src/scene/components/MenuBoardFrameGlow.tsx",
+          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+          "frontend/src/scene/environment/CafeSceneDressing.tsx"
         ]
       }
     ]
@@ -39,7 +47,10 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/scene/components/MenuBoardFrameGlow.tsx",
+    "frontend/src/scene/components/WallFrameLabel.tsx",
     "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+    "frontend/src/scene/environment/CafeSceneDressing.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -7,16 +7,16 @@
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-visible-3d-coffee-espresso-machine-prop-on-top-of-the-counter-in-the-always-rendered-fallback-scene-so-users-can-see-it-on-the-counter-during-normal-app-usage",
-      "title": "Add a visible 3D coffee/espresso machine prop on top of the counter in the always-rendered fallback scene so users can see it on the counter during normal app usage.",
+      "id": "feature-increase-the-3d-label-text-size-for-the-behind-counter-wall-frame-the-seven-balance-wallframelabel-so-it-is-clearly-readable-from-far-away-across-the-room-in-both-the-basic-fallback-room-and-the-full-scene-dressing-implementation",
+      "title": "Increase the 3D label text size for the behind-counter wall frame (the \"Seven Balance\" WallFrameLabel) so it is clearly readable from far away across the room in both the basic fallback room and the full scene dressing implementation.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-ensure-the-coffee-espresso-machine-prop-position-is-aligned-with-the-existing-counter-placement-so-it-appears-correctly-on-the-counter-z-aligned-with-the-counter-group-at-z-5-and-does-not-overlap-existing-fallback-countertop-props-cups-to-go-cups-syrup-bottles",
-      "title": "Ensure the coffee/espresso machine prop position is aligned with the existing counter placement so it appears correctly on the counter (z aligned with the counter group at z = -5) and does not overlap existing fallback countertop props (cups, to-go cups, syrup bottles).",
+      "id": "feature-add-a-neon-green-glow-effect-to-the-edge-of-the-behind-counter-rectangular-frame-the-menu-board-frame-in-both-the-basic-fallback-room-and-the-full-scene-dressing-implementation",
+      "title": "Add a neon green glow effect to the edge of the behind-counter rectangular frame (the menu board frame) in both the basic fallback room and the full scene dressing implementation.",
       "reqIds": [
         "REQ-2"
       ],
@@ -26,11 +26,18 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add a coffee machine on the counter",
+      "summary": "Increase the font size so it’s clearly visible across the room",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add a neon green glow to the frame edge (lighting accent)",
       "reqIds": [],
       "status": "pending"
     }
   ],
+  "gameProjectType": "none",
   "projectName": "Contour Cafe",
   "clarification_mode": "instant",
   "clarification_rounds": 0

@@ -1,57 +1,66 @@
 {
   "kind": "build_request",
-  "title": "Add coffee machine prop on the counter",
+  "title": "Increase wall-frame label size and add neon green edge glow",
   "projectName": "Contour Cafe",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a visible 3D coffee/espresso machine prop on top of the counter in the always-rendered fallback scene so users can see it on the counter during normal app usage.",
+      "text": "Increase the 3D label text size for the behind-counter wall frame (the \"Seven Balance\" WallFrameLabel) so it is clearly readable from far away across the room in both the basic fallback room and the full scene dressing implementation.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "Where is the coffee machine on the counter? Add it"
+          "Make that font bigger like clearly visible in whole room"
         ]
       },
       "acceptanceCriteria": [
-        "In the default rendered scene (the basic fallback room), a coffee/espresso machine mesh is present on the counter surface (on top of the counter, not intersecting the counter body).",
-        "The coffee/espresso machine renders with a shiny silver/chrome look (high metalness, low roughness) consistent with the existing machine styling.",
-        "The prop casts/receives shadows consistently with the other countertop props (when shadows are enabled in the scene)."
+        "In the BasicCafeRoomFallback menu board label, the rendered \"Seven Balance\" text is visibly larger than before and remains crisp (not blurry/pixelated) when viewed from the default camera position.",
+        "In the CafeSceneDressing menu board label, the rendered \"Seven Balance\" text is visibly larger than before and remains crisp (not blurry/pixelated) when viewed from the default camera position.",
+        "The text remains centered on the label plane and does not clip outside the label area."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Ensure the coffee/espresso machine prop position is aligned with the existing counter placement so it appears correctly on the counter (z aligned with the counter group at z = -5) and does not overlap existing fallback countertop props (cups, to-go cups, syrup bottles).",
+      "text": "Add a neon green glow effect to the edge of the behind-counter rectangular frame (the menu board frame) in both the basic fallback room and the full scene dressing implementation.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "Where is the coffee machine on the counter? Add it"
+          "add a neon green glow to that frame edge"
         ]
       },
       "acceptanceCriteria": [
-        "The coffee/espresso machine is placed at a stable position on the counter top in the fallback scene and is not visually colliding with the fallback cups/to-go cups/syrup bottles.",
-        "The coffee/espresso machine remains visible from the default camera starting view without requiring navigation."
+        "In BasicCafeRoomFallback, the menu board frame edge shows a clearly visible neon green glow when viewed from the default camera position.",
+        "In CafeSceneDressing, the menu board frame edge shows a clearly visible neon green glow when viewed from the default camera position.",
+        "The glow effect is applied to the frame edge (not the whole wall/board surface) and does not introduce obvious z-fighting artifacts."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (read-only).",
-    "Do not modify the Internet Identity hooks (frontend/src/hooks/useInternetIdentity.ts / .tsx) or actor hook (frontend/src/hooks/useActor.ts) which are immutable paths.",
-    "Keep all changes within the existing React + React Three Fiber scene code; no external 3D asset pipelines or external services."
+    "Do not edit files under frontend.immutablePaths (e.g., frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui/*).",
+    "Keep all backend logic in the single Motoko actor (backend/main.mo); no new backend services."
   ],
   "nonGoals": [
-    "Adding backend state or APIs for the coffee machine.",
-    "Adding new interactions (inspect, click, hover UI) for the coffee machine.",
-    "Refactoring the scene to enable the full environment stack beyond what is required to make the coffee machine visible on the counter."
+    "Do not add new authentication methods or external integrations.",
+    "Do not change unrelated scene lighting, navigation controls, or UI panels beyond what is needed to enlarge the label and glow the frame edge."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }
