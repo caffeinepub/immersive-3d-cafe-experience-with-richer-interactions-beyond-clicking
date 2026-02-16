@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Improve 3D café scene load reliability by reducing texture, geometry, and rendering workload.
+**Goal:** Add a visible 3D coffee/espresso machine prop on the counter in the always-rendered fallback scene.
 
 **Planned changes:**
-- Replace the 2048×2048 contour floor/furniture texture with a smaller generated texture and update all 3D scene references to use the new filename.
-- Reduce geometric complexity by lowering segment counts for high-segment primitives across the café environment, dressing, and furniture components while preserving overall shapes and layout.
-- Adjust the React Three Fiber `Canvas` configuration to cap device pixel ratio (DPR) and avoid expensive rendering features that are not required for functionality.
+- Add a new coffee/espresso machine mesh/group to the fallback room scene, placed on top of the counter surface (not intersecting the counter geometry).
+- Apply a shiny silver/chrome material to the machine (high metalness, low roughness) consistent with existing machine styling.
+- Position the machine aligned with the existing counter placement (z aligned with the counter group at z = -5), avoiding overlap with existing fallback countertop props (cups, to-go cups, syrup bottles), and ensure it’s visible from the default camera view.
+- Ensure the machine casts/receives shadows consistently with other countertop props when shadows are enabled.
 
-**User-visible outcome:** The 3D café scene loads more reliably and is less likely to time out on startup, while keeping the same overall look, layout, and interactions.
+**User-visible outcome:** In normal app usage (default fallback room), users can see a chrome-looking espresso machine sitting on the counter without it colliding with other props.

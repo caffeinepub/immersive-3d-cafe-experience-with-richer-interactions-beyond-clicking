@@ -4,31 +4,39 @@ interface FurnitureProps {
   contourTexture?: Texture;
 }
 
-// Counter with multi-part construction
+// Counter with multi-part construction and beige contour texture on prominent surfaces
 export function Counter({ contourTexture }: FurnitureProps) {
   return (
     <group position={[0, 0, -5]}>
-      {/* Main counter body */}
+      {/* Main counter body - beige with contour texture */}
       <mesh position={[0, 0.9, 0]} castShadow receiveShadow>
         <boxGeometry args={[6, 1.8, 1.2]} />
-        <meshStandardMaterial color="#3d3228" roughness={0.7} />
+        <meshStandardMaterial 
+          map={contourTexture}
+          color="#c4a882" 
+          roughness={0.7} 
+        />
       </mesh>
       
-      {/* Counter top with wood texture */}
+      {/* Counter top with contour texture - distinct beige surface */}
       <mesh position={[0, 1.82, 0]} castShadow receiveShadow>
         <boxGeometry args={[6.2, 0.08, 1.3]} />
         <meshStandardMaterial 
           map={contourTexture}
-          color="#4a3f32" 
+          color="#d4b896" 
           roughness={0.5} 
           metalness={0.1}
         />
       </mesh>
       
-      {/* Front panel detail */}
+      {/* Front panel detail - beige with contour texture */}
       <mesh position={[0, 0.5, 0.61]} castShadow>
         <boxGeometry args={[5.8, 1.4, 0.02]} />
-        <meshStandardMaterial color="#2a2420" roughness={0.8} />
+        <meshStandardMaterial 
+          map={contourTexture}
+          color="#b89968" 
+          roughness={0.8} 
+        />
       </mesh>
       
       {/* Decorative trim */}
@@ -40,16 +48,16 @@ export function Counter({ contourTexture }: FurnitureProps) {
   );
 }
 
-// Cafe table with pedestal base
+// Cafe table with pedestal base and beige contour texture on top
 export function CafeTable({ position, contourTexture }: { position: [number, number, number] } & FurnitureProps) {
   return (
     <group position={position}>
-      {/* Table top */}
+      {/* Table top - beige with contour texture */}
       <mesh position={[0, 0.75, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.65, 0.65, 0.05, 12]} />
         <meshStandardMaterial 
           map={contourTexture}
-          color="#4a3f32" 
+          color="#d4b896" 
           roughness={0.5}
         />
       </mesh>
@@ -69,20 +77,28 @@ export function CafeTable({ position, contourTexture }: { position: [number, num
   );
 }
 
-// Wooden chair with back
-export function WoodenChair({ position, rotation = 0 }: { position: [number, number, number]; rotation?: number }) {
+// Wooden chair with back and beige contour texture on seat/back
+export function WoodenChair({ position, rotation = 0, contourTexture }: { position: [number, number, number]; rotation?: number } & FurnitureProps) {
   return (
     <group position={position} rotation={[0, rotation, 0]}>
-      {/* Seat */}
+      {/* Seat - beige with contour texture */}
       <mesh position={[0, 0.45, 0]} castShadow receiveShadow>
         <boxGeometry args={[0.4, 0.05, 0.4]} />
-        <meshStandardMaterial color="#4a3f32" roughness={0.6} />
+        <meshStandardMaterial 
+          map={contourTexture}
+          color="#d4b896" 
+          roughness={0.6} 
+        />
       </mesh>
       
-      {/* Back rest */}
+      {/* Back rest - beige with contour texture */}
       <mesh position={[0, 0.75, -0.18]} castShadow receiveShadow>
         <boxGeometry args={[0.38, 0.5, 0.04]} />
-        <meshStandardMaterial color="#4a3f32" roughness={0.6} />
+        <meshStandardMaterial 
+          map={contourTexture}
+          color="#d4b896" 
+          roughness={0.6} 
+        />
       </mesh>
       
       {/* Legs - front left */}
@@ -112,14 +128,18 @@ export function WoodenChair({ position, rotation = 0 }: { position: [number, num
   );
 }
 
-// Bar stool
-export function BarStool({ position }: { position: [number, number, number] }) {
+// Bar stool with beige contour texture on seat
+export function BarStool({ position, contourTexture }: { position: [number, number, number] } & FurnitureProps) {
   return (
     <group position={position}>
-      {/* Seat */}
+      {/* Seat - beige with contour texture */}
       <mesh position={[0, 0.65, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.2, 0.18, 0.08, 8]} />
-        <meshStandardMaterial color="#4a3f32" roughness={0.6} />
+        <meshStandardMaterial 
+          map={contourTexture}
+          color="#d4b896" 
+          roughness={0.6} 
+        />
       </mesh>
       
       {/* Center post */}

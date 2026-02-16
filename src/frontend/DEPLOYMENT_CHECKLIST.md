@@ -1,14 +1,24 @@
 # Deployment Validation Checklist
 
-This checklist helps diagnose deployment failures in the standard flow: backend deploy → frontend build → runtime.
+This document provides a comprehensive guide for validating deployments and diagnosing common failure points in the three-step deployment flow.
 
-## Standard Deployment Flow
+## Three-Step Deployment Flow
 
-1. **Backend Deploy** - Motoko compilation and canister deployment
-2. **Frontend Build** - TypeScript compilation and bundling
-3. **Runtime** - Application execution in the browser
+1. **Backend Deploy** (`dfx deploy backend`)
+   - Compiles Motoko canister
+   - Deploys to Internet Computer
+   - Generates candid interface
+
+2. **Frontend Build** (`npm run build`)
+   - Generates TypeScript bindings from candid
+   - Compiles React/TypeScript application
+   - Bundles assets
+
+3. **Runtime** (Browser execution)
+   - Initializes actor connection
+   - Renders UI components
+   - Executes 3D scene
 
 ## Diagnostic Output Format
 
-When a deployment or runtime error occurs, the enhanced diagnostics will output:
-
+All diagnostic messages follow this format:

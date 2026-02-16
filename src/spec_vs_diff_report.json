@@ -1,50 +1,67 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T22:14:22.277Z",
-  "summary": "REQ-42 appears partially implemented by updating code references to a 1024x1024 contour texture path in the environment/dressing, and REQ-43/REQ-44 appear implemented via reduced geometry segment counts and a more conservative Canvas configuration. However, the diff shows no new smaller texture asset being added, which is an explicit acceptance criterion for REQ-42. Additionally, the diff suggests some unrelated feature/documentation expansion in a summary file that is not part of the optimization request.",
+  "generatedAt": "2026-02-16T23:06:42.905Z",
+  "summary": "The diff shows updates to the fallback room (floor/ceiling overlays, wall textures, wall decor) and project metadata, but the provided truncated code does not include concrete evidence of an espresso/coffee machine prop being added on top of the counter or positioned/aligned per the counter (z = -5) requirements.",
   "missing_requirements": [
     {
-      "id": "REQ-42",
-      "requirement": "Include a smaller contour texture file in `frontend/public/assets/generated/` (1024x1024) and ensure the scene loads it instead of the 2048x2048 version without runtime missing-asset errors.",
-      "reason": "Code references were updated to `/assets/generated/contour-texture-warm.dim_1024x1024.png`, but the diff shows no added asset file. This risks runtime 404/missing texture unless the file already existed (not evidenced in the diff).",
+      "id": "REQ-1",
+      "requirement": "Add a visible 3D coffee/espresso machine prop on top of the counter in the always-rendered fallback scene (shiny silver/chrome, casts/receives shadows).",
+      "reason": "In the shown portion of the modified fallback scene, there is no mesh/group that clearly represents a coffee/espresso machine placed on the counter, nor any visible material settings demonstrating a chrome look (high metalness/low roughness) for such a prop. The comment mentions an espresso machine, but the truncated code excerpt does not show its implementation.",
       "evidence": [
-        "File diff summary: \"Added: 0\" (no new asset file added)",
-        "frontend/src/scene/environment/CafeEnvironment.tsx (references `/assets/generated/contour-texture-warm.dim_1024x1024.png`)",
-        "frontend/src/scene/environment/CafeSceneDressing.tsx (references `/assets/generated/contour-texture-warm.dim_1024x1024.png`)"
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Place the coffee machine aligned with the counter placement (z aligned with counter group at z = -5), not overlapping existing fallback countertop props, and visible from the default camera start.",
+      "reason": "No explicit position/transform for a coffee/espresso machine is visible in the provided diff excerpt, so alignment to the counter (z = -5), non-overlap with other countertop props, and visibility from the default camera cannot be verified from the diff summary.",
+      "evidence": [
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx (truncated)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Expanded/added interaction systems and related scene features (POI markers, proximity zones, door controller, inspectable prop, new scene panel props, immersive navigation controls) referenced in the project’s frontend file summaries.",
-      "reason": "The BuildRequest is optimization-only (reduce scene heaviness) and explicitly lists non-goals such as not adding new UI panels/navigation concepts; these interaction feature additions are not requested by REQ-42/43/44. Evidence is limited to the modified `frontend-file-summaries.txt` content, not direct code diffs for those modules.",
+      "description": "Added/changed ceiling rendering in the fallback scene, including a ceiling plane and a contour overlay pass.",
+      "reason": "The BuildRequest only asks to add a coffee machine prop on the counter in the fallback scene; it does not request ceiling geometry or contour overlay rendering changes.",
       "evidence": [
-        "frontend-file-summaries.txt (mentions InteractionManager, POIMarkers, ProximityZones, DoorController, InspectableProp, useCafeNavigation, etc.)"
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
       ]
     },
     {
-      "description": "Added/expanded theme/design system token and motion system documentation (theme/tokens.ts and theme/motion.ts) in summaries.",
-      "reason": "Not requested by REQ-42/43/44 (performance optimization of texture/geometry/Canvas). Evidence is limited to the modified summary file, not direct code diffs for the theme files.",
+      "description": "Changed/added wall texturing using a green world-map texture in the fallback scene.",
+      "reason": "Not requested by the BuildRequest, which is limited to adding an espresso machine prop on the counter.",
       "evidence": [
-        "frontend-file-summaries.txt (mentions `frontend/src/theme/tokens.ts` and `frontend/src/theme/motion.ts`)"
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
       ]
     },
     {
-      "description": "Contact message React Query hook changes with diagnostics/normalization described in summaries (`frontend/src/hooks/useQueries.ts`).",
-      "reason": "Not requested by REQ-42/43/44 and the BuildRequest non-goals state not to change backend contact message API/storage as part of this optimization-only request. Evidence is limited to the modified summary file, not a shown code diff for `useQueries.ts`.",
+      "description": "Added wall decor (framed art groups/meshes) in the fallback scene.",
+      "reason": "Not requested; the request explicitly scopes to adding a coffee machine prop and avoiding unrelated scene refactors/dressing.",
       "evidence": [
-        "frontend-file-summaries.txt (mentions `frontend/src/hooks/useQueries.ts` changes)"
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+      ]
+    },
+    {
+      "description": "Updated project tracking/metadata to include new_feature_requests entries (AR-1/AR-2/AR-3).",
+      "reason": "The BuildRequest does not ask for modifications to project_state.json or request-tracking metadata files.",
+      "evidence": [
+        "project_state.json"
+      ]
+    },
+    {
+      "description": "Modified frontend-file-summaries.txt content (documentation/index-style summaries).",
+      "reason": "Not requested by the BuildRequest (which is about adding a 3D prop in the fallback scene).",
+      "evidence": [
+        "frontend-file-summaries.txt"
       ]
     }
   ],
-  "confidence": 0.66,
+  "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/scene/environment/CafeEnvironment.tsx",
-    "frontend/src/scene/environment/CafeFurniture.tsx",
-    "frontend/src/scene/environment/CafeSceneDressing.tsx",
+    "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
     "project_state.json"
   ]
 }

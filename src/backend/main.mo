@@ -2,9 +2,6 @@ import Text "mo:core/Text";
 import VarArray "mo:core/VarArray";
 import Runtime "mo:core/Runtime";
 
-
-
-
 actor {
   type ContactMessage = {
     name : Text;

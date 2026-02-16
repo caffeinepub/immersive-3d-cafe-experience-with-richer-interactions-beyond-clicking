@@ -51,49 +51,56 @@ export default function ContactPanel({ open, onClose }: ContactPanelProps) {
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="right" className="w-full sm:max-w-xl flex flex-col">
-        <SheetHeader>
-          <SheetTitle className="text-2xl">Contact Us</SheetTitle>
+      <SheetContent 
+        side="right" 
+        className="w-full sm:max-w-xl flex flex-col p-0 safe-top safe-bottom"
+        style={{ maxHeight: 'var(--app-height, 100dvh)' }}
+      >
+        <SheetHeader className="px-4 py-4 sm:px-6 sm:py-6 border-b shrink-0">
+          <SheetTitle className="text-xl sm:text-2xl">Contact Us</SheetTitle>
         </SheetHeader>
 
-        <ScrollArea className="flex-1 pr-4">
-          <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+        <ScrollArea className="flex-1 px-4 py-4 sm:px-6 sm:py-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="name">Name *</Label>
+              <Label htmlFor="name" className="text-sm">Name *</Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your name"
                 required
+                className="text-base"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm">Email</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
+                className="text-base"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="message">Message</Label>
+              <Label htmlFor="message" className="text-sm">Message</Label>
               <Textarea
                 id="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Tell us what's on your mind..."
-                rows={6}
+                rows={5}
+                className="text-base resize-none"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full min-h-[44px]"
               disabled={submitMutation.isPending}
             >
               {submitMutation.isPending ? (
@@ -107,24 +114,24 @@ export default function ContactPanel({ open, onClose }: ContactPanelProps) {
             </Button>
           </form>
 
-          <Separator className="my-8" />
+          <Separator className="my-6 sm:my-8" />
 
-          <div className="rounded-lg border p-4">
-            <h3 className="mb-3 font-semibold flex items-center gap-2">
+          <div className="rounded-lg border p-3 sm:p-4">
+            <h3 className="mb-3 font-semibold flex items-center gap-2 text-sm sm:text-base">
               <MessageSquare className="h-4 w-4" />
               Other Ways to Reach Us
             </h3>
-            <div className="space-y-2 text-sm text-muted-foreground">
+            <div className="space-y-2 text-xs sm:text-sm text-muted-foreground">
               <p className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                hello@contourcafe.com
+                <Mail className="h-4 w-4 shrink-0" />
+                <span className="break-all">hello@contourcafe.com</span>
               </p>
               <p className="flex items-center gap-2">
-                <Phone className="h-4 w-4" />
+                <Phone className="h-4 w-4 shrink-0" />
                 (555) 123-4567
               </p>
               <p className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
+                <MapPin className="h-4 w-4 shrink-0" />
                 123 Contour Street, Design District
               </p>
             </div>
@@ -132,9 +139,9 @@ export default function ContactPanel({ open, onClose }: ContactPanelProps) {
 
           {messages && messages.length > 0 && (
             <>
-              <Separator className="my-8" />
-              <div className="rounded-lg border p-4">
-                <h3 className="mb-3 font-semibold">Recent Messages</h3>
+              <Separator className="my-6 sm:my-8" />
+              <div className="rounded-lg border p-3 sm:p-4">
+                <h3 className="mb-3 font-semibold text-sm sm:text-base">Recent Messages</h3>
                 {messagesLoading ? (
                   <div className="flex items-center justify-center py-4">
                     <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -142,10 +149,10 @@ export default function ContactPanel({ open, onClose }: ContactPanelProps) {
                 ) : (
                   <div className="space-y-3">
                     {messages.slice(0, 5).map((msg, idx) => (
-                      <div key={idx} className="rounded-md bg-muted/50 p-3 text-sm">
+                      <div key={idx} className="rounded-md bg-muted/50 p-3 text-xs sm:text-sm">
                         <div className="font-medium">{msg.name}</div>
                         {msg.email && (
-                          <div className="text-xs text-muted-foreground">{msg.email}</div>
+                          <div className="text-xs text-muted-foreground break-all">{msg.email}</div>
                         )}
                         {msg.message && (
                           <div className="mt-1 text-muted-foreground line-clamp-2">

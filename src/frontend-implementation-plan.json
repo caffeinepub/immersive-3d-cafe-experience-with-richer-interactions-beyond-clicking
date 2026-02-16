@@ -1,73 +1,36 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Optimize 3D cafe scene assets and rendering for more reliable startup",
+  "title": "Contour Cafe — Coffee machine prop in fallback counter scene",
   "requirements": [
     {
-      "id": "REQ-42",
-      "summary": "Swap the 3D scene contour texture to a smaller generated file and update scene references to the new filename.",
+      "id": "REQ-1",
+      "summary": "Add a visible shiny silver/chrome espresso machine prop on top of the counter in the always-rendered fallback room scene.",
       "acceptanceCriteria": [
-        "The project includes a smaller contour texture file in `frontend/public/assets/generated/` and the 3D scene loads it instead of the 2048x2048 version.",
-        "No runtime errors occur due to missing texture assets; if the texture fails to load, the scene still renders with the existing safe material fallback behavior (texture undefined).",
-        "The frontend build completes successfully with the updated asset path(s)."
+        "In the default rendered scene (the basic fallback room), a coffee/espresso machine mesh is present on the counter surface (on top of the counter, not intersecting the counter body).",
+        "The coffee/espresso machine renders with a shiny silver/chrome look (high metalness, low roughness) consistent with the existing machine styling.",
+        "The prop casts/receives shadows consistently with the other countertop props (when shadows are enabled in the scene)."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/generated/contour-texture-warm.dim_1024x1024.png",
-          "operation": "create",
-          "description": "Add the downscaled contour texture asset so the 3D scene can load `frontend/public/assets/generated/contour-texture-warm.dim_1024x1024.png` instead of the 2048x2048 version."
-        },
-        {
-          "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
+          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Update the contour texture load path to use `/assets/generated/contour-texture-warm.dim_1024x1024.png` and ensure existing safe fallback behavior remains unchanged if the texture fails to load."
-        },
-        {
-          "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
-          "operation": "modify",
-          "description": "Update the contour texture load path to use `/assets/generated/contour-texture-warm.dim_1024x1024.png` and ensure existing safe fallback behavior remains unchanged if the texture fails to load."
+          "description": "Add an espresso machine prop group to the fallback countertop props, using meshStandardMaterial configured for a chrome look (high metalness, low roughness), and ensure meshes have castShadow/receiveShadow set consistently with existing props."
         }
       ]
     },
     {
-      "id": "REQ-43",
-      "summary": "Lower geometric segment counts for high-segment primitives in the cafe environment, dressing, and furniture while preserving overall shape and layout.",
+      "id": "REQ-2",
+      "summary": "Position the fallback espresso machine so it aligns with the counter group (z aligned to the counter at z = -5), avoids overlapping existing fallback props, and is visible from the default camera view.",
       "acceptanceCriteria": [
-        "Segment counts are reduced across the environment/furniture/dressing components (visible in code changes) without breaking the scene layout or interactivity.",
-        "The scene renders successfully and the environment still looks like a café (no missing meshes, no obviously broken geometry).",
-        "The scene reaches the “full-environment-mount” success path under normal conditions (i.e., does not consistently fall into degraded mode due to timeouts)."
+        "The coffee/espresso machine is placed at a stable position on the counter top in the fallback scene and is not visually colliding with the fallback cups/to-go cups/syrup bottles.",
+        "The coffee/espresso machine remains visible from the default camera starting view without requiring navigation."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
+          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Reduce segment counts on high-segment primitives (e.g., cylinderGeometry/coneGeometry) used in the environment while keeping positions, scales, and layout intact."
-        },
-        {
-          "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
-          "operation": "modify",
-          "description": "Reduce segment counts on high-segment primitives (e.g., cylinderGeometry/torusGeometry/sphereGeometry/coneGeometry) used in scene dressing props while keeping the prop placement and silhouette consistent."
-        },
-        {
-          "path": "frontend/src/scene/environment/CafeFurniture.tsx",
-          "operation": "modify",
-          "description": "Reduce segment counts on furniture primitives (e.g., table cylinders, stool torus/cylinders, chair legs) while preserving furniture shapes and scene layout."
-        }
-      ]
-    },
-    {
-      "id": "REQ-44",
-      "summary": "Adjust React Three Fiber Canvas configuration to reduce rendering workload by capping DPR and disabling expensive rendering features not required for functionality.",
-      "acceptanceCriteria": [
-        "The `Canvas` in `frontend/src/App.tsx` is configured with a capped DPR (e.g., a lower max DPR than the browser default).",
-        "The 3D scene remains functional (navigation, panel props, interactions still work), and user-facing overlays continue to display English text as they do now.",
-        "On typical modern browsers, the scene is less likely to hit the startup watchdog timeout compared to before these changes."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Update the React Three Fiber `Canvas` to use a capped DPR (e.g., `dpr={[1, 1.5]}`) and apply more conservative WebGL settings (e.g., disable antialiasing and other non-essential features) to reduce GPU/rendering cost without changing UI overlays or interaction behavior."
+          "description": "Set the espresso machine group's position so its z aligns with the counter placement (z = -5) while choosing x/z offsets that avoid the existing fallback prop clusters (cups/to-go cups/syrup bottles) and keep it in view from the default camera start."
         }
       ]
     }

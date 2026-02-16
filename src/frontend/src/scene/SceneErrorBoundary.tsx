@@ -4,10 +4,12 @@ interface SceneErrorBoundaryProps {
   children: ReactNode;
   onError: (error: Error) => void;
   onReset: () => void;
+  resetKey?: number;
 }
 
 interface SceneErrorBoundaryState {
   hasError: boolean;
+  errorCount: number;
 }
 
 export default class SceneErrorBoundary extends Component<
@@ -16,26 +18,30 @@ export default class SceneErrorBoundary extends Component<
 > {
   constructor(props: SceneErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, errorCount: 0 };
   }
 
-  static getDerivedStateFromError(): SceneErrorBoundaryState {
+  static getDerivedStateFromError(): Partial<SceneErrorBoundaryState> {
     return { hasError: true };
   }
 
   componentDidCatch(error: Error) {
+    this.setState(prev => ({ errorCount: prev.errorCount + 1 }));
     this.props.onError(error);
   }
 
   componentDidUpdate(prevProps: SceneErrorBoundaryProps) {
-    // Reset error state when key changes (retry)
-    if (this.state.hasError && prevProps.children !== this.props.children) {
+    // Reset error state when resetKey changes (retry attempt)
+    if (this.props.resetKey !== undefined && 
+        prevProps.resetKey !== this.props.resetKey && 
+        this.state.hasError) {
       this.setState({ hasError: false });
     }
   }
 
   render() {
     if (this.state.hasError) {
+      // Return null to let parent handle error display via overlay
       return null;
     }
 

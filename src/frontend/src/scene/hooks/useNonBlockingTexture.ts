@@ -13,6 +13,8 @@ export function useNonBlockingTexture(
   const [texture, setTexture] = useState<Texture | undefined>(undefined);
 
   useEffect(() => {
+    if (!url) return;
+    
     const loader = new TextureLoader();
     
     loader.load(
@@ -34,7 +36,7 @@ export function useNonBlockingTexture(
         // Texture remains undefined, component should handle fallback
       }
     );
-  }, [url, options]);
+  }, [url, options?.onError]);
 
   return texture;
 }

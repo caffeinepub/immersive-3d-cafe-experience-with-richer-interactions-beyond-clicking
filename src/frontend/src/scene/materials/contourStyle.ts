@@ -1,4 +1,4 @@
-import { MeshStandardMaterial } from 'three';
+import { MeshStandardMaterial, MeshBasicMaterial, Texture } from 'three';
 
 export function createContourMaterial(baseColor: string, emissiveColor: string, intensity: number = 0.5) {
   return new MeshStandardMaterial({
@@ -23,6 +23,22 @@ export function createMetalMaterial(baseColor: string = '#5a5a5a') {
     color: baseColor,
     roughness: 0.3,
     metalness: 0.7,
+  });
+}
+
+/**
+ * Creates an unlit overlay material for contour lines that is independent of scene lighting.
+ * Uses MeshBasicMaterial with transparency and proper depth settings to prevent z-fighting.
+ */
+export function createContourOverlayMaterial(contourTexture: Texture, opacity: number = 1.0) {
+  return new MeshBasicMaterial({
+    map: contourTexture,
+    transparent: true,
+    opacity: opacity,
+    depthWrite: false, // Prevent z-fighting by not writing to depth buffer
+    polygonOffset: true,
+    polygonOffsetFactor: -1, // Pull overlay slightly forward
+    polygonOffsetUnits: -1,
   });
 }
 

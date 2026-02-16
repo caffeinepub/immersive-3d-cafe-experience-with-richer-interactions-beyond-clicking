@@ -1,87 +1,57 @@
 {
   "kind": "build_request",
-  "title": "Reduce 3D cafe scene heaviness to improve load reliability",
+  "title": "Add coffee machine prop on the counter",
+  "projectName": "Contour Cafe",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-42",
-      "text": "Reduce the size of the contour floor/furniture texture used by the 3D scene by switching the app from `/assets/generated/contour-texture-warm.dim_2048x2048.png` to a smaller generated texture, and update all references in the 3D scene to use the new filename.",
+      "id": "REQ-1",
+      "text": "Add a visible 3D coffee/espresso machine prop on top of the counter in the always-rendered fallback scene so users can see it on the counter during normal app usage.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Make this less heavy maybe that will fix the issue"
+          "Where is the coffee machine on the counter? Add it"
         ]
       },
       "acceptanceCriteria": [
-        "The project includes a smaller contour texture file in `frontend/public/assets/generated/` and the 3D scene loads it instead of the 2048x2048 version.",
-        "No runtime errors occur due to missing texture assets; if the texture fails to load, the scene still renders with the existing safe material fallback behavior (texture undefined).",
-        "The frontend build completes successfully with the updated asset path(s)."
+        "In the default rendered scene (the basic fallback room), a coffee/espresso machine mesh is present on the counter surface (on top of the counter, not intersecting the counter body).",
+        "The coffee/espresso machine renders with a shiny silver/chrome look (high metalness, low roughness) consistent with the existing machine styling.",
+        "The prop casts/receives shadows consistently with the other countertop props (when shadows are enabled in the scene)."
       ]
     },
     {
-      "id": "REQ-43",
-      "text": "Reduce geometric complexity in the 3D cafe environment by lowering segment counts for high-segment primitives (e.g., `cylinderGeometry`, `torusGeometry`, `sphereGeometry`, `coneGeometry`) within `frontend/src/scene/environment/CafeEnvironment.tsx`, `frontend/src/scene/environment/CafeSceneDressing.tsx`, and `frontend/src/scene/environment/CafeFurniture.tsx`, while preserving overall shapes and layout.",
+      "id": "REQ-2",
+      "text": "Ensure the coffee/espresso machine prop position is aligned with the existing counter placement so it appears correctly on the counter (z aligned with the counter group at z = -5) and does not overlap existing fallback countertop props (cups, to-go cups, syrup bottles).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Make this less heavy maybe that will fix the issue"
+          "Where is the coffee machine on the counter? Add it"
         ]
       },
       "acceptanceCriteria": [
-        "Segment counts are reduced across the environment/furniture/dressing components (visible in code changes) without breaking the scene layout or interactivity.",
-        "The scene renders successfully and the environment still looks like a café (no missing meshes, no obviously broken geometry).",
-        "The scene reaches the “full-environment-mount” success path under normal conditions (i.e., does not consistently fall into degraded mode due to timeouts)."
-      ]
-    },
-    {
-      "id": "REQ-44",
-      "text": "Reduce GPU/rendering workload for the 3D canvas by adjusting the React Three Fiber `Canvas` configuration in `frontend/src/App.tsx` to use a more conservative device pixel ratio (DPR) and to avoid expensive rendering features when not required for functionality.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "Make this less heavy maybe that will fix the issue"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The `Canvas` in `frontend/src/App.tsx` is configured with a capped DPR (e.g., a lower max DPR than the browser default).",
-        "The 3D scene remains functional (navigation, panel props, interactions still work), and user-facing overlays continue to display English text as they do now.",
-        "On typical modern browsers, the scene is less likely to hit the startup watchdog timeout compared to before these changes."
+        "The coffee/espresso machine is placed at a stable position on the counter top in the fallback scene and is not visually colliding with the fallback cups/to-go cups/syrup bottles.",
+        "The coffee/espresso machine remains visible from the default camera starting view without requiring navigation."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`, or anything in `frontend/src/components/ui` (compose instead).",
-    "Backend must remain a single Motoko actor; no new backend services or external databases.",
-    "Use English for any user-facing text."
+    "Do not edit files under frontend/src/components/ui (read-only).",
+    "Do not modify the Internet Identity hooks (frontend/src/hooks/useInternetIdentity.ts / .tsx) or actor hook (frontend/src/hooks/useActor.ts) which are immutable paths.",
+    "Keep all changes within the existing React + React Three Fiber scene code; no external 3D asset pipelines or external services."
   ],
   "nonGoals": [
-    "Do not add new UI panels or new navigation concepts.",
-    "Do not change the backend contact message API or storage as part of this optimization-only request.",
-    "Do not introduce external performance/analytics services."
+    "Adding backend state or APIs for the coffee machine.",
+    "Adding new interactions (inspect, click, hover UI) for the coffee machine.",
+    "Refactoring the scene to enable the full environment stack beyond what is required to make the coffee machine visible on the counter."
   ],
   "imageRequirements": {
     "required": [],
-    "edits": [
-      "Downscale the contour texture to a smaller size (contour-texture-warm.dim_2048x2048.png > contour-texture-warm.dim_1024x1024.png)"
-    ]
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
+    "edits": []
   }
 }
