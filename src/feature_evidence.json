@@ -2,10 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-3d-cafe-scene-so-that-all-four-chairs-placed-around-the-single-table-are-rotated-to-face-toward-the-table-at-position-0-0-2-in-both-the-full-environment-and-the-fallback-environment",
-      "featureTitle": "Update the 3D cafe scene so that all four chairs placed around the single table are rotated to face toward the table at position [0, 0, 2], in both the full environment and the fallback environment.",
+      "featureId": "feature-in-the-full-caf-environment-frontend-src-scene-environment-cafeenvironment-tsx-duplicate-the-existing-table-4-chair-seating-set-and-add-3-additional-identical-sets-placed-in-the-right-side-area-of-the-room-positive-x-side-ensuring-each-set-has-a-clear-gap-from-walls-and-from-other-furniture-and-does-not-overlap-other-seating-sets",
+      "featureTitle": "In the full café environment (frontend/src/scene/environment/CafeEnvironment.tsx), duplicate the existing table + 4-chair seating set and add 3 additional identical sets placed in the right-side area of the room (positive X side), ensuring each set has a clear gap from walls and from other furniture and does not overlap other seating sets.",
       "files": [
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
         "frontend/src/scene/environment/CafeEnvironment.tsx"
       ],
       "components": [
@@ -16,7 +15,25 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-in-the-fallback-environment-frontend-src-scene-environment-basiccaferoomfallback-tsx-duplicate-the-existing-table-4-chair-seating-set-and-add-the-same-3-additional-identical-sets-placed-in-the-right-side-area-positive-x-side-keeping-chair-rotations-facing-their-table",
+      "featureTitle": "In the fallback environment (frontend/src/scene/environment/BasicCafeRoomFallback.tsx), duplicate the existing table + 4-chair seating set and add the same 3 additional identical sets placed in the right-side area (positive X side), keeping chair rotations facing their table.",
+      "files": [
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
       ],
       "confidence": "high"
     }

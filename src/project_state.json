@@ -3,21 +3,34 @@
   "projectStateVersion": 3,
   "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [
-    "4 chairs are facing the wrong direction; should face toward the table."
-  ],
-  "isFixRequest": true,
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-update-the-3d-cafe-scene-so-that-all-four-chairs-placed-around-the-single-table-are-rotated-to-face-toward-the-table-at-position-0-0-2-in-both-the-full-environment-and-the-fallback-environment",
-      "title": "Update the 3D cafe scene so that all four chairs placed around the single table are rotated to face toward the table at position [0, 0, 2], in both the full environment and the fallback environment.",
+      "id": "feature-in-the-full-caf-environment-frontend-src-scene-environment-cafeenvironment-tsx-duplicate-the-existing-table-4-chair-seating-set-and-add-3-additional-identical-sets-placed-in-the-right-side-area-of-the-room-positive-x-side-ensuring-each-set-has-a-clear-gap-from-walls-and-from-other-furniture-and-does-not-overlap-other-seating-sets",
+      "title": "In the full café environment (frontend/src/scene/environment/CafeEnvironment.tsx), duplicate the existing table + 4-chair seating set and add 3 additional identical sets placed in the right-side area of the room (positive X side), ensuring each set has a clear gap from walls and from other furniture and does not overlap other seating sets.",
       "reqIds": [
-        "REQ-1"
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-fallback-environment-frontend-src-scene-environment-basiccaferoomfallback-tsx-duplicate-the-existing-table-4-chair-seating-set-and-add-the-same-3-additional-identical-sets-placed-in-the-right-side-area-positive-x-side-keeping-chair-rotations-facing-their-table",
+      "title": "In the fallback environment (frontend/src/scene/environment/BasicCafeRoomFallback.tsx), duplicate the existing table + 4-chair seating set and add the same 3 additional identical sets placed in the right-side area (positive X side), keeping chair rotations facing their table.",
+      "reqIds": [
+        "REQ-3"
       ],
       "version": 1
     }
   ],
-  "new_feature_requests": [],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Duplicate the existing chair-table set and place 3 copies in the right-side area",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
   "projectName": "3D Cafe",
   "clarification_mode": "instant",
   "clarification_rounds": 0

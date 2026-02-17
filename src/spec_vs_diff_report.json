@@ -1,20 +1,26 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-17T05:01:59.798Z",
-  "summary": "CafeEnvironment was updated to rotate the four chairs so they face toward the table at [0,0,2] (front chairs z=1.3 rotation=0; back chairs z=2.7 rotation=Math.PI). The diff summary for BasicCafeRoomFallback is truncated before the table/chair placement, so there is insufficient evidence that the fallback environment chair rotations were updated to match.",
-  "missing_requirements": [
+  "generatedAt": "2026-02-17T05:07:48.578Z",
+  "summary": "REQ-2 appears implemented in CafeEnvironment with duplicated seating sets on the right side; REQ-3 cannot be conclusively verified from the truncated BasicCafeRoomFallback diff. The diff also includes several non-requested scene/prop/UI elements in the fallback room.",
+  "missing_requirements": [],
+  "hallucinated_features": [
     {
-      "id": "REQ-1",
-      "requirement": "In BasicCafeRoomFallback, the chair rotations match the full environment so all four chairs face toward the table at [0, 0, 2].",
-      "reason": "BasicCafeRoomFallback.tsx is truncated in the diff summary before any table/chair placement or rotation props are shown, so we cannot confirm the fallback chairs were rotated to face the table.",
+      "description": "Added/advertised fallback-room features unrelated to duplicating seating sets (e.g., very large \"Seven Balance\" label text and neon green frame glow on the menu board).",
+      "reason": "BuildRequest non-goals explicitly exclude changes beyond duplicating the existing table+chair components; these UI/visual additions are not requested.",
       "evidence": [
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx (truncated)"
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx (header comment mentions large label text and neon green frame glow; imports WallFrameLabel and MenuBoardFrameGlow)"
+      ]
+    },
+    {
+      "description": "Added/advertised additional props in the fallback environment (CommercialEspressoMachine and a coffee grinder mesh group on the counter).",
+      "reason": "BuildRequest scope is limited to duplicating existing table + wooden chair seating sets; adding other props is not requested.",
+      "evidence": [
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx (imports CommercialEspressoMachine; renders <CommercialEspressoMachine .../> and a \"Coffee Grinder\" mesh group)"
       ]
     }
   ],
-  "hallucinated_features": [],
-  "confidence": 0.63,
+  "confidence": 0.56,
   "changed_files": [
     "frontend-file-summaries.txt",
     "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",

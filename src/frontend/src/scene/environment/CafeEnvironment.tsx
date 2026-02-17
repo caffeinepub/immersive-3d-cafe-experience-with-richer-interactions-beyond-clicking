@@ -99,7 +99,7 @@ export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
       {/* Counter with detailed construction */}
       <Counter contourTexture={furnitureVariant} />
 
-      {/* Single table with four chairs - all facing toward the table */}
+      {/* Original table with four chairs - all facing toward the table */}
       <CafeTable position={[0, 0, 2]} contourTexture={furnitureVariant} />
       {/* Front chairs (z=1.3) facing +Z toward table */}
       <WoodenChair position={[0.7, 0, 1.3]} rotation={0} contourTexture={furnitureVariant} />
@@ -107,6 +107,29 @@ export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
       {/* Back chairs (z=2.7) facing -Z toward table */}
       <WoodenChair position={[0.7, 0, 2.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
       <WoodenChair position={[-0.7, 0, 2.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
+
+      {/* DUPLICATED SEATING SETS ON RIGHT SIDE (positive X) */}
+      
+      {/* Seating set 1 - right side, front area */}
+      <CafeTable position={[5.5, 0, -2]} contourTexture={furnitureVariant} />
+      <WoodenChair position={[6.2, 0, -2.7]} rotation={0} contourTexture={furnitureVariant} />
+      <WoodenChair position={[4.8, 0, -2.7]} rotation={0} contourTexture={furnitureVariant} />
+      <WoodenChair position={[6.2, 0, -1.3]} rotation={Math.PI} contourTexture={furnitureVariant} />
+      <WoodenChair position={[4.8, 0, -1.3]} rotation={Math.PI} contourTexture={furnitureVariant} />
+
+      {/* Seating set 2 - right side, middle area */}
+      <CafeTable position={[5.5, 0, 2]} contourTexture={furnitureVariant} />
+      <WoodenChair position={[6.2, 0, 1.3]} rotation={0} contourTexture={furnitureVariant} />
+      <WoodenChair position={[4.8, 0, 1.3]} rotation={0} contourTexture={furnitureVariant} />
+      <WoodenChair position={[6.2, 0, 2.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
+      <WoodenChair position={[4.8, 0, 2.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
+
+      {/* Seating set 3 - right side, back area */}
+      <CafeTable position={[5.5, 0, 6]} contourTexture={furnitureVariant} />
+      <WoodenChair position={[6.2, 0, 5.3]} rotation={0} contourTexture={furnitureVariant} />
+      <WoodenChair position={[4.8, 0, 5.3]} rotation={0} contourTexture={furnitureVariant} />
+      <WoodenChair position={[6.2, 0, 6.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
+      <WoodenChair position={[4.8, 0, 6.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
 
       {/* Bar stools at counter */}
       <BarStool position={[-0.8, 0, -3.8]} contourTexture={furnitureVariant} />

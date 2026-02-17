@@ -1,47 +1,56 @@
 {
   "kind": "build_request",
-  "title": "Rotate the four chairs to face toward the table",
+  "title": "Duplicate chair-table set 3 times on the right side of the 3D cafe scene",
   "projectName": "3D Cafe",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Update the 3D cafe scene so that all four chairs placed around the single table are rotated to face toward the table at position [0, 0, 2], in both the full environment and the fallback environment.",
+      "id": "REQ-2",
+      "text": "In the full café environment (frontend/src/scene/environment/CafeEnvironment.tsx), duplicate the existing table + 4-chair seating set and add 3 additional identical sets placed in the right-side area of the room (positive X side), ensuring each set has a clear gap from walls and from other furniture and does not overlap other seating sets.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Fix the direction of the 4 chairs they should be facing towards the table"
+          "Good now simply copy this chair table set and paste 3 just like these in the right side area"
         ]
       },
       "acceptanceCriteria": [
-        "In CafeEnvironment, the two chairs positioned at z=1.3 (in front of the table) are rotated to face +Z (toward the table), and the two chairs positioned at z=2.7 (behind the table) are rotated to face -Z (toward the table).",
-        "In BasicCafeRoomFallback, the chair rotations match the full environment so all four chairs face toward the table.",
-        "Visual check: when viewing the scene, each chair’s backrest is oriented away from the table and the seat opening faces the table."
+        "CafeEnvironment renders the original seating set plus 3 additional duplicated seating sets (total 4 table+chair sets).",
+        "All 3 new seating sets are placed on the right side of the room (positive X) and are visibly separated (no z-fighting/overlap) from each other and from existing props.",
+        "For each new seating set, all 4 chairs are rotated to face toward their corresponding table (matching the current orientation behavior of the original set)."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "In the fallback environment (frontend/src/scene/environment/BasicCafeRoomFallback.tsx), duplicate the existing table + 4-chair seating set and add the same 3 additional identical sets placed in the right-side area (positive X side), keeping chair rotations facing their table.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Good now simply copy this chair table set and paste 3 just like these in the right side area"
+        ]
+      },
+      "acceptanceCriteria": [
+        "BasicCafeRoomFallback renders the original seating set plus 3 additional duplicated seating sets (total 4 table+chair sets).",
+        "All 3 new seating sets are placed on the right side of the fallback room (positive X) with no visible overlaps.",
+        "For each new seating set, all 4 chairs face toward their corresponding table."
       ]
     }
   ],
   "constraints": [
-    "Do not modify files under frontend/src/components/ui or any other immutablePaths listed in SYSTEM_CONTEXT."
+    "Do not modify any backend Motoko canister code for this change.",
+    "Do not edit files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Repositioning the table or chairs (only fix chair direction/rotation).",
-    "Changing chair geometry/materials/textures or adding new furniture."
+    "Adding new furniture models beyond duplicating the existing table and wooden chair components.",
+    "Changing materials, lighting, textures, or navigation controls."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

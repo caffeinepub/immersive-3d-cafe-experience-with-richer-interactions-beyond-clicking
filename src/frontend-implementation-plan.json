@@ -1,26 +1,37 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "3D Cafe — Rotate chairs to face the table",
+  "title": "Duplicate table+chair seating set 3x on the right side in both full and fallback 3D cafe scenes",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Adjust chair Y-rotations in both CafeEnvironment and BasicCafeRoomFallback so all four chairs face toward the table at [0, 0, 2] without changing positions or assets.",
+      "id": "REQ-2",
+      "summary": "Add 3 duplicated table+4-chair seating sets to the right side (positive X) of the full CafeEnvironment scene without overlaps and with chairs facing their table.",
       "acceptanceCriteria": [
-        "In CafeEnvironment, the two chairs positioned at z=1.3 (in front of the table) are rotated to face +Z (toward the table), and the two chairs positioned at z=2.7 (behind the table) are rotated to face -Z (toward the table).",
-        "In BasicCafeRoomFallback, the chair rotations match the full environment so all four chairs face toward the table.",
-        "Visual check: when viewing the scene, each chair’s backrest is oriented away from the table and the seat opening faces the table."
+        "CafeEnvironment renders the original seating set plus 3 additional duplicated seating sets (total 4 table+chair sets).",
+        "All 3 new seating sets are placed on the right side of the room (positive X) and are visibly separated (no z-fighting/overlap) from each other and from existing props.",
+        "For each new seating set, all 4 chairs are rotated to face toward their corresponding table (matching the current orientation behavior of the original set)."
       ],
       "file_operations": [
         {
           "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
           "operation": "modify",
-          "description": "Update the four <WoodenChair> instances around the table at [0, 0, 2] so both chairs at z=1.3 use a rotation that makes the seat opening face +Z, and both chairs at z=2.7 use a rotation that makes the seat opening face -Z; do not change any chair/table positions or materials."
-        },
+          "description": "Duplicate the existing CafeTable + 4 WoodenChair arrangement three times and place the new sets on the positive-X (right) side of the room (e.g., tables around x≈5–6 with spaced z positions), ensuring clear gaps from the right wall (x=8 wall mesh), from the existing center seating set, and from other props (e.g., wall art at x≈7.85, z≈3) to avoid overlap/z-fighting; keep chair positions relative to each table and preserve rotations (front chairs rotation=0, back chairs rotation=Math.PI) so all chairs face their corresponding table."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Add 3 duplicated table+4-chair seating sets to the right side (positive X) of the BasicCafeRoomFallback scene without overlaps and with chairs facing their table.",
+      "acceptanceCriteria": [
+        "BasicCafeRoomFallback renders the original seating set plus 3 additional duplicated seating sets (total 4 table+chair sets).",
+        "All 3 new seating sets are placed on the right side of the fallback room (positive X) with no visible overlaps.",
+        "For each new seating set, all 4 chairs face toward their corresponding table."
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Mirror the same chair rotation fixes as CafeEnvironment for the four <WoodenChair> instances around the table at [0, 0, 2], ensuring the fallback scene matches the full environment (no repositioning, geometry, or material changes)."
+          "description": "Duplicate the existing CafeTable + 4 WoodenChair arrangement three times and place the new sets on the positive-X (right) side of the fallback room (e.g., tables around x≈6–7 with spaced z positions), ensuring clear gaps from the right wall (x=10 wall mesh), from the existing center seating set, and from counter-area objects to avoid visible overlaps; keep chair offsets relative to each table and preserve rotations (front chairs rotation=0, back chairs rotation=Math.PI) so all chairs face their corresponding table."
         }
       ]
     }

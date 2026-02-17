@@ -1,10 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Rotate the four chairs in the 3D cafe so each chair faces toward the table at position [0, 0, 2] in both the full and fallback environments.
+**Goal:** Add three more identical table + 4-chair seating sets to the right side of the café in both the full and fallback 3D environments.
 
 **Planned changes:**
-- Update chair rotation values in `CafeEnvironment` so the two chairs at z=1.3 face +Z toward the table and the two chairs at z=2.7 face -Z toward the table.
-- Update chair rotation values in `BasicCafeRoomFallback` to match the full environment so all four chairs face toward the table.
+- In `frontend/src/scene/environment/CafeEnvironment.tsx`, duplicate the existing table + 4-chair set 3 times and place the new sets on the room’s right side (positive X) with clear gaps and no overlaps.
+- In `frontend/src/scene/environment/BasicCafeRoomFallback.tsx`, duplicate the existing table + 4-chair set 3 times and place the new sets on the room’s right side (positive X) with clear gaps and no overlaps.
+- Ensure chairs in each duplicated set remain rotated to face their corresponding table, matching the original set’s orientation behavior.
 
-**User-visible outcome:** In both the full cafe scene and the fallback scene, all four chairs around the table are oriented correctly, with their seat openings facing the table and backrests facing away.
+**User-visible outcome:** The 3D cafe scene (and its fallback) shows four total table+chair seating sets, with three additional sets clearly arranged on the right side without intersecting other furniture.
