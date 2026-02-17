@@ -1,20 +1,66 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-17T00:12:45.216Z",
-  "summary": "Diff adds lightweight primitive-based human and dog characters with continuous idle/walk animations and mounts them into the always-available BasicCafeRoomFallback scene via a composed CafeCharacters component.",
-  "missing_requirements": [],
+  "generatedAt": "2026-02-17T00:22:46.232Z",
+  "summary": "Diff implements new local GLTF/GLB-based components for humans, dogs, and furniture, updates cafe placements to use those models, removes legacy per-frame character animation, and adds a third-party model attribution document. However, the diff does not provide verifiable bundled model files under static assets, and the GLTF loader’s “fallback” is Suspense-only (loading state) rather than an error fallback, so graceful rendering on load failure is not clearly implemented.",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Models load successfully with a graceful fallback (the scene still renders if a model fails to load).",
+      "reason": "LocalGltfModel wraps useGLTF in Suspense with a fallback, but Suspense fallback only covers loading; there is no error boundary/try-catch to render the primitive fallback when useGLTF fails to load/parse a model.",
+      "evidence": [
+        "frontend/src/scene/assets/LocalGltfModel.tsx",
+        "frontend/src/scene/characters/HumanModel.tsx",
+        "frontend/src/scene/characters/DogModel.tsx"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Human and dog visuals come from imported GLB/GLTF files stored under frontend/public (or another frontend-static location) and are not downloaded from external hosts at runtime.",
+      "reason": "The diff references local paths (e.g., /assets/models/humans/human-01.glb), but no actual GLB/GLTF asset files (e.g., under frontend/public/assets/models/...) are shown as added in the diff summary, so bundling cannot be verified from the provided changes.",
+      "evidence": [
+        "frontend/src/scene/characters/CafeHumans.tsx",
+        "frontend/src/scene/characters/CafeDogs.tsx",
+        "frontend/src/scene/environment/FurnitureModels.tsx",
+        "frontend/THIRD_PARTY_MODEL_ATTRIBUTION.md"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Furniture models load successfully with a graceful fallback (the scene still renders if a model fails to load).",
+      "reason": "TableModel/ChairModel provide primitive fallback props, but LocalGltfModel does not implement an error fallback path if the GLB fails to load; useGLTF errors would not be caught/rendered as fallback.",
+      "evidence": [
+        "frontend/src/scene/assets/LocalGltfModel.tsx",
+        "frontend/src/scene/environment/FurnitureModels.tsx"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Use locally bundled GLB/GLTF table/chair set models sourced free-to-use and stored under frontend/public (or another frontend-static location).",
+      "reason": "Furniture models are referenced via /assets/models/furniture/table-chair-set.glb, but the diff does not show the actual model asset files being added to a static directory, so local bundling cannot be confirmed from the provided changes.",
+      "evidence": [
+        "frontend/src/scene/environment/FurnitureModels.tsx",
+        "frontend/THIRD_PARTY_MODEL_ATTRIBUTION.md"
+      ]
+    }
+  ],
   "hallucinated_features": [],
-  "confidence": 0.78,
+  "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/scene/characters/CafeCharacters.tsx",
+    "frontend/THIRD_PARTY_MODEL_ATTRIBUTION.md",
+    "frontend/src/scene/assets/LocalGltfModel.tsx",
     "frontend/src/scene/characters/CafeDogs.tsx",
     "frontend/src/scene/characters/CafeHumans.tsx",
     "frontend/src/scene/characters/DogCharacter.tsx",
+    "frontend/src/scene/characters/DogModel.tsx",
     "frontend/src/scene/characters/HumanCharacter.tsx",
+    "frontend/src/scene/characters/HumanModel.tsx",
     "frontend/src/scene/characters/characterMaterials.ts",
     "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+    "frontend/src/scene/environment/CafeEnvironment.tsx",
+    "frontend/src/scene/environment/CafeFurniture.tsx",
+    "frontend/src/scene/environment/FurnitureModels.tsx",
     "project_state.json"
   ]
 }

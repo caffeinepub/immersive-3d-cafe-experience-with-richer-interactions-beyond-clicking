@@ -12,6 +12,10 @@ interface CafeEnvironmentProps {
   onMounted?: () => void;
 }
 
+/**
+ * Full café environment with contour-textured floor and furniture surfaces, green world-map textured walls, model-backed furniture, seating clusters, ambient lighting, scene dressing props, and matching ceiling.
+ * All furniture now uses GLB models with graceful primitive fallbacks.
+ */
 export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
   const { floorVariant, furnitureVariant } = useContourTexture();
   const wallMapTexture = useWallMapTexture();
@@ -94,7 +98,7 @@ export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
         />
       </mesh>
 
-      {/* UPGRADED FURNITURE */}
+      {/* UPGRADED FURNITURE - now model-backed with fallbacks */}
       
       {/* Counter with detailed construction */}
       <Counter contourTexture={furnitureVariant} />

@@ -8,7 +8,7 @@ import MenuBoardFrameGlow from '../components/MenuBoardFrameGlow';
 import CafeCharacters from '../characters/CafeCharacters';
 
 /**
- * Minimal always-available fallback room with very large "Seven Balance" label text, neon green frame glow on the menu board, and human/dog characters.
+ * Minimal always-available fallback room with very large "Seven Balance" label text, neon green frame glow on the menu board, human/dog characters, and model-backed furniture.
  * Renders immediately without any Suspense or Physics dependencies to ensure the user always sees some 3D geometry even if other scene elements fail.
  */
 export default function BasicCafeRoomFallback() {
@@ -183,7 +183,7 @@ export default function BasicCafeRoomFallback() {
         </mesh>
       </group>
 
-      {/* Seating area - tables and chairs */}
+      {/* Seating area - tables and chairs now use model-backed components */}
       <CafeTable position={[-3, 0, 0]} contourTexture={contourTexture} />
       <WoodenChair position={[-3.5, 0, 0.5]} rotation={Math.PI / 4} contourTexture={contourTexture} />
       <WoodenChair position={[-2.5, 0, 0.5]} rotation={-Math.PI / 4} contourTexture={contourTexture} />
@@ -196,7 +196,7 @@ export default function BasicCafeRoomFallback() {
       <WoodenChair position={[0.5, 0, 3.5]} rotation={Math.PI / 2} contourTexture={contourTexture} />
       <WoodenChair position={[-0.5, 0, 3.5]} rotation={-Math.PI / 2} contourTexture={contourTexture} />
 
-      {/* Characters - humans and dogs */}
+      {/* Characters - humans and dogs (now static, model-backed) */}
       <CafeCharacters />
     </group>
   );

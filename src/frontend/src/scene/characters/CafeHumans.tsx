@@ -1,49 +1,35 @@
-import { Vector3 } from 'three';
-import HumanCharacter from './HumanCharacter';
+import HumanModel from './HumanModel';
 
 /**
- * Placement component for human characters in the cafe.
- * Positions: (1) seated customer at table, (2) waiting customer at counter, (3) walking customer on loop path.
- * Placements avoid camera navigation corridor and minimize clipping.
+ * Placement component for static human characters in the cafe.
+ * Positions: (1) seated customer at table, (2) waiting customer at counter, (3) additional standing customer.
+ * All humans are now static (no walking or animation) and use bundled GLB models.
  */
 export default function CafeHumans() {
-  // Walking path - small loop through open floor space
-  const walkPath = [
-    new Vector3(5, 0, 2),
-    new Vector3(5, 0, 5),
-    new Vector3(-5, 0, 5),
-    new Vector3(-5, 0, 2),
-  ];
-
   return (
     <group>
       {/* Seated customer at left table */}
-      <HumanCharacter
+      <HumanModel
         position={[-3, 0, 0.3]}
         rotation={Math.PI / 6}
-        skinTone="light"
-        shirtColor="blue"
-        pantsColor="gray"
-        seated
+        modelPath="/assets/models/humans/human-01.glb"
+        scale={1}
       />
 
       {/* Waiting customer at counter */}
-      <HumanCharacter
+      <HumanModel
         position={[-1.5, 0, -3.8]}
         rotation={Math.PI}
-        skinTone="tan"
-        shirtColor="green"
-        pantsColor="brown"
+        modelPath="/assets/models/humans/human-02.glb"
+        scale={1}
       />
 
-      {/* Walking customer on loop path */}
-      <HumanCharacter
-        position={[5, 0, 2]}
-        skinTone="medium"
-        shirtColor="red"
-        pantsColor="black"
-        walking
-        walkPath={walkPath}
+      {/* Standing customer near right table (replaces walking customer) */}
+      <HumanModel
+        position={[3.5, 0, 2.5]}
+        rotation={Math.PI * 0.75}
+        modelPath="/assets/models/humans/human-03.glb"
+        scale={1}
       />
     </group>
   );

@@ -1,32 +1,43 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
+  "summary": "3D project using static (non-animated) characters/props with free 3D models (humans, dogs, and table/chair sets) sourced from Google.",
+  "architectural_notes": [
+    "Characters/props should be static (no movement/animation).",
+    "Asset sourcing plan: use free 3D models found via Google for humans, dogs, and table/chair sets (ensure compatible licensing)."
+  ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-3d-human-characters-to-the-cafe-scene-including-at-least-a-seated-customers-at-tables-b-a-customer-waiting-at-the-counter-and-c-a-walking-customer-moving-through-the-cafe",
-      "title": "Add 3D human characters to the cafe scene, including at least: (a) seated customers at tables, (b) a customer waiting at the counter, and (c) a walking customer moving through the cafe.",
+      "id": "feature-stop-all-human-movement-in-the-cafe-scene-by-removing-the-walking-customer-behavior-and-any-per-frame-animation-updates-affecting-human-transforms-so-all-humans-remain-static-in-place",
+      "title": "Stop all human movement in the cafe scene by removing the walking customer behavior and any per-frame animation updates affecting human transforms so all humans remain static in place.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-3d-pet-dog-characters-accompanying-the-humans-in-the-cafe-scene-e-g-sitting-standing-near-seated-humans-and-near-the-counter-with-simple-idle-motion",
-      "title": "Add 3D pet dog characters accompanying the humans in the cafe scene (e.g., sitting/standing near seated humans and near the counter), with simple idle motion.",
+      "id": "feature-replace-the-current-primitive-based-human-and-dog-characters-with-locally-bundled-free-3d-model-assets-glb-gltf-sourced-via-google-search-free-to-use-and-load-them-from-the-app-s-static-assets-rather-than-fetching-from-external-urls-at-runtime",
+      "title": "Replace the current primitive-based human and dog characters with locally bundled, free 3D model assets (GLB/GLTF) sourced via Google search (free-to-use), and load them from the app’s static assets rather than fetching from external URLs at runtime.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-ensure-the-added-humans-and-dogs-render-in-the-currently-active-cafe-scene-path-the-always-available-basic-room-fallback-scene-and-keep-performance-stable-on-typical-devices",
-      "title": "Ensure the added humans and dogs render in the currently active cafe scene path (the always-available basic room/fallback scene), and keep performance stable on typical devices.",
+      "id": "feature-replace-the-current-procedural-table-and-chair-components-with-locally-bundled-free-3d-table-chair-set-models-glb-gltf-sourced-via-google-search-free-to-use-and-use-those-models-in-both-the-basic-fallback-room-and-the-full-cafe-environment-furniture-layout",
+      "title": "Replace the current procedural table and chair components with locally bundled, free 3D table/chair set models (GLB/GLTF) sourced via Google search (free-to-use), and use those models in both the basic fallback room and the full cafe environment furniture layout.",
       "reqIds": [
         "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-simple-attribution-license-record-for-each-third-party-3d-model-used-humans-dogs-tables-chairs-including-source-url-and-license-type-and-ensure-it-is-included-in-the-repository",
+      "title": "Add a simple attribution/license record for each third-party 3D model used (humans, dogs, tables/chairs), including source URL and license type, and ensure it is included in the repository.",
+      "reqIds": [
+        "REQ-4"
       ],
       "version": 1
     }
@@ -34,11 +45,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add humans to the cafe scene (sitting, waiting at counter, walking) and include pet dogs with them",
+      "summary": "Use free 3D models from Google for humans, dogs, and table/chair sets (no character movement/animation).",
       "reqIds": [],
       "status": "pending"
     }
   ],
+  "gameProjectType": "3d",
   "projectName": "Contour Cafe",
   "clarification_mode": "instant",
   "clarification_rounds": 0

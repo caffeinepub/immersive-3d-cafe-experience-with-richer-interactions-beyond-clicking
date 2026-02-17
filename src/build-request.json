@@ -1,72 +1,90 @@
 {
   "kind": "build_request",
-  "title": "Add humans and pet dogs to the 3D cafe scene",
+  "title": "Replace procedural humans/dogs/furniture with free 3D models and disable character movement",
   "projectName": "Contour Cafe",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add 3D human characters to the cafe scene, including at least: (a) seated customers at tables, (b) a customer waiting at the counter, and (c) a walking customer moving through the cafe.",
+      "text": "Stop all human movement in the cafe scene by removing the walking customer behavior and any per-frame animation updates affecting human transforms so all humans remain static in place.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "Add humans into the cafe sitting or waiting at counter or walking, also add pet dogs with them"
+          "Not moving people just use free 3d models from Google for humans, dogs and table chair sets"
         ]
       },
       "acceptanceCriteria": [
-        "When the scene loads, at least three distinct human characters are visible in the cafe.",
-        "At least one human is positioned to appear seated at an existing table/chair cluster.",
-        "At least one human is positioned near the counter area to appear as waiting at the counter.",
-        "At least one human has a subtle walking/idle animation (e.g., looped step cycle or small positional movement) that runs continuously without user input.",
-        "Characters are placed so they do not block the camera spawn/typical navigation path or clip heavily into the floor/furniture."
+        "No human character changes position or rotation over time (no walk loops).",
+        "The scene renders without using any per-frame animation logic for humans (no HumanCharacter movement/idle animation affecting transforms).",
+        "At least the same number of human figures remain visible in the scene as before (seated + standing/waiting equivalent placements)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add 3D pet dog characters accompanying the humans in the cafe scene (e.g., sitting/standing near seated humans and near the counter), with simple idle motion.",
+      "text": "Replace the current primitive-based human and dog characters with locally bundled, free 3D model assets (GLB/GLTF) sourced via Google search (free-to-use), and load them from the app’s static assets rather than fetching from external URLs at runtime.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "...also add pet dogs with them"
+          "Not moving people just use free 3d models from Google for humans, dogs and table chair sets"
         ]
       },
       "acceptanceCriteria": [
-        "When the scene loads, at least two dog characters are visible.",
-        "At least one dog is placed near a seated human and at least one dog is placed near a standing/waiting human (counter area or walking path).",
-        "Dogs have a subtle idle animation (e.g., tail wag, head bob, or breathing) that runs continuously without user input.",
-        "Dog scale and placement are visually consistent with the cafe environment (not oversized, not below the floor)."
+        "Human and dog visuals come from imported GLB/GLTF files stored under frontend/public (or another frontend-static location) and are not downloaded from Google or any external host at runtime.",
+        "The cafe scene shows at least 3 human models and at least 2 dog models placed similarly to the current layout.",
+        "Models load successfully with a graceful fallback (the scene still renders if a model fails to load)."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Ensure the added humans and dogs render in the currently active cafe scene path (the always-available basic room/fallback scene), and keep performance stable on typical devices.",
+      "text": "Replace the current procedural table and chair components with locally bundled, free 3D table/chair set models (GLB/GLTF) sourced via Google search (free-to-use), and use those models in both the basic fallback room and the full cafe environment furniture layout.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
+        ],
+        "quotes": [
+          "Not moving people just use free 3d models from Google for humans, dogs and table chair sets"
         ]
       },
       "acceptanceCriteria": [
-        "Humans and dogs appear in the basic room experience that currently renders by default.",
-        "No runtime errors are introduced in the 3D scene (console remains free of new scene-related exceptions during load and during animation loops).",
-        "Character geometry/material complexity is kept lightweight enough to avoid noticeable frame drops compared to before the change."
+        "Tables and chairs visible in BasicCafeRoomFallback and CafeEnvironment render using imported 3D model assets rather than box/cylinder primitive geometry for those items.",
+        "Furniture models are placed and scaled so the seating areas remain navigable (no major blocking of the camera corridor).",
+        "The build succeeds and the scene renders without runtime errors related to asset loading."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add a simple attribution/license record for each third-party 3D model used (humans, dogs, tables/chairs), including source URL and license type, and ensure it is included in the repository.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3"
+        ],
+        "quotes": [
+          "Not moving people just use free 3d models from Google for humans, dogs and table chair sets"
+        ]
+      },
+      "acceptanceCriteria": [
+        "There is a committed attribution document listing each model, its original source URL, author/creator (if available), and license.",
+        "Attribution entries cover: at least one human model source, one dog model source, and one table/chair set source."
       ]
     }
   ],
   "constraints": [
-    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or any files under frontend/src/components/ui (compose instead of editing if needed).",
-    "Keep all changes within the existing single-frontend React Three Fiber scene architecture; no new backend services."
+    "Do not fetch or hotlink 3D models from Google or any external domain at runtime; all models must be bundled as frontend static assets.",
+    "Keep the backend as-is; no Motoko canister changes are required for this request.",
+    "Do not modify files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Adding character customization UI (choosing outfits, breeds, names, etc.).",
-    "Adding dialogue, quests, or interactive NPC behavior beyond simple idle/walk animations.",
-    "Adding physics-based collisions for characters."
+    "Adding new gameplay, interactions, or AI behaviors for humans/dogs.",
+    "Implementing custom character animation systems (walking cycles, skeletal animation blending, etc.).",
+    "Adding third-party authentication or external storage/CDN for assets."
   ],
   "imageRequirements": {
     "required": [],
@@ -75,7 +93,9 @@
   "userProfileUpdate": {
     "goalsToAdd": [],
     "goalsToRemove": [],
-    "preferencesToAdd": [],
+    "preferencesToAdd": [
+      "Prefer using free-to-use third-party 3D models for scene assets and keep characters static (no movement)."
+    ],
     "preferencesToRemove": [],
     "miscToAdd": [],
     "miscToRemove": [],

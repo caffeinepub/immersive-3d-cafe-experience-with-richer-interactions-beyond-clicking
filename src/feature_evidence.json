@@ -2,12 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-3d-human-characters-to-the-cafe-scene-including-at-least-a-seated-customers-at-tables-b-a-customer-waiting-at-the-counter-and-c-a-walking-customer-moving-through-the-cafe",
-      "featureTitle": "Add 3D human characters to the cafe scene, including at least: (a) seated customers at tables, (b) a customer waiting at the counter, and (c) a walking customer moving through the cafe.",
+      "featureId": "feature-stop-all-human-movement-in-the-cafe-scene-by-removing-the-walking-customer-behavior-and-any-per-frame-animation-updates-affecting-human-transforms-so-all-humans-remain-static-in-place",
+      "featureTitle": "Stop all human movement in the cafe scene by removing the walking customer behavior and any per-frame animation updates affecting human transforms so all humans remain static in place.",
       "files": [
         "frontend/src/scene/characters/CafeHumans.tsx",
         "frontend/src/scene/characters/HumanCharacter.tsx",
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+        "frontend/src/scene/characters/HumanModel.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -22,12 +22,14 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-3d-pet-dog-characters-accompanying-the-humans-in-the-cafe-scene-e-g-sitting-standing-near-seated-humans-and-near-the-counter-with-simple-idle-motion",
-      "featureTitle": "Add 3D pet dog characters accompanying the humans in the cafe scene (e.g., sitting/standing near seated humans and near the counter), with simple idle motion.",
+      "featureId": "feature-replace-the-current-primitive-based-human-and-dog-characters-with-locally-bundled-free-3d-model-assets-glb-gltf-sourced-via-google-search-free-to-use-and-load-them-from-the-app-s-static-assets-rather-than-fetching-from-external-urls-at-runtime",
+      "featureTitle": "Replace the current primitive-based human and dog characters with locally bundled, free 3D model assets (GLB/GLTF) sourced via Google search (free-to-use), and load them from the app’s static assets rather than fetching from external URLs at runtime.",
       "files": [
+        "frontend/src/scene/assets/LocalGltfModel.tsx",
         "frontend/src/scene/characters/CafeDogs.tsx",
+        "frontend/src/scene/characters/CafeHumans.tsx",
         "frontend/src/scene/characters/DogCharacter.tsx",
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+        "frontend/src/scene/characters/DogModel.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -42,12 +44,13 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-the-added-humans-and-dogs-render-in-the-currently-active-cafe-scene-path-the-always-available-basic-room-fallback-scene-and-keep-performance-stable-on-typical-devices",
-      "featureTitle": "Ensure the added humans and dogs render in the currently active cafe scene path (the always-available basic room/fallback scene), and keep performance stable on typical devices.",
+      "featureId": "feature-replace-the-current-procedural-table-and-chair-components-with-locally-bundled-free-3d-table-chair-set-models-glb-gltf-sourced-via-google-search-free-to-use-and-use-those-models-in-both-the-basic-fallback-room-and-the-full-cafe-environment-furniture-layout",
+      "featureTitle": "Replace the current procedural table and chair components with locally bundled, free 3D table/chair set models (GLB/GLTF) sourced via Google search (free-to-use), and use those models in both the basic fallback room and the full cafe environment furniture layout.",
       "files": [
-        "frontend/src/scene/characters/CafeCharacters.tsx",
-        "frontend/src/scene/characters/characterMaterials.ts",
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+        "frontend/src/scene/environment/CafeEnvironment.tsx",
+        "frontend/src/scene/environment/CafeFurniture.tsx",
+        "frontend/src/scene/environment/FurnitureModels.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -58,6 +61,24 @@
       ],
       "testIds": [
         "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-simple-attribution-license-record-for-each-third-party-3d-model-used-humans-dogs-tables-chairs-including-source-url-and-license-type-and-ensure-it-is-included-in-the-repository",
+      "featureTitle": "Add a simple attribution/license record for each third-party 3D model used (humans, dogs, tables/chairs), including source URL and license type, and ensure it is included in the repository.",
+      "files": [
+        "frontend/THIRD_PARTY_MODEL_ATTRIBUTION.md"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
       ],
       "confidence": "high"
     }
