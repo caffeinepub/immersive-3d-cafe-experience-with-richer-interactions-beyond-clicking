@@ -1,143 +1,127 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Contour Cafe: Static bundled 3D models for humans/dogs/furniture (no character movement)",
+  "title": "Contour Cafe: Fix GLB path, remove humans, add seating + dogs, add MENU counter label, warm overlay theme",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Remove all human movement and per-frame transform updates so humans remain static in place.",
+      "summary": "Ensure the table/chair GLB is present and served at /assets/models/furniture/table-chair-set.glb (or update code to an existing correct path) to stop HTML/Unexpected token errors and keep fallbacks working.",
       "acceptanceCriteria": [
-        "No human character changes position or rotation over time (no walk loops).",
-        "The scene renders without using any per-frame animation logic for humans (no HumanCharacter movement/idle animation affecting transforms).",
-        "At least the same number of human figures remain visible in the scene as before (seated + standing/waiting equivalent placements)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/scene/characters/CafeHumans.tsx",
-          "operation": "modify",
-          "description": "Remove the walking customer placement/behavior and ensure only static human placements are used (keep at least the same count by adding an additional static human if needed)."
-        },
-        {
-          "path": "frontend/src/scene/characters/HumanCharacter.tsx",
-          "operation": "modify",
-          "description": "Remove/disable all useFrame-driven transform animation logic so this component never updates transforms per-frame (or convert it into a purely static fallback renderer if kept for graceful model-load fallback)."
-        },
-        {
-          "path": "frontend/src/scene/characters/HumanModel.tsx",
-          "operation": "create",
-          "description": "Create a static human GLB/GLTF renderer component that loads a local model from frontend static assets and renders it without any per-frame animation; include a non-animated primitive fallback if loading fails."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Replace primitive humans and dogs with locally bundled free-to-use GLB/GLTF models loaded from static assets with graceful fallback.",
-      "acceptanceCriteria": [
-        "Human and dog visuals come from imported GLB/GLTF files stored under frontend/public (or another frontend-static location) and are not downloaded from Google or any external host at runtime.",
-        "The cafe scene shows at least 3 human models and at least 2 dog models placed similarly to the current layout.",
-        "Models load successfully with a graceful fallback (the scene still renders if a model fails to load)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/public/assets/models/humans/human-01.glb",
-          "operation": "create",
-          "description": "Add a free-to-use human GLB model file as a bundled static asset (do not hotlink at runtime)."
-        },
-        {
-          "path": "frontend/public/assets/models/humans/human-02.glb",
-          "operation": "create",
-          "description": "Add a second free-to-use human GLB model file as a bundled static asset (do not hotlink at runtime)."
-        },
-        {
-          "path": "frontend/public/assets/models/humans/human-03.glb",
-          "operation": "create",
-          "description": "Add a third free-to-use human GLB model file as a bundled static asset (do not hotlink at runtime)."
-        },
-        {
-          "path": "frontend/public/assets/models/dogs/dog-01.glb",
-          "operation": "create",
-          "description": "Add a free-to-use dog GLB model file as a bundled static asset (do not hotlink at runtime)."
-        },
-        {
-          "path": "frontend/public/assets/models/dogs/dog-02.glb",
-          "operation": "create",
-          "description": "Add a second free-to-use dog GLB model file as a bundled static asset (do not hotlink at runtime)."
-        },
-        {
-          "path": "frontend/src/scene/assets/LocalGltfModel.tsx",
-          "operation": "create",
-          "description": "Create a reusable local GLB/GLTF loader/render helper for @react-three/fiber that loads from frontend/public and returns a graceful fallback mesh on error. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/scene/characters/CafeHumans.tsx",
-          "operation": "modify",
-          "description": "Switch human placements to use the new HumanModel (GLB/GLTF) component(s) pointing at local static assets; keep placements similar to current seated/waiting equivalents and ensure at least 3 humans are shown."
-        },
-        {
-          "path": "frontend/src/scene/characters/CafeDogs.tsx",
-          "operation": "modify",
-          "description": "Switch dog placements to use a new DogModel (GLB/GLTF) component(s) pointing at local static assets; keep placements similar to current layout and ensure at least 2 dogs are shown."
-        },
-        {
-          "path": "frontend/src/scene/characters/DogModel.tsx",
-          "operation": "create",
-          "description": "Create a static dog GLB/GLTF renderer component that loads a local model from frontend static assets; include a non-animated primitive fallback if loading fails."
-        },
-        {
-          "path": "frontend/src/scene/characters/DogCharacter.tsx",
-          "operation": "modify",
-          "description": "Remove/disable all useFrame-driven idle transform animation logic so the legacy primitive dog (if still used as fallback) remains fully static and does not update transforms per-frame."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Replace procedural tables/chairs with locally bundled free-to-use GLB/GLTF furniture models in both the basic fallback room and full cafe environment.",
-      "acceptanceCriteria": [
-        "Tables and chairs visible in BasicCafeRoomFallback and CafeEnvironment render using imported 3D model assets rather than box/cylinder primitive geometry for those items.",
-        "Furniture models are placed and scaled so the seating areas remain navigable (no major blocking of the camera corridor).",
-        "The build succeeds and the scene renders without runtime errors related to asset loading."
+        "Loading the café scene no longer triggers the \"Unexpected token '<'\" error for `/assets/models/furniture/table-chair-set.glb`.",
+        "The furniture GLB request to `/assets/models/furniture/table-chair-set.glb` returns `model/gltf-binary` (or a valid GLB download) instead of an HTML page.",
+        "Tables/chairs render using the GLB model when available; if the model fails to load, the existing primitive fallbacks in `frontend/src/scene/environment/FurnitureModels.tsx` render without crashing the scene."
       ],
       "file_operations": [
         {
           "path": "frontend/public/assets/models/furniture/table-chair-set.glb",
           "operation": "create",
-          "description": "Add a free-to-use table/chair set GLB model file as a bundled static asset (do not hotlink at runtime)."
+          "description": "Add the missing furniture GLB file so requests to `/assets/models/furniture/table-chair-set.glb` resolve to a real binary asset instead of falling back to an HTML document."
         },
         {
           "path": "frontend/src/scene/environment/FurnitureModels.tsx",
-          "operation": "create",
-          "description": "Create model-backed furniture components (e.g., TableModel, ChairModel, optionally a combined SetModel) that load local GLB/GLTF assets and provide a primitive fallback if model loading fails."
-        },
-        {
-          "path": "frontend/src/scene/environment/CafeFurniture.tsx",
           "operation": "modify",
-          "description": "Update CafeTable and WoodenChair to primarily render using the bundled GLB/GLTF furniture models (with graceful fallback), while preserving existing public props (position/rotation) so existing scene layout code continues to work."
+          "description": "Confirm the GLB path used by TableModel/ChairModel matches the intended public asset location under `frontend/public/assets/models/furniture/` (keep `/assets/models/furniture/table-chair-set.glb` if the file is added there, or update to the correct existing file name/path). Preserve current primitive fallbacks so scene rendering remains resilient if GLB loading fails."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Remove humans from the active scene composition so only dogs and non-character props render.",
+      "acceptanceCriteria": [
+        "No human models render in the scene (no instances from `frontend/src/scene/characters/CafeHumans.tsx`).",
+        "Dogs and other scene props still render normally."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/scene/characters/CafeCharacters.tsx",
+          "operation": "modify",
+          "description": "Update the character aggregator to stop rendering `CafeHumans` and only include `CafeDogs`, ensuring humans are skipped in the active scene wiring."
         },
         {
           "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Ensure all table/chair instances in the basic fallback room render via the updated model-backed CafeTable/WoodenChair components (and adjust scale/placement if necessary to preserve navigable corridors)."
-        },
+          "description": "Verify the room-first active scene continues to mount characters via `CafeCharacters` (dogs only after the aggregator change), and does not directly render `CafeHumans` anywhere."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Place at least two additional static table-and-chair clusters in the active (room-first) café scene without overlaps and at y=0.",
+      "acceptanceCriteria": [
+        "At least 2 additional table-and-chair clusters are visible in the active scene (the one rendered in `roomFirstMode`).",
+        "New tables/chairs do not intersect the counter or walls and are placed on the floor plane at y=0."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
+          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Ensure all table/chair instances in the full environment render via the updated model-backed CafeTable/WoodenChair components (and adjust scale/placement if necessary to avoid blocking the camera corridor)."
+          "description": "Add at least two more `CafeTable` + `WoodenChair` clusters at sensible open-floor coordinates (y=0), ensuring they do not overlap the counter/walls and do not block the default camera start area."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Add repository attribution/license documentation for each third-party 3D model used (humans, dogs, furniture).",
+      "summary": "Add at least two more static dogs near the new seating areas using the existing DogModel pattern.",
       "acceptanceCriteria": [
-        "There is a committed attribution document listing each model, its original source URL, author/creator (if available), and license.",
-        "Attribution entries cover: at least one human model source, one dog model source, and one table/chair set source."
+        "At least 2 additional dogs are visible in the active scene in addition to the current dogs defined in `frontend/src/scene/characters/CafeDogs.tsx`.",
+        "All dogs are static (no per-frame animation/movement logic added)."
       ],
       "file_operations": [
         {
-          "path": "frontend/THIRD_PARTY_MODEL_ATTRIBUTION.md",
-          "operation": "create",
-          "description": "Add an attribution/license record for each bundled third-party model (humans, dogs, table/chair set), including source URL, author/creator (if available), and license type."
+          "path": "frontend/src/scene/characters/CafeDogs.tsx",
+          "operation": "modify",
+          "description": "Add at least two additional `DogModel` instances positioned near some of the newly added seating areas. Keep them static (no per-frame updates or movement logic)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Add an in-scene 3D 'MENU' label on/near the counter front with bold styling and beige color, readable from the default camera angle.",
+      "acceptanceCriteria": [
+        "The text \"MENU\" appears on/near the counter in the 3D scene.",
+        "The label uses a bold visual weight and a beige color consistent with the scene palette.",
+        "The label is legible at typical viewing distance (not clipped into the counter mesh)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/scene/components/WallFrameLabel.tsx",
+          "operation": "modify",
+          "description": "Extend the label component to support a bold visual weight option suitable for an in-scene counter sign (e.g., configurable font weight/style in the canvas text render), while keeping existing label usages unchanged."
+        },
+        {
+          "path": "frontend/src/scene/environment/CafeFurniture.tsx",
+          "operation": "modify",
+          "description": "Add a `WallFrameLabel` instance reading \"MENU\" positioned slightly in front of the counter’s front panel (beige color, bold weight, and a small surface offset) so it is clearly readable from the default camera angle and not clipped into the mesh."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Apply a cohesive warm café theme to UI overlays (loading/error/menus) with cream/beige surfaces, espresso-brown accents, and subtle neon-green highlights; keep all user-facing text in English.",
+      "acceptanceCriteria": [
+        "Overlays and panels use a consistent warm café palette (cream/beige + espresso-brown) with restrained neon-green accents; no default mismatched colors.",
+        "All overlay/panel user-facing text remains in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Adjust the global CSS color variables to better reflect a warm café palette (cream/beige surfaces and espresso-brown accents) and introduce/align a restrained neon-green accent token used by Tailwind color mappings, without changing user-facing text content."
+        },
+        {
+          "path": "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
+          "operation": "modify",
+          "description": "Update overlay styling classes to consistently use the warm café palette and add subtle neon-green accents (e.g., highlight spinner/accent elements) while keeping all displayed text in English."
+        },
+        {
+          "path": "frontend/src/scene/ui/SceneErrorOverlay.tsx",
+          "operation": "modify",
+          "description": "Update error overlay styling classes to match the same warm café theme (cream/beige + espresso-brown) and add restrained neon-green highlights where appropriate, without changing the English copy."
+        },
+        {
+          "path": "frontend/src/components/layout/ContourFrame.tsx",
+          "operation": "modify",
+          "description": "Refine panel frame background/opacity/border styling so overlay panels feel cohesive with the warm café theme and existing contour texture treatment, while keeping existing layout behavior intact."
         }
       ]
     }

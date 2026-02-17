@@ -1,90 +1,120 @@
 {
   "kind": "build_request",
-  "title": "Replace procedural humans/dogs/furniture with free 3D models and disable character movement",
+  "title": "Fix GLB loading failure and update café scene (remove humans, add tables/chairs + dogs, add beige MENU counter text)",
   "projectName": "Contour Cafe",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Stop all human movement in the cafe scene by removing the walking customer behavior and any per-frame animation updates affecting human transforms so all humans remain static in place.",
+      "text": "Fix the 3D scene load failure caused by the furniture model path `/assets/models/furniture/table-chair-set.glb` returning HTML (\"Unexpected token '<' ... is not valid JSON\") by ensuring the GLB file is present and served as a static asset at that exact path, or by updating the code to reference the correct existing furniture GLB path under `frontend/public/assets/models/furniture/`.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-3"
         ],
         "quotes": [
-          "Not moving people just use free 3d models from Google for humans, dogs and table chair sets"
+          "Could not load /assets/models/furniture/table-chair-set.glb: Unexpected token '<', \"<html lang\"... is not valid JSON"
         ]
       },
       "acceptanceCriteria": [
-        "No human character changes position or rotation over time (no walk loops).",
-        "The scene renders without using any per-frame animation logic for humans (no HumanCharacter movement/idle animation affecting transforms).",
-        "At least the same number of human figures remain visible in the scene as before (seated + standing/waiting equivalent placements)."
+        "Loading the café scene no longer triggers the \"Unexpected token '<'\" error for `/assets/models/furniture/table-chair-set.glb`.",
+        "The furniture GLB request to `/assets/models/furniture/table-chair-set.glb` returns `model/gltf-binary` (or a valid GLB download) instead of an HTML page.",
+        "Tables/chairs render using the GLB model when available; if the model fails to load, the existing primitive fallbacks in `frontend/src/scene/environment/FurnitureModels.tsx` render without crashing the scene."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Replace the current primitive-based human and dog characters with locally bundled, free 3D model assets (GLB/GLTF) sourced via Google search (free-to-use), and load them from the app’s static assets rather than fetching from external URLs at runtime.",
+      "text": "Remove/skip all human characters from the café scene so that only dogs (and non-character props) appear; do not render `CafeHumans` anywhere in the active scene composition.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-3"
         ],
         "quotes": [
-          "Not moving people just use free 3d models from Google for humans, dogs and table chair sets"
+          "Skip the humans"
         ]
       },
       "acceptanceCriteria": [
-        "Human and dog visuals come from imported GLB/GLTF files stored under frontend/public (or another frontend-static location) and are not downloaded from Google or any external host at runtime.",
-        "The cafe scene shows at least 3 human models and at least 2 dog models placed similarly to the current layout.",
-        "Models load successfully with a graceful fallback (the scene still renders if a model fails to load)."
+        "No human models render in the scene (no instances from `frontend/src/scene/characters/CafeHumans.tsx`).",
+        "Dogs and other scene props still render normally."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Replace the current procedural table and chair components with locally bundled, free 3D table/chair set models (GLB/GLTF) sourced via Google search (free-to-use), and use those models in both the basic fallback room and the full cafe environment furniture layout.",
+      "text": "Add more table-and-chair sets to the café scene by placing additional `CafeTable` + `WoodenChair` clusters (static, no animation) in open areas without overlapping existing furniture or blocking the camera start position.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-3"
         ],
         "quotes": [
-          "Not moving people just use free 3d models from Google for humans, dogs and table chair sets"
+          "add more table chairs"
         ]
       },
       "acceptanceCriteria": [
-        "Tables and chairs visible in BasicCafeRoomFallback and CafeEnvironment render using imported 3D model assets rather than box/cylinder primitive geometry for those items.",
-        "Furniture models are placed and scaled so the seating areas remain navigable (no major blocking of the camera corridor).",
-        "The build succeeds and the scene renders without runtime errors related to asset loading."
+        "At least 2 additional table-and-chair clusters are visible in the active scene (the one rendered in `roomFirstMode`).",
+        "New tables/chairs do not intersect the counter or walls and are placed on the floor plane at y=0."
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Add a simple attribution/license record for each third-party 3D model used (humans, dogs, tables/chairs), including source URL and license type, and ensure it is included in the repository.",
+      "text": "Add more dogs to the café scene by placing additional static dog models (using the existing `DogModel` pattern) at sensible positions near some of the new seating areas.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-3"
         ],
         "quotes": [
-          "Not moving people just use free 3d models from Google for humans, dogs and table chair sets"
+          "and dogs in the Cafe"
         ]
       },
       "acceptanceCriteria": [
-        "There is a committed attribution document listing each model, its original source URL, author/creator (if available), and license.",
-        "Attribution entries cover: at least one human model source, one dog model source, and one table/chair set source."
+        "At least 2 additional dogs are visible in the active scene in addition to the current dogs defined in `frontend/src/scene/characters/CafeDogs.tsx`.",
+        "All dogs are static (no per-frame animation/movement logic added)."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Add the word \"MENU\" on the café counter as an in-scene 3D label using bold styling and a beige color; position it clearly on/near the counter front so it is readable from the default camera angle.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3"
+        ],
+        "quotes": [
+          "write word menu on he counter in full bold font in beige color"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The text \"MENU\" appears on/near the counter in the 3D scene.",
+        "The label uses a bold visual weight and a beige color consistent with the scene palette.",
+        "The label is legible at typical viewing distance (not clipped into the counter mesh)."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Apply a cohesive warm café visual theme across UI overlays (loading/error/menus) that matches the scene: warm cream/beige surfaces, espresso-brown accents, and subtle neon-green highlights to complement the existing menu-board glow; keep all user-facing text in English.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Overlays and panels use a consistent warm café palette (cream/beige + espresso-brown) with restrained neon-green accents; no default mismatched colors.",
+        "All overlay/panel user-facing text remains in English."
       ]
     }
   ],
   "constraints": [
-    "Do not fetch or hotlink 3D models from Google or any external domain at runtime; all models must be bundled as frontend static assets.",
-    "Keep the backend as-is; no Motoko canister changes are required for this request.",
-    "Do not modify files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT."
+    "Do not edit any files under `frontend/src/components/ui` (read-only UI components).",
+    "Do not edit files in `frontend/immutablePaths` (e.g., `frontend/src/hooks/useInternetIdentity.ts(x)`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`).",
+    "Keep characters/props static (no animation/movement logic)."
   ],
   "nonGoals": [
-    "Adding new gameplay, interactions, or AI behaviors for humans/dogs.",
-    "Implementing custom character animation systems (walking cycles, skeletal animation blending, etc.).",
-    "Adding third-party authentication or external storage/CDN for assets."
+    "Adding multiplayer, real-time features, or chat.",
+    "Adding external asset hosting/CDNs or external databases.",
+    "Changing authentication (Internet Identity only)."
   ],
   "imageRequirements": {
     "required": [],
@@ -94,7 +124,7 @@
     "goalsToAdd": [],
     "goalsToRemove": [],
     "preferencesToAdd": [
-      "Prefer using free-to-use third-party 3D models for scene assets and keep characters static (no movement)."
+      "Use English for any user-facing text."
     ],
     "preferencesToRemove": [],
     "miscToAdd": [],

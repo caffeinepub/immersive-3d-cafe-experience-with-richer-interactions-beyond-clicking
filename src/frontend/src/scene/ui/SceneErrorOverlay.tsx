@@ -72,7 +72,7 @@ export default function SceneErrorOverlay({ message, onRetry, diagnostics }: Sce
           </div>
         )}
 
-        <Button onClick={onRetry} variant="default" size="lg" className="w-full">
+        <Button onClick={onRetry} variant="default" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
           Retry Loading Scene
         </Button>
 

@@ -1,81 +1,89 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-17T00:22:46.236Z",
+  "generatedAt": "2026-02-17T00:31:53.482Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 4,
+    "total": 6,
+    "implemented": 6,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Stop all human movement in the cafe scene by removing the walking customer behavior and any per-frame animation updates affecting human transforms so all humans remain static in place.",
+        "summary": "Fix the 3D scene load failure caused by the furniture model path `/assets/models/furniture/table-chair-set.glb` returning HTML (\"Unexpected token '<' ... is not valid JSON\") by ensuring the GLB file is present and served as a static asset at that exact path, or by updating the code to reference the correct existing furniture GLB path under `frontend/public/assets/models/furniture/`.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/scene/characters/CafeHumans.tsx",
-          "frontend/src/scene/characters/HumanCharacter.tsx",
-          "frontend/src/scene/characters/HumanModel.tsx"
+          "frontend/public/assets/models/furniture/table-chair-set.glb",
+          "frontend/src/scene/environment/FurnitureModels.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/scene/characters/CafeHumans.tsx",
-          "frontend/src/scene/characters/HumanCharacter.tsx",
-          "frontend/src/scene/characters/HumanModel.tsx"
+          "frontend/src/scene/environment/FurnitureModels.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Replace the current primitive-based human and dog characters with locally bundled, free 3D model assets (GLB/GLTF) sourced via Google search (free-to-use), and load them from the app’s static assets rather than fetching from external URLs at runtime.",
+        "summary": "Remove/skip all human characters from the café scene so that only dogs (and non-character props) appear; do not render `CafeHumans` anywhere in the active scene composition.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/models/humans/human-01.glb",
-          "frontend/public/assets/models/humans/human-02.glb",
-          "frontend/public/assets/models/humans/human-03.glb",
-          "frontend/public/assets/models/dogs/dog-01.glb",
-          "frontend/public/assets/models/dogs/dog-02.glb",
-          "frontend/src/scene/assets/LocalGltfModel.tsx",
-          "frontend/src/scene/characters/CafeHumans.tsx",
-          "frontend/src/scene/characters/CafeDogs.tsx",
-          "frontend/src/scene/characters/DogModel.tsx",
-          "frontend/src/scene/characters/DogCharacter.tsx"
+          "frontend/src/scene/characters/CafeCharacters.tsx",
+          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/scene/assets/LocalGltfModel.tsx",
-          "frontend/src/scene/characters/CafeHumans.tsx",
-          "frontend/src/scene/characters/CafeDogs.tsx",
-          "frontend/src/scene/characters/DogModel.tsx",
-          "frontend/src/scene/characters/DogCharacter.tsx"
+          "frontend/src/scene/characters/CafeCharacters.tsx",
+          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Replace the current procedural table and chair components with locally bundled, free 3D table/chair set models (GLB/GLTF) sourced via Google search (free-to-use), and use those models in both the basic fallback room and the full cafe environment furniture layout.",
+        "summary": "Add more table-and-chair sets to the café scene by placing additional `CafeTable` + `WoodenChair` clusters (static, no animation) in open areas without overlapping existing furniture or blocking the camera start position.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/models/furniture/table-chair-set.glb",
-          "frontend/src/scene/environment/FurnitureModels.tsx",
-          "frontend/src/scene/environment/CafeFurniture.tsx",
-          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
-          "frontend/src/scene/environment/CafeEnvironment.tsx"
+          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/scene/environment/FurnitureModels.tsx",
-          "frontend/src/scene/environment/CafeFurniture.tsx",
-          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
-          "frontend/src/scene/environment/CafeEnvironment.tsx"
+          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Add a simple attribution/license record for each third-party 3D model used (humans, dogs, tables/chairs), including source URL and license type, and ensure it is included in the repository.",
+        "summary": "Add more dogs to the café scene by placing additional static dog models (using the existing `DogModel` pattern) at sensible positions near some of the new seating areas.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/THIRD_PARTY_MODEL_ATTRIBUTION.md"
+          "frontend/src/scene/characters/CafeDogs.tsx"
         ],
         "matchedFiles": [
-          "frontend/THIRD_PARTY_MODEL_ATTRIBUTION.md"
+          "frontend/src/scene/characters/CafeDogs.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Add the word \"MENU\" on the café counter as an in-scene 3D label using bold styling and a beige color; position it clearly on/near the counter front so it is readable from the default camera angle.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/scene/components/WallFrameLabel.tsx",
+          "frontend/src/scene/environment/CafeFurniture.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/scene/components/WallFrameLabel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Apply a cohesive warm café visual theme across UI overlays (loading/error/menus) that matches the scene: warm cream/beige surfaces, espresso-brown accents, and subtle neon-green highlights to complement the existing menu-board glow; keep all user-facing text in English.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/index.css",
+          "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
+          "frontend/src/scene/ui/SceneErrorOverlay.tsx",
+          "frontend/src/components/layout/ContourFrame.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/index.css",
+          "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
+          "frontend/src/scene/ui/SceneErrorOverlay.tsx",
+          "frontend/src/components/layout/ContourFrame.tsx"
         ]
       }
     ]
@@ -85,19 +93,16 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/THIRD_PARTY_MODEL_ATTRIBUTION.md",
-    "frontend/src/scene/assets/LocalGltfModel.tsx",
+    "frontend/src/components/layout/ContourFrame.tsx",
+    "frontend/src/index.css",
+    "frontend/src/scene/characters/CafeCharacters.tsx",
     "frontend/src/scene/characters/CafeDogs.tsx",
-    "frontend/src/scene/characters/CafeHumans.tsx",
-    "frontend/src/scene/characters/DogCharacter.tsx",
-    "frontend/src/scene/characters/DogModel.tsx",
-    "frontend/src/scene/characters/HumanCharacter.tsx",
-    "frontend/src/scene/characters/HumanModel.tsx",
-    "frontend/src/scene/characters/characterMaterials.ts",
+    "frontend/src/scene/components/WallFrameLabel.tsx",
     "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
-    "frontend/src/scene/environment/CafeEnvironment.tsx",
-    "frontend/src/scene/environment/CafeFurniture.tsx",
     "frontend/src/scene/environment/FurnitureModels.tsx",
+    "frontend/src/scene/ui/SceneErrorOverlay.tsx",
+    "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
+    "frontend/tailwind.config.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

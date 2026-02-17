@@ -1,12 +1,15 @@
 # Specification
 
 ## Summary
-**Goal:** Replace procedural cafe characters and furniture with locally bundled free 3D models, and keep all human characters static (no movement/transform animation).
+**Goal:** Restore reliable 3D café scene loading and refresh the scene layout/theme by removing humans, adding more seating and dogs, and adding a beige “MENU” counter label.
 
 **Planned changes:**
-- Remove/disable the walking customer behavior and any per-frame updates that change human character transforms so humans remain fixed in place.
-- Add locally bundled (static) free-to-use GLB/GLTF assets for humans and dogs; update the scene to render at least 3 humans and at least 2 dogs from these models, with graceful fallback if a model fails to load.
-- Add locally bundled (static) free-to-use GLB/GLTF assets for tables/chairs; replace primitive furniture in both BasicCafeRoomFallback and CafeEnvironment with the model-based furniture, placed/scaled to keep seating areas navigable.
-- Add a repository attribution document listing each third-party model used (humans, dogs, tables/chairs) with source URL, author (if available), and license type.
+- Fix the GLB loading failure for `/assets/models/furniture/table-chair-set.glb` by ensuring the asset is served at that exact path or updating the code to reference the correct existing GLB under `frontend/public/assets/models/furniture/`.
+- Ensure tables/chairs render from the GLB when available, and fall back to existing primitive furniture without crashing if the GLB fails to load.
+- Remove/skip rendering of all human characters (do not render `CafeHumans` in the active scene composition).
+- Add at least two additional static table + chair clusters in open areas on the floor plane (y=0), avoiding intersections and not blocking the camera start position.
+- Add at least two additional static dogs near some of the new seating areas using the existing `DogModel` pattern.
+- Add an in-scene 3D “MENU” label in bold with a beige color on/near the counter front, positioned for readability from the default camera.
+- Update UI overlays (loading/error/menus) to use a cohesive warm café palette (cream/beige surfaces, espresso-brown accents, subtle neon-green highlights) while keeping all user-facing text in English.
 
-**User-visible outcome:** The cafe scene displays static human figures and dogs rendered from bundled 3D models, with tables/chairs also rendered from bundled 3D furniture models; the scene loads without hotlinking external model URLs and includes attribution for used assets.
+**User-visible outcome:** The café scene loads without the GLB path error, shows no humans, includes more seating and more dogs, displays a readable beige “MENU” label on the counter, and has warm-themed UI overlays that match the café aesthetic.

@@ -1,144 +1,131 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --radius: 0.625rem;
-        
-        /* Warm monochrome contour palette - Light mode */
-        --background: 0.96 0.015 55;
-        --foreground: 0.25 0.03 50;
-        --card: 0.98 0.01 60;
-        --card-foreground: 0.25 0.03 50;
-        --popover: 0.98 0.01 60;
-        --popover-foreground: 0.25 0.03 50;
-        --primary: 0.45 0.08 45;
-        --primary-foreground: 0.98 0.01 60;
-        --secondary: 0.88 0.025 58;
-        --secondary-foreground: 0.30 0.04 48;
-        --muted: 0.90 0.02 57;
-        --muted-foreground: 0.50 0.04 52;
-        --accent: 0.75 0.10 50;
-        --accent-foreground: 0.98 0.01 60;
-        --destructive: 0.55 0.22 25;
-        --destructive-foreground: 0.98 0.01 60;
-        --border: 0.85 0.02 55;
-        --input: 0.85 0.02 55;
-        --ring: 0.45 0.08 45;
-        
-        /* Coffee color for header */
-        --coffee: 0.50 0.08 40;
-        
-        --chart-1: 0.65 0.15 45;
-        --chart-2: 0.60 0.12 50;
-        --chart-3: 0.55 0.10 55;
-        --chart-4: 0.70 0.18 40;
-        --chart-5: 0.75 0.20 48;
-        
-        /* Mobile viewport height - set by useAppViewport hook */
-        --app-height: 100vh;
-    }
+  :root {
+    /* Warm café palette - cream/beige surfaces with espresso-brown accents */
+    --background: oklch(0.96 0.01 60); /* Warm cream */
+    --foreground: oklch(0.20 0.02 40); /* Espresso brown */
 
-    .dark {
-        /* Warm monochrome contour palette - Dark mode */
-        --background: 0.18 0.03 48;
-        --foreground: 0.92 0.015 58;
-        --card: 0.22 0.035 50;
-        --card-foreground: 0.92 0.015 58;
-        --popover: 0.20 0.03 49;
-        --popover-foreground: 0.92 0.015 58;
-        --primary: 0.78 0.10 52;
-        --primary-foreground: 0.20 0.03 48;
-        --secondary: 0.30 0.04 50;
-        --secondary-foreground: 0.92 0.015 58;
-        --muted: 0.28 0.04 51;
-        --muted-foreground: 0.65 0.05 54;
-        --accent: 0.55 0.12 48;
-        --accent-foreground: 0.95 0.01 60;
-        --destructive: 0.60 0.20 22;
-        --destructive-foreground: 0.95 0.01 60;
-        --border: 0.30 0.04 50;
-        --input: 0.28 0.04 51;
-        --ring: 0.65 0.08 50;
-        
-        /* Coffee color for header - slightly lighter in dark mode */
-        --coffee: 0.45 0.08 38;
-        
-        --chart-1: 0.55 0.18 48;
-        --chart-2: 0.60 0.15 52;
-        --chart-3: 0.65 0.12 55;
-        --chart-4: 0.50 0.20 45;
-        --chart-5: 0.70 0.22 50;
-    }
+    --card: oklch(0.98 0.008 60); /* Light cream card */
+    --card-foreground: oklch(0.20 0.02 40); /* Espresso brown */
 
-    * {
-        @apply border-border;
-    }
-    
-    html, body, #root {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        position: fixed;
-        overscroll-behavior: none;
-    }
-    
-    body {
-        @apply bg-background text-foreground;
-        font-family: 'Inter', system-ui, sans-serif;
-        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-        /* Support safe areas on notched devices */
-        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Space Grotesk', 'Inter', sans-serif;
-        font-weight: 600;
-    }
-    
-    /* App viewport container using stable height */
-    .app-viewport {
-        width: 100vw;
-        height: var(--app-height);
-        height: 100dvh; /* Dynamic viewport height fallback for modern browsers */
-    }
-    
-    /* Safe area utilities */
-    .safe-top {
-        padding-top: env(safe-area-inset-top);
-    }
-    
-    .safe-bottom {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-    
-    .safe-left {
-        padding-left: env(safe-area-inset-left);
-    }
-    
-    .safe-right {
-        padding-right: env(safe-area-inset-right);
-    }
+    --popover: oklch(0.98 0.008 60); /* Light cream */
+    --popover-foreground: oklch(0.20 0.02 40); /* Espresso brown */
+
+    --primary: oklch(0.45 0.08 40); /* Rich coffee brown */
+    --primary-foreground: oklch(0.98 0.008 60); /* Light cream text */
+
+    --secondary: oklch(0.85 0.02 60); /* Beige */
+    --secondary-foreground: oklch(0.20 0.02 40); /* Espresso brown */
+
+    --muted: oklch(0.90 0.015 60); /* Soft beige */
+    --muted-foreground: oklch(0.40 0.02 40); /* Medium brown */
+
+    --accent: oklch(0.65 0.15 145); /* Restrained neon green accent */
+    --accent-foreground: oklch(0.98 0.008 60); /* Light cream text */
+
+    --destructive: oklch(0.55 0.20 25); /* Warm red */
+    --destructive-foreground: oklch(0.98 0.008 60); /* Light cream text */
+
+    --success: oklch(0.60 0.12 145); /* Muted green */
+    --success-foreground: oklch(0.98 0.008 60); /* Light cream text */
+
+    --warning: oklch(0.70 0.15 70); /* Warm amber */
+    --warning-foreground: oklch(0.20 0.02 40); /* Espresso brown */
+
+    --border: oklch(0.75 0.02 60); /* Light beige border */
+    --input: oklch(0.75 0.02 60); /* Light beige input */
+    --ring: oklch(0.45 0.08 40); /* Coffee brown ring */
+
+    --radius: 0.5rem;
+
+    /* Coffee color for header */
+    --coffee: oklch(0.35 0.04 40); /* Deep coffee brown */
+  }
+
+  .dark {
+    /* Dark mode - inverted warm palette */
+    --background: oklch(0.18 0.02 40); /* Dark espresso */
+    --foreground: oklch(0.95 0.01 60); /* Light cream */
+
+    --card: oklch(0.22 0.02 40); /* Dark brown card */
+    --card-foreground: oklch(0.95 0.01 60); /* Light cream */
+
+    --popover: oklch(0.22 0.02 40); /* Dark brown */
+    --popover-foreground: oklch(0.95 0.01 60); /* Light cream */
+
+    --primary: oklch(0.75 0.08 60); /* Light beige */
+    --primary-foreground: oklch(0.20 0.02 40); /* Espresso brown */
+
+    --secondary: oklch(0.30 0.02 40); /* Dark beige */
+    --secondary-foreground: oklch(0.95 0.01 60); /* Light cream */
+
+    --muted: oklch(0.28 0.02 40); /* Dark muted brown */
+    --muted-foreground: oklch(0.70 0.02 60); /* Light brown */
+
+    --accent: oklch(0.65 0.18 145); /* Brighter neon green for dark mode */
+    --accent-foreground: oklch(0.18 0.02 40); /* Dark espresso text */
+
+    --destructive: oklch(0.60 0.22 25); /* Brighter warm red */
+    --destructive-foreground: oklch(0.95 0.01 60); /* Light cream text */
+
+    --success: oklch(0.65 0.15 145); /* Brighter green */
+    --success-foreground: oklch(0.18 0.02 40); /* Dark espresso text */
+
+    --warning: oklch(0.75 0.18 70); /* Brighter amber */
+    --warning-foreground: oklch(0.18 0.02 40); /* Dark espresso text */
+
+    --border: oklch(0.35 0.02 40); /* Dark border */
+    --input: oklch(0.35 0.02 40); /* Dark input */
+    --ring: oklch(0.75 0.08 60); /* Light beige ring */
+
+    /* Coffee color for header in dark mode */
+    --coffee: oklch(0.25 0.03 40); /* Very dark coffee */
+  }
 }
 
-@layer utilities {
-    .text-balance {
-        text-wrap: balance;
-    }
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  }
 }
 
-/* Smooth transitions for reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+/* Safe area utilities for mobile notches/home indicators */
+@supports (padding: env(safe-area-inset-top)) {
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Stable viewport height for mobile browsers */
+:root {
+  --app-height: 100vh;
+}
+
+html, body, #root {
+  height: var(--app-height);
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  overscroll-behavior: none;
 }

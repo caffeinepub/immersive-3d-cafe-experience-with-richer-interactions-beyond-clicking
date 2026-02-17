@@ -1,43 +1,58 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "3D project using static (non-animated) characters/props with free 3D models (humans, dogs, and table/chair sets) sourced from Google.",
-  "architectural_notes": [
-    "Characters/props should be static (no movement/animation).",
-    "Asset sourcing plan: use free 3D models found via Google for humans, dogs, and table/chair sets (ensure compatible licensing)."
+  "summary": "3D café environment scene with furniture and animal props, and counter signage text.",
+  "architectural_notes": [],
+  "known_issues": [
+    "Scene fails to load due to model file /assets/models/furniture/table-chair-set.glb returning HTML (Unexpected token '<' / not valid JSON), suggesting a bad path/404 or server returning an HTML error page instead of a .glb."
   ],
-  "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-stop-all-human-movement-in-the-cafe-scene-by-removing-the-walking-customer-behavior-and-any-per-frame-animation-updates-affecting-human-transforms-so-all-humans-remain-static-in-place",
-      "title": "Stop all human movement in the cafe scene by removing the walking customer behavior and any per-frame animation updates affecting human transforms so all humans remain static in place.",
+      "id": "feature-fix-the-3d-scene-load-failure-caused-by-the-furniture-model-path-assets-models-furniture-table-chair-set-glb-returning-html-unexpected-token-is-not-valid-json-by-ensuring-the-glb-file-is-present-and-served-as-a-static-asset-at-that-exact-path-or-by-updating-the-code-to-reference-the-correct-existing-furniture-glb-path-under-frontend-public-assets-models-furniture",
+      "title": "Fix the 3D scene load failure caused by the furniture model path `/assets/models/furniture/table-chair-set.glb` returning HTML (\"Unexpected token '<' ... is not valid JSON\") by ensuring the GLB file is present and served as a static asset at that exact path, or by updating the code to reference the correct existing furniture GLB path under `frontend/public/assets/models/furniture/`.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-replace-the-current-primitive-based-human-and-dog-characters-with-locally-bundled-free-3d-model-assets-glb-gltf-sourced-via-google-search-free-to-use-and-load-them-from-the-app-s-static-assets-rather-than-fetching-from-external-urls-at-runtime",
-      "title": "Replace the current primitive-based human and dog characters with locally bundled, free 3D model assets (GLB/GLTF) sourced via Google search (free-to-use), and load them from the app’s static assets rather than fetching from external URLs at runtime.",
+      "id": "feature-remove-skip-all-human-characters-from-the-caf-scene-so-that-only-dogs-and-non-character-props-appear-do-not-render-cafehumans-anywhere-in-the-active-scene-composition",
+      "title": "Remove/skip all human characters from the café scene so that only dogs (and non-character props) appear; do not render `CafeHumans` anywhere in the active scene composition.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-replace-the-current-procedural-table-and-chair-components-with-locally-bundled-free-3d-table-chair-set-models-glb-gltf-sourced-via-google-search-free-to-use-and-use-those-models-in-both-the-basic-fallback-room-and-the-full-cafe-environment-furniture-layout",
-      "title": "Replace the current procedural table and chair components with locally bundled, free 3D table/chair set models (GLB/GLTF) sourced via Google search (free-to-use), and use those models in both the basic fallback room and the full cafe environment furniture layout.",
+      "id": "feature-add-more-table-and-chair-sets-to-the-caf-scene-by-placing-additional-cafetable-woodenchair-clusters-static-no-animation-in-open-areas-without-overlapping-existing-furniture-or-blocking-the-camera-start-position",
+      "title": "Add more table-and-chair sets to the café scene by placing additional `CafeTable` + `WoodenChair` clusters (static, no animation) in open areas without overlapping existing furniture or blocking the camera start position.",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-simple-attribution-license-record-for-each-third-party-3d-model-used-humans-dogs-tables-chairs-including-source-url-and-license-type-and-ensure-it-is-included-in-the-repository",
-      "title": "Add a simple attribution/license record for each third-party 3D model used (humans, dogs, tables/chairs), including source URL and license type, and ensure it is included in the repository.",
+      "id": "feature-add-more-dogs-to-the-caf-scene-by-placing-additional-static-dog-models-using-the-existing-dogmodel-pattern-at-sensible-positions-near-some-of-the-new-seating-areas",
+      "title": "Add more dogs to the café scene by placing additional static dog models (using the existing `DogModel` pattern) at sensible positions near some of the new seating areas.",
       "reqIds": [
         "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-word-menu-on-the-caf-counter-as-an-in-scene-3d-label-using-bold-styling-and-a-beige-color-position-it-clearly-on-near-the-counter-front-so-it-is-readable-from-the-default-camera-angle",
+      "title": "Add the word \"MENU\" on the café counter as an in-scene 3D label using bold styling and a beige color; position it clearly on/near the counter front so it is readable from the default camera angle.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-cohesive-warm-caf-visual-theme-across-ui-overlays-loading-error-menus-that-matches-the-scene-warm-cream-beige-surfaces-espresso-brown-accents-and-subtle-neon-green-highlights-to-complement-the-existing-menu-board-glow-keep-all-user-facing-text-in-english",
+      "title": "Apply a cohesive warm café visual theme across UI overlays (loading/error/menus) that matches the scene: warm cream/beige surfaces, espresso-brown accents, and subtle neon-green highlights to complement the existing menu-board glow; keep all user-facing text in English.",
+      "reqIds": [
+        "REQ-6"
       ],
       "version": 1
     }
@@ -45,7 +60,25 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Use free 3D models from Google for humans, dogs, and table/chair sets (no character movement/animation).",
+      "summary": "Remove/skip human characters from the café scene.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add more table-chair sets in the café.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Add dogs in the café scene.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add the word \"MENU\" on the counter in full bold beige font.",
       "reqIds": [],
       "status": "pending"
     }
