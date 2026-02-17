@@ -6,14 +6,24 @@ import {
 } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Coffee, Croissant, Cake } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Coffee, Croissant, Cake, Info, Mail, Download } from 'lucide-react';
+import type { PanelType } from '../state/uiOverlayStore';
 
 interface MenuPanelProps {
   open: boolean;
   onClose: () => void;
+  onNavigate: (panel: PanelType) => void;
 }
 
-export default function MenuPanel({ open, onClose }: MenuPanelProps) {
+export default function MenuPanel({ open, onClose, onNavigate }: MenuPanelProps) {
+  const handleNavigate = (panel: PanelType) => {
+    onClose();
+    // Small delay to allow sheet close animation
+    setTimeout(() => onNavigate(panel), 150);
+  };
+
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent 
@@ -116,6 +126,36 @@ export default function MenuPanel({ open, onClose }: MenuPanelProps) {
                   price="$5.50"
                 />
               </TabsContent>
+
+              <Separator className="my-6" />
+
+              <div className="pb-6 space-y-3">
+                <h3 className="font-semibold text-sm sm:text-base mb-3">More Information</h3>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-2 min-h-[44px]"
+                  onClick={() => handleNavigate('about')}
+                >
+                  <Info className="h-4 w-4" />
+                  About Contour Cafe
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-2 min-h-[44px]"
+                  onClick={() => handleNavigate('contact')}
+                >
+                  <Mail className="h-4 w-4" />
+                  Contact Us
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-2 min-h-[44px]"
+                  onClick={() => handleNavigate('export')}
+                >
+                  <Download className="h-4 w-4" />
+                  Download for WordPress
+                </Button>
+              </div>
             </ScrollArea>
           </Tabs>
         </div>

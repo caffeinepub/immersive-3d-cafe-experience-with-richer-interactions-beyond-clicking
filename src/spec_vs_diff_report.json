@@ -1,36 +1,65 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-16T23:35:47.938Z",
-  "summary": "REQ-1 and REQ-2 appear implemented for CafeSceneDressing (larger, higher-resolution WallFrameLabel and a neon-green frame-edge glow via the new MenuBoardFrameGlow component). However, due to truncation, the diff summary does not provide direct evidence that BasicCafeRoomFallback actually renders the enlarged label and the glow effect in-scene (only imports/comments are visible).",
+  "generatedAt": "2026-02-16T23:56:00.401Z",
+  "summary": "The diff primarily adds/adjusts frontend UI structure and runtime diagnostics around React Query and the 3D scene. It does not show any backend (Motoko/candid/bindings) fixes, nor clear implementation of build-step ('frontend-build') diagnostics, so the core publish/deploy-failure requirements are only partially addressed based on the provided changes.",
   "missing_requirements": [
     {
       "id": "REQ-1",
-      "requirement": "Increase the 3D label text size for the behind-counter wall frame (\"Seven Balance\" WallFrameLabel) so it is clearly readable from far away across the room in both the basic fallback room and the full scene dressing implementation.",
-      "reason": "CafeSceneDressing shows the larger label props (e.g., fontSize={140}), but the BasicCafeRoomFallback file is truncated before showing the menu board label usage; only an import/comment is visible, so the fallback implementation cannot be confirmed from the provided diff evidence.",
+      "requirement": "Identify and fix the root cause(s) of the deployment failure so that backend deploy, frontend build, and runtime load all succeed.",
+      "reason": "No backend changes are shown (no Motoko/candid fixes), and nothing in the diff evidences addressing a specific deploy or build failure root cause; changes are mostly UI and runtime handling.",
       "evidence": [
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx (truncated; only imports/comment shown)",
-        "frontend/src/scene/environment/CafeSceneDressing.tsx (truncated; shows WallFrameLabel with fontSize={140})"
+        "MODIFIED FILES list contains only frontend files (e.g., frontend/src/App.tsx, frontend/src/hooks/useQueries.ts, frontend/src/utils/deploymentDiagnostics.ts) and no backend/main.mo or dfx/candid-related files."
       ]
     },
     {
       "id": "REQ-2",
-      "requirement": "Add a neon green glow effect to the edge of the behind-counter rectangular frame (the menu board frame) in both the basic fallback room and the full scene dressing implementation.",
-      "reason": "CafeSceneDressing clearly uses MenuBoardFrameGlow on the frame, but BasicCafeRoomFallback is truncated before showing the menu board frame/glow usage; only an import/comment is visible, so the fallback implementation cannot be confirmed from the provided diff evidence.",
+      "requirement": "Harden build/deploy diagnostics so failures clearly indicate which step failed, including actionable context (module, operation, remediation hints), and ensure frontend-build failures are labeled as \"frontend-build\".",
+      "reason": "Diagnostics utilities define a 'frontend-build' step, but all shown call sites use step: 'runtime'. No evidence is shown of any code path that labels or handles actual frontend build failures as 'frontend-build'.",
       "evidence": [
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx (truncated; only imports/comment shown)",
-        "frontend/src/scene/environment/CafeSceneDressing.tsx (truncated; shows <MenuBoardFrameGlow ... />)"
+        "frontend/src/hooks/useQueries.ts (step is set to 'runtime' for both getContactMessages and submitContactMessage)",
+        "frontend/src/utils/deploymentDiagnostics.ts (defines DeploymentStep including 'frontend-build', but diff does not show any 'frontend-build' usage)"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "Ensure the frontend↔backend interface remains consistent by validating all frontend actor method calls match backend candid interface and generated bindings are up-to-date as part of the publish-ready build.",
+      "reason": "The diff adds runtime assertions that methods exist, but does not show updating/regenerating bindings or aligning frontend types with the backend candid interface; also no backend candid changes are shown.",
+      "evidence": [
+        "frontend/src/hooks/useQueries.ts (runtime checks for actor.getContactMessages and actor.submitContactMessage, but no evidence of regenerated bindings)",
+        "MODIFIED FILES list does not include backend files or generated binding artifacts"
       ]
     }
   ],
-  "hallucinated_features": [],
-  "confidence": 0.63,
+  "hallucinated_features": [
+    {
+      "description": "3D scene WebGL support checks, scene error boundary/overlays, and retry workflow changes.",
+      "reason": "BuildRequest focuses on deployment/publish failures and diagnostics for deploy/build/runtime initialization; these scene-specific overlays and WebGL gating appear to be additional product behavior beyond the requested deployment fixes.",
+      "evidence": [
+        "frontend/src/scene/HomeCafeCanvas.tsx"
+      ]
+    },
+    {
+      "description": "UI/navigation restructuring and panel wiring changes (TopNav buttons, panel open/close orchestration, app layout adjustments).",
+      "reason": "Not explicitly requested by the BuildRequest, which is centered on fixing deployment/build/runtime fatal errors and interface/diagnostics consistency.",
+      "evidence": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/nav/TopNav.tsx",
+        "frontend/src/pages/MenuPanel.tsx",
+        "frontend/src/state/uiOverlayStore.ts"
+      ]
+    }
+  ],
+  "confidence": 0.72,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/scene/components/MenuBoardFrameGlow.tsx",
-    "frontend/src/scene/components/WallFrameLabel.tsx",
-    "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
-    "frontend/src/scene/environment/CafeSceneDressing.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/components/nav/TopNav.tsx",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/MenuPanel.tsx",
+    "frontend/src/scene/HomeCafeCanvas.tsx",
+    "frontend/src/state/uiOverlayStore.ts",
+    "frontend/src/utils/deploymentDiagnostics.ts",
     "project_state.json"
   ]
 }

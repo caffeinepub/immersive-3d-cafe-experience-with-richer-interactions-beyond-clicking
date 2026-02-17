@@ -1,4 +1,4 @@
-import { Menu } from 'lucide-react';
+import { Menu, Info, Mail, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { PanelType } from '../../state/uiOverlayStore';
 
@@ -19,12 +19,33 @@ export default function TopNav({ onOpenPanel }: TopNavProps) {
           <span className="text-base font-semibold text-foreground sm:text-lg">Contour Cafe</span>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onOpenPanel('about')}
+            className="gap-2 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"
+            title="About"
+          >
+            <Info className="h-5 w-5 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">About</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onOpenPanel('contact')}
+            className="gap-2 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"
+            title="Contact"
+          >
+            <Mail className="h-5 w-5 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Contact</span>
+          </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onOpenPanel('menu')}
             className="gap-2 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"
+            title="Menu"
           >
             <Menu className="h-5 w-5 sm:h-4 sm:w-4" />
             <span className="hidden sm:inline">Menu</span>

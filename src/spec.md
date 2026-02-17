@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Make the behind-counter wall-frame label (“Seven Balance”) clearly readable from across the room and add a neon green glow to the menu board frame edge in both the basic fallback room and the full scene dressing.
+**Goal:** Fix the deployment/publish failure so backend deploy, frontend build, and runtime loading all succeed without fatal errors.
 
 **Planned changes:**
-- Increase the 3D label text size for the “Seven Balance” WallFrameLabel in BasicCafeRoomFallback while keeping it crisp, centered, and unclipped.
-- Increase the 3D label text size for the “Seven Balance” WallFrameLabel in CafeSceneDressing while keeping it crisp, centered, and unclipped.
-- Add a neon green edge-glow effect to the menu board rectangular frame in BasicCafeRoomFallback, constrained to the frame edge and avoiding z-fighting.
-- Add a neon green edge-glow effect to the menu board rectangular frame in CafeSceneDressing, constrained to the frame edge and avoiding z-fighting.
+- Identify and resolve root cause(s) blocking `dfx deploy backend`, `npm run build`, and/or browser runtime initialization.
+- Improve build/deploy diagnostics so failures clearly indicate which step failed (backend-deploy vs frontend-build vs runtime) with standardized, actionable context (module, operation, remediation hints).
+- Validate and align the frontend↔backend interface by ensuring actor method calls match the backend candid (including `submitContactMessage` and `getContactMessages`) and that generated bindings are up-to-date for a publish-ready build.
 
-**User-visible outcome:** In both versions of the cafe room, the “Seven Balance” menu-board label is larger and readable from the default camera view, and the frame around it has a clearly visible neon green glow along its edge.
+**User-visible outcome:** The app deploys and builds successfully, then loads in the browser and renders the main UI without crashing; Contact panel calls work without missing-method/type mismatch errors and diagnostics are clearer if something fails.

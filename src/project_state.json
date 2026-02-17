@@ -3,41 +3,37 @@
   "projectStateVersion": 3,
   "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "known_issues": [
+    "Deployment/build did not complete (deployment error)."
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-increase-the-3d-label-text-size-for-the-behind-counter-wall-frame-the-seven-balance-wallframelabel-so-it-is-clearly-readable-from-far-away-across-the-room-in-both-the-basic-fallback-room-and-the-full-scene-dressing-implementation",
-      "title": "Increase the 3D label text size for the behind-counter wall frame (the \"Seven Balance\" WallFrameLabel) so it is clearly readable from far away across the room in both the basic fallback room and the full scene dressing implementation.",
+      "id": "feature-identify-and-fix-the-root-cause-s-of-the-deployment-failure-so-that-the-full-three-step-flow-completes-successfully-1-backend-deploy-dfx-deploy-backend-2-frontend-build-npm-run-build-and-3-runtime-loads-in-the-browser-without-a-fatal-error",
+      "title": "Identify and fix the root cause(s) of the deployment failure so that the full three-step flow completes successfully: (1) backend deploy (dfx deploy backend), (2) frontend build (npm run build), and (3) runtime loads in the browser without a fatal error.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-neon-green-glow-effect-to-the-edge-of-the-behind-counter-rectangular-frame-the-menu-board-frame-in-both-the-basic-fallback-room-and-the-full-scene-dressing-implementation",
-      "title": "Add a neon green glow effect to the edge of the behind-counter rectangular frame (the menu board frame) in both the basic fallback room and the full scene dressing implementation.",
+      "id": "feature-harden-build-deploy-diagnostics-so-that-if-backend-deploy-frontend-build-or-runtime-initialization-fails-the-error-output-clearly-indicates-which-step-failed-and-includes-actionable-context-module-operation-and-remediation-hints-using-the-existing-deployment-diagnostics-utilities",
+      "title": "Harden build/deploy diagnostics so that if backend deploy, frontend build, or runtime initialization fails, the error output clearly indicates which step failed and includes actionable context (module, operation, and remediation hints) using the existing deployment diagnostics utilities.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
-    }
-  ],
-  "new_feature_requests": [
-    {
-      "id": "AR-1",
-      "summary": "Increase the font size so it’s clearly visible across the room",
-      "reqIds": [],
-      "status": "pending"
     },
     {
-      "id": "AR-2",
-      "summary": "Add a neon green glow to the frame edge (lighting accent)",
-      "reqIds": [],
-      "status": "pending"
+      "id": "feature-ensure-the-frontend-backend-interface-remains-consistent-by-validating-that-all-frontend-actor-method-calls-match-the-backend-candid-interface-including-method-names-and-parameter-return-types-and-that-generated-bindings-are-up-to-date-as-part-of-the-publish-ready-build",
+      "title": "Ensure the frontend↔backend interface remains consistent by validating that all frontend actor method calls match the backend candid interface (including method names and parameter/return types) and that generated bindings are up-to-date as part of the publish-ready build.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
     }
   ],
-  "gameProjectType": "none",
+  "new_feature_requests": [],
   "projectName": "Contour Cafe",
   "clarification_mode": "instant",
   "clarification_rounds": 0

@@ -22,6 +22,7 @@ export default function HomeCafeCanvas() {
   }, []);
 
   const handleSceneError = useCallback((err: Error) => {
+    console.error('[HomeCafeCanvas] Scene error caught:', err);
     const diagnostic = logSceneFailure('scene-render', err.message, err);
     setDiagnostics(diagnostic);
     setError(err.message || 'Unknown scene error');
@@ -29,6 +30,7 @@ export default function HomeCafeCanvas() {
   }, []);
 
   const handleRetry = useCallback(() => {
+    console.log('[HomeCafeCanvas] Retrying scene mount...');
     setError(null);
     setDiagnostics(null);
     setIsLoading(true);
@@ -66,6 +68,9 @@ export default function HomeCafeCanvas() {
           powerPreference: isMobile ? 'low-power' : 'high-performance'
         }}
         dpr={isMobile ? [1, 1.5] : isTablet ? [1, 2] : [1, 2]}
+        onCreated={() => {
+          console.log('[HomeCafeCanvas] Canvas created successfully');
+        }}
       >
         <Suspense fallback={null}>
           <SceneErrorBoundary

@@ -8,7 +8,7 @@ interface CafeSceneDressingProps {
 }
 
 /**
- * Scene dressing props with larger "Seven Balance" label text and neon green frame glow on the menu board, plus beige contour texture applied to appropriate surfaces.
+ * Scene dressing props with very large "Seven Balance" label text and neon green frame glow on the menu board, plus beige contour texture applied to appropriate surfaces.
  */
 export default function CafeSceneDressing({ contourTexture }: CafeSceneDressingProps) {
   return (
@@ -99,15 +99,18 @@ export default function CafeSceneDressing({ contourTexture }: CafeSceneDressingP
           frameThickness={0.06}
         />
 
-        {/* Seven Balance Label - Larger and more visible */}
+        {/* Seven Balance Label - Very Large and Prominent */}
         <WallFrameLabel
           text="Seven Balance"
           width={2.8}
-          height={0.6}
-          fontSize={140}
+          height={1.0}
+          fontSize={240}
           color="#2a2420"
           position={[0, 0, 0.03]}
           surfaceOffset={0.001}
+          canvasWidth={3072}
+          canvasHeight={1024}
+          padding={80}
         />
       </group>
 

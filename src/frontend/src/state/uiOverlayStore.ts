@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type PanelType = 'menu' | null;
+export type PanelType = 'menu' | 'about' | 'contact' | 'export' | null;
 
 interface UIOverlayState {
   activePanel: PanelType;

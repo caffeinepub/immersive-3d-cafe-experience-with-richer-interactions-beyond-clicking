@@ -7,7 +7,7 @@ import WallFrameLabel from '../components/WallFrameLabel';
 import MenuBoardFrameGlow from '../components/MenuBoardFrameGlow';
 
 /**
- * Minimal always-available fallback room with larger "Seven Balance" label text and neon green frame glow on the menu board.
+ * Minimal always-available fallback room with very large "Seven Balance" label text and neon green frame glow on the menu board.
  * Renders immediately without any Suspense or Physics dependencies to ensure the user always sees some 3D geometry even if other scene elements fail.
  */
 export default function BasicCafeRoomFallback() {
@@ -147,15 +147,18 @@ export default function BasicCafeRoomFallback() {
           frameThickness={0.06}
         />
         
-        {/* Seven Balance Label - Larger and more visible */}
+        {/* Seven Balance Label - Very Large and Prominent */}
         <WallFrameLabel
           text="Seven Balance"
           width={2.8}
-          height={0.6}
-          fontSize={140}
+          height={1.0}
+          fontSize={240}
           color="#2a2420"
           position={[0, 0, 0.03]}
           surfaceOffset={0.001}
+          canvasWidth={3072}
+          canvasHeight={1024}
+          padding={80}
         />
       </group>
 
@@ -180,65 +183,17 @@ export default function BasicCafeRoomFallback() {
       </group>
 
       {/* Seating area - tables and chairs */}
-      {/* Table 1 with chairs */}
       <CafeTable position={[-3, 0, 0]} contourTexture={contourTexture} />
-      <WoodenChair position={[-3.8, 0, 0]} rotation={Math.PI / 2} contourTexture={contourTexture} />
-      <WoodenChair position={[-2.2, 0, 0]} rotation={-Math.PI / 2} contourTexture={contourTexture} />
+      <WoodenChair position={[-3.5, 0, 0.5]} rotation={Math.PI / 4} contourTexture={contourTexture} />
+      <WoodenChair position={[-2.5, 0, 0.5]} rotation={-Math.PI / 4} contourTexture={contourTexture} />
 
-      {/* Table 2 with chairs */}
       <CafeTable position={[3, 0, 0]} contourTexture={contourTexture} />
-      <WoodenChair position={[2.2, 0, 0]} rotation={Math.PI / 2} contourTexture={contourTexture} />
-      <WoodenChair position={[3.8, 0, 0]} rotation={-Math.PI / 2} contourTexture={contourTexture} />
+      <WoodenChair position={[3.5, 0, 0.5]} rotation={Math.PI / 4} contourTexture={contourTexture} />
+      <WoodenChair position={[2.5, 0, 0.5]} rotation={-Math.PI / 4} contourTexture={contourTexture} />
 
-      {/* Table 3 with chairs */}
-      <CafeTable position={[-3, 0, -4]} contourTexture={contourTexture} />
-      <WoodenChair position={[-3.8, 0, -4]} rotation={Math.PI / 2} contourTexture={contourTexture} />
-      <WoodenChair position={[-2.2, 0, -4]} rotation={-Math.PI / 2} contourTexture={contourTexture} />
-
-      {/* Table 4 with chairs */}
-      <CafeTable position={[3, 0, -4]} contourTexture={contourTexture} />
-      <WoodenChair position={[2.2, 0, -4]} rotation={Math.PI / 2} contourTexture={contourTexture} />
-      <WoodenChair position={[3.8, 0, -4]} rotation={-Math.PI / 2} contourTexture={contourTexture} />
-
-      {/* Chalkboard Stand near entrance */}
-      <group position={[-5, 0, 5]}>
-        <mesh castShadow receiveShadow>
-          <boxGeometry args={[0.5, 0.05, 0.5]} />
-          <meshStandardMaterial 
-            map={contourTexture}
-            color="#d4b896" 
-            roughness={0.7} 
-          />
-        </mesh>
-        <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.03, 0.03, 1, 8]} />
-          <meshStandardMaterial color="#3d3228" roughness={0.7} />
-        </mesh>
-        <mesh position={[0, 0.8, 0]} castShadow receiveShadow>
-          <boxGeometry args={[0.4, 0.6, 0.02]} />
-          <meshStandardMaterial color="#1a1a1a" roughness={0.9} />
-        </mesh>
-      </group>
-
-      {/* Plant Pot near entrance */}
-      <group position={[5, 0, 5]}>
-        <mesh castShadow receiveShadow>
-          <cylinderGeometry args={[0.25, 0.2, 0.3, 8]} />
-          <meshStandardMaterial 
-            map={contourTexture}
-            color="#c4a882" 
-            roughness={0.7} 
-          />
-        </mesh>
-        <mesh position={[0, 0.3, 0]} castShadow>
-          <coneGeometry args={[0.2, 0.4, 6]} />
-          <meshStandardMaterial color="#2d4a2b" roughness={0.8} />
-        </mesh>
-        <mesh position={[0.1, 0.35, 0.1]} castShadow>
-          <coneGeometry args={[0.15, 0.3, 6]} />
-          <meshStandardMaterial color="#3a5a38" roughness={0.8} />
-        </mesh>
-      </group>
+      <CafeTable position={[0, 0, 3]} contourTexture={contourTexture} />
+      <WoodenChair position={[0.5, 0, 3.5]} rotation={Math.PI / 2} contourTexture={contourTexture} />
+      <WoodenChair position={[-0.5, 0, 3.5]} rotation={-Math.PI / 2} contourTexture={contourTexture} />
     </group>
   );
 }

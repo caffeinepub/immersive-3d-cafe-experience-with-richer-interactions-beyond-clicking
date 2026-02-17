@@ -69,13 +69,18 @@ function formatStepLabel(step: DeploymentStep): string {
  */
 function getRemediationHints(errorMessage: string, module: string, step: DeploymentStep): string[] {
   const hints: string[] = [];
+  const lowerMessage = errorMessage.toLowerCase();
 
   // Backend deploy failures
   if (step === 'backend-deploy') {
     hints.push('Check Motoko compilation: dfx build backend');
     hints.push('Verify canister status: dfx canister status backend');
     hints.push('Review backend/main.mo for syntax errors');
-    hints.push('Check stable variable migrations if upgrading');
+    
+    if (lowerMessage.includes('actor') || lowerMessage.includes('create')) {
+      hints.push('Ensure backend canister is deployed: dfx deploy backend');
+      hints.push('Check canister IDs in .dfx/local/canister_ids.json');
+    }
   }
 
   // Frontend build failures
@@ -83,12 +88,16 @@ function getRemediationHints(errorMessage: string, module: string, step: Deploym
     hints.push('Regenerate backend types: dfx generate backend');
     hints.push('Check TypeScript compilation: npm run typescript-check');
     hints.push('Verify all imports resolve correctly');
-    hints.push('Review frontend/src/backend.d.ts for type mismatches');
+    
+    if (lowerMessage.includes('root') || lowerMessage.includes('dom')) {
+      hints.push('Ensure index.html has a <div id="root"></div> element');
+      hints.push('Check that frontend build artifacts are present');
+    }
   }
 
   // Actor initialization failures
-  if (module === 'useActor' || errorMessage.includes('actor')) {
-    if (errorMessage.includes('not initialized') || errorMessage.includes('undefined')) {
+  if (module === 'useActor' || lowerMessage.includes('actor')) {
+    if (lowerMessage.includes('not initialized') || lowerMessage.includes('undefined') || lowerMessage.includes('null')) {
       hints.push('Verify backend canister is deployed: dfx canister status backend');
       hints.push('Regenerate types: dfx generate backend');
       hints.push('Check that createActorWithConfig is properly configured');
@@ -96,17 +105,23 @@ function getRemediationHints(errorMessage: string, module: string, step: Deploym
   }
 
   // Type/interface mismatches
-  if (errorMessage.includes('type') || errorMessage.includes('undefined is not a function')) {
+  if (lowerMessage.includes('type') || lowerMessage.includes('undefined is not a function') || lowerMessage.includes('not found')) {
     hints.push('Backend types may be out of sync. Run: dfx generate backend');
     hints.push('Check frontend/src/backend.d.ts matches actual backend interface');
     hints.push('Verify all actor method calls match the candid interface');
+    
+    if (lowerMessage.includes('method') || lowerMessage.includes('function')) {
+      hints.push('The backend method may not exist or has been renamed');
+      hints.push('Compare backend/main.mo public methods with frontend calls');
+    }
   }
 
   // Network/canister call failures
-  if (errorMessage.includes('network') || errorMessage.includes('fetch') || errorMessage.includes('rejected')) {
+  if (lowerMessage.includes('network') || lowerMessage.includes('fetch') || lowerMessage.includes('rejected')) {
     hints.push('Check network connectivity to the canister');
     hints.push('Verify canister is running: dfx canister status backend');
     hints.push('Check browser console for CORS or network errors');
+    hints.push('Ensure dfx is running: dfx start --background');
   }
 
   // Query/mutation failures
@@ -114,6 +129,10 @@ function getRemediationHints(errorMessage: string, module: string, step: Deploym
     hints.push('Verify the backend method exists and is public');
     hints.push('Check that parameters match the expected types');
     hints.push('Ensure actor is initialized before calling methods');
+    
+    if (lowerMessage.includes('empty') || lowerMessage.includes('validation')) {
+      hints.push('Check input validation rules in both frontend and backend');
+    }
   }
 
   return hints;
@@ -145,7 +164,8 @@ export function isTypeMismatchError(error: unknown): boolean {
     message.includes('type') ||
     message.includes('undefined is not a function') ||
     message.includes('cannot read property') ||
-    message.includes('is not a function')
+    message.includes('is not a function') ||
+    message.includes('not found')
   );
 }
 
@@ -159,6 +179,22 @@ export function isActorInitError(error: unknown): boolean {
   return (
     message.includes('actor not initialized') ||
     message.includes('actor is null') ||
-    message.includes('cannot create actor')
+    message.includes('cannot create actor') ||
+    message.includes('failed to create')
+  );
+}
+
+/**
+ * Check if error indicates missing build artifacts
+ */
+export function isBuildArtifactError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  
+  const message = error.message.toLowerCase();
+  return (
+    message.includes('root element not found') ||
+    message.includes('dom') ||
+    message.includes('module not found') ||
+    message.includes('cannot find module')
   );
 }

@@ -11,6 +11,9 @@ interface WallFrameLabelProps {
   position?: [number, number, number];
   rotation?: [number, number, number];
   surfaceOffset?: number;
+  canvasWidth?: number;
+  canvasHeight?: number;
+  padding?: number;
 }
 
 /**
@@ -27,6 +30,9 @@ export default function WallFrameLabel({
   position = [0, 0, 0],
   rotation = [0, 0, 0],
   surfaceOffset = 0.001,
+  canvasWidth = 2048,
+  canvasHeight = 512,
+  padding = 40,
 }: WallFrameLabelProps) {
   const meshRef = useRef<Mesh>(null);
 
@@ -38,8 +44,8 @@ export default function WallFrameLabel({
 
     // Higher resolution for crisp large text
     const scale = 6;
-    canvas.width = 2048 * scale;
-    canvas.height = 512 * scale;
+    canvas.width = canvasWidth * scale;
+    canvas.height = canvasHeight * scale;
 
     // Clear background
     if (backgroundColor !== 'transparent') {
@@ -54,8 +60,8 @@ export default function WallFrameLabel({
     ctx.textBaseline = 'middle';
     
     // Add safe padding to prevent clipping
-    const padding = 40 * scale;
-    ctx.fillText(text, canvas.width / 2, canvas.height / 2, canvas.width - padding * 2);
+    const safePadding = padding * scale;
+    ctx.fillText(text, canvas.width / 2, canvas.height / 2, canvas.width - safePadding * 2);
 
     const canvasTexture = new CanvasTexture(canvas);
     canvasTexture.minFilter = LinearFilter;
@@ -64,7 +70,7 @@ export default function WallFrameLabel({
     canvasTexture.needsUpdate = true;
 
     return canvasTexture;
-  }, [text, fontSize, color, backgroundColor]);
+  }, [text, fontSize, color, backgroundColor, canvasWidth, canvasHeight, padding]);
 
   useEffect(() => {
     return () => {

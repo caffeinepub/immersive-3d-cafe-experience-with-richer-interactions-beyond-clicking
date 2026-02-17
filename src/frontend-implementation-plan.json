@@ -1,57 +1,108 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Contour Cafe: larger Seven Balance wall-frame label + neon green frame edge glow",
+  "title": "Contour Cafe — Publish/Deploy Stabilization (Frontend-only)",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Make the \"Seven Balance\" WallFrameLabel text significantly larger and keep it crisp/centered in both BasicCafeRoomFallback and CafeSceneDressing.",
+      "summary": "Fix frontend build/runtime issues that block successful publish flow (frontend build completes and app renders without fatal crash).",
       "acceptanceCriteria": [
-        "In the BasicCafeRoomFallback menu board label, the rendered \"Seven Balance\" text is visibly larger than before and remains crisp (not blurry/pixelated) when viewed from the default camera position.",
-        "In the CafeSceneDressing menu board label, the rendered \"Seven Balance\" text is visibly larger than before and remains crisp (not blurry/pixelated) when viewed from the default camera position.",
-        "The text remains centered on the label plane and does not clip outside the label area."
+        "Running `dfx deploy backend` completes successfully without Motoko compilation or candid generation errors.",
+        "Running `npm run build` completes successfully without TypeScript or bundler errors.",
+        "After deployment, the app loads in the browser and renders the main UI without a crash (no white screen / uncaught exception blocking render)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/scene/components/WallFrameLabel.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Improve label texture sharpness and fit: increase effective texture resolution for large text, add safe padding/margins, and ensure the canvas text rendering stays centered and does not clip when using a larger fontSize."
+          "description": "Wire all existing panels used for publish validation (including Contact) into the main UI overlay flow so runtime paths are exercised without causing a render-blocking crash; ensure no new top-level routes/pages are introduced."
         },
         {
-          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+          "path": "frontend/src/state/uiOverlayStore.ts",
           "operation": "modify",
-          "description": "Increase the \"Seven Balance\" WallFrameLabel sizing for the fallback menu board (e.g., larger fontSize and/or label plane dimensions) while keeping the label centered and within the board area."
+          "description": "Ensure the UI overlay state supports all panels that must be reachable during publish validation (e.g., menu/about/contact/export) and that setting/clearing panels cannot throw at runtime."
         },
         {
-          "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
+          "path": "frontend/src/components/nav/TopNav.tsx",
           "operation": "modify",
-          "description": "Increase the \"Seven Balance\" WallFrameLabel sizing for the full scene menu board (e.g., larger fontSize and/or label plane dimensions) while keeping the label centered and within the board area."
+          "description": "Add/adjust navigation triggers so the Contact panel (and other existing panels) can be opened during runtime validation; continue using existing shadcn-ui Button component patterns (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/pages/MenuPanel.tsx",
+          "operation": "modify",
+          "description": "Add lightweight in-panel navigation actions/links to open About/Contact/Export panels from the existing Menu panel (no new features beyond making existing panels reachable); continue using existing shadcn-ui components (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/scene/HomeCafeCanvas.tsx",
+          "operation": "modify",
+          "description": "Harden runtime initialization to avoid a fatal white-screen scenario by ensuring scene errors reliably fall back to existing overlays and do not propagate uncaught exceptions that block React render."
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Add a top-level runtime guard for initialization failures (e.g., unexpected exceptions during provider setup) so the app still renders a minimal fallback UI instead of crashing; keep using the core-infrastructure-provided React entry-point pattern (Verify the component's usage instructions before implementing)."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add a neon green glow effect on the menu board frame edge in both BasicCafeRoomFallback and CafeSceneDressing without z-fighting.",
+      "summary": "Standardize and harden diagnostics so failures clearly identify the failing step (frontend-build vs runtime), module/operation, and remediation hints.",
       "acceptanceCriteria": [
-        "In BasicCafeRoomFallback, the menu board frame edge shows a clearly visible neon green glow when viewed from the default camera position.",
-        "In CafeSceneDressing, the menu board frame edge shows a clearly visible neon green glow when viewed from the default camera position.",
-        "The glow effect is applied to the frame edge (not the whole wall/board surface) and does not introduce obvious z-fighting artifacts."
+        "When a runtime error is triggered during actor initialization or React Query calls, the console output follows the standardized format and includes the deployment step label.",
+        "When a frontend-build related failure is detected/handled, diagnostics specify the step as \"frontend-build\" (not just \"runtime\").",
+        "Diagnostics include module and operation fields for the failing path, and remediation hints are printed when the error message matches known patterns."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/scene/components/MenuBoardFrameGlow.tsx",
-          "operation": "create",
-          "description": "Create a small reusable 3D helper component that renders a neon-green edge-glow around a rectangular frame (e.g., via an edge/outline render and/or a slightly offset emissive halo geometry) with parameters to avoid z-fighting."
+          "path": "frontend/src/utils/deploymentDiagnostics.ts",
+          "operation": "modify",
+          "description": "Extend diagnostics utilities to better classify and label failures as \"frontend-build\" vs \"runtime\" (e.g., known build-artifact missing patterns), while preserving the existing standardized output format."
         },
         {
-          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+          "path": "frontend/src/hooks/useActor.ts",
           "operation": "modify",
-          "description": "Wire the new MenuBoardFrameGlow component into the fallback menu board group so only the frame edge gets a visible neon green glow, using slight positional/size offsets to prevent z-fighting."
+          "description": "Wrap actor creation/refresh logic with the existing deployment diagnostics utilities so actor initialization failures log module/operation and an explicit step label; avoid changing auth behavior and only improve error visibility."
         },
         {
-          "path": "frontend/src/scene/environment/CafeSceneDressing.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Wire the new MenuBoardFrameGlow component into the full scene menu board group so only the frame edge gets a visible neon green glow, using slight positional/size offsets to prevent z-fighting."
+          "description": "Ensure React Query call diagnostics consistently include correct module/operation fields and improve step labeling when failures match known build/bindings patterns (e.g., missing generated bindings); keep existing behavior intact aside from diagnostics."
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Add a small publish preflight check at startup that, when detecting missing build-time artifacts/config needed for runtime (e.g., missing canister config or incompatible bindings signals), logs via deployment diagnostics with step \"frontend-build\" and actionable remediation hints (Verify the component's usage instructions before implementing)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Keep frontend actor calls and generated bindings consistent with the backend candid interface; prevent missing-method/type mismatch failures in Contact flows.",
+      "acceptanceCriteria": [
+        "Frontend compiles with the current generated backend bindings, with no type/interface mismatch errors.",
+        "Runtime calls to `submitContactMessage` and `getContactMessages` succeed when the backend is deployed and the actor is initialized.",
+        "No console errors indicating missing actor methods (e.g., \"undefined is not a function\") during normal usage of the Contact panel queries/mutations."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add a lightweight runtime assertion/guard (with standardized diagnostics) that the initialized actor exposes the required contact methods before invoking them; on mismatch, fail with a clear remediation path (e.g., regenerate bindings) rather than throwing an ambiguous error."
+        },
+        {
+          "path": "frontend/src/pages/ContactPanel.tsx",
+          "operation": "modify",
+          "description": "Ensure the Contact panel uses the validated query/mutation hooks and surfaces non-fatal failures cleanly (e.g., toast + diagnostics) without causing render crashes; continue using shadcn-ui form components already in use (Verify the component's usage instructions before implementing)."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Ensure Contact panel is reachable during normal usage so the `submitContactMessage` and `getContactMessages` flows can be exercised after deploy; do not add new pages/routes."
+        },
+        {
+          "path": "frontend/src/backend.d.ts",
+          "operation": "modify",
+          "description": "Verify/refresh the frontend-visible backend interface typings to match the current candid-generated contract (method names and parameter/return types) and ensure frontend compilation stays aligned for publish-ready builds."
         }
       ]
     }

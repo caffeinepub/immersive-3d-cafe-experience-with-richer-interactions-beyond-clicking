@@ -1,6 +1,10 @@
 import { ThemeProvider } from 'next-themes';
+import { Toaster } from '@/components/ui/sonner';
 import TopNav from './components/nav/TopNav';
 import MenuPanel from './pages/MenuPanel';
+import AboutPanel from './pages/AboutPanel';
+import ContactPanel from './pages/ContactPanel';
+import ExportPanel from './pages/ExportPanel';
 import { useUIOverlayStore } from './state/uiOverlayStore';
 import HomeCafeCanvas from './scene/HomeCafeCanvas';
 import { useAppViewport } from './hooks/useAppViewport';
@@ -28,7 +32,29 @@ export default function App() {
         <MenuPanel
           open={activePanel === 'menu'}
           onClose={() => setActivePanel(null)}
+          onNavigate={setActivePanel}
         />
+
+        {/* About Panel */}
+        <AboutPanel
+          open={activePanel === 'about'}
+          onClose={() => setActivePanel(null)}
+        />
+
+        {/* Contact Panel */}
+        <ContactPanel
+          open={activePanel === 'contact'}
+          onClose={() => setActivePanel(null)}
+        />
+
+        {/* Export Panel */}
+        <ExportPanel
+          open={activePanel === 'export'}
+          onClose={() => setActivePanel(null)}
+        />
+
+        {/* Toast notifications */}
+        <Toaster />
       </div>
     </ThemeProvider>
   );

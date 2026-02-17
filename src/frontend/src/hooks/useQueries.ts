@@ -22,6 +22,13 @@ export function useGetContactMessages() {
           if (!actor) {
             throw new Error('Actor not initialized - cannot fetch contact messages');
           }
+
+          // Runtime assertion: verify actor has the required method
+          if (typeof actor.getContactMessages !== 'function') {
+            throw new Error(
+              'Actor method "getContactMessages" not found. Please regenerate backend bindings: dfx generate backend'
+            );
+          }
           
           const messages = await actor.getContactMessages();
           
@@ -77,6 +84,13 @@ export function useSubmitContactMessage() {
         async () => {
           if (!actor) {
             throw new Error('Actor not initialized - cannot submit contact message');
+          }
+
+          // Runtime assertion: verify actor has the required method
+          if (typeof actor.submitContactMessage !== 'function') {
+            throw new Error(
+              'Actor method "submitContactMessage" not found. Please regenerate backend bindings: dfx generate backend'
+            );
           }
           
           // Validate inputs before sending

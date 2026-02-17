@@ -1,53 +1,72 @@
 {
   "kind": "build_request",
-  "title": "Increase wall-frame label size and add neon green edge glow",
+  "title": "Fix deployment failure and publish successfully",
   "projectName": "Contour Cafe",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Increase the 3D label text size for the behind-counter wall frame (the \"Seven Balance\" WallFrameLabel) so it is clearly readable from far away across the room in both the basic fallback room and the full scene dressing implementation.",
-      "target": "frontend",
+      "text": "Identify and fix the root cause(s) of the deployment failure so that the full three-step flow completes successfully: (1) backend deploy (dfx deploy backend), (2) frontend build (npm run build), and (3) runtime loads in the browser without a fatal error.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "Make that font bigger like clearly visible in whole room"
+          "Fix n publish"
         ]
       },
       "acceptanceCriteria": [
-        "In the BasicCafeRoomFallback menu board label, the rendered \"Seven Balance\" text is visibly larger than before and remains crisp (not blurry/pixelated) when viewed from the default camera position.",
-        "In the CafeSceneDressing menu board label, the rendered \"Seven Balance\" text is visibly larger than before and remains crisp (not blurry/pixelated) when viewed from the default camera position.",
-        "The text remains centered on the label plane and does not clip outside the label area."
+        "Running `dfx deploy backend` completes successfully without Motoko compilation or candid generation errors.",
+        "Running `npm run build` completes successfully without TypeScript or bundler errors.",
+        "After deployment, the app loads in the browser and renders the main UI without a crash (no white screen / uncaught exception blocking render)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add a neon green glow effect to the edge of the behind-counter rectangular frame (the menu board frame) in both the basic fallback room and the full scene dressing implementation.",
+      "text": "Harden build/deploy diagnostics so that if backend deploy, frontend build, or runtime initialization fails, the error output clearly indicates which step failed and includes actionable context (module, operation, and remediation hints) using the existing deployment diagnostics utilities.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "add a neon green glow to that frame edge"
+          "Fix n publish"
         ]
       },
       "acceptanceCriteria": [
-        "In BasicCafeRoomFallback, the menu board frame edge shows a clearly visible neon green glow when viewed from the default camera position.",
-        "In CafeSceneDressing, the menu board frame edge shows a clearly visible neon green glow when viewed from the default camera position.",
-        "The glow effect is applied to the frame edge (not the whole wall/board surface) and does not introduce obvious z-fighting artifacts."
+        "When a runtime error is triggered during actor initialization or React Query calls, the console output follows the standardized format and includes the deployment step label.",
+        "When a frontend-build related failure is detected/handled, diagnostics specify the step as \"frontend-build\" (not just \"runtime\").",
+        "Diagnostics include module and operation fields for the failing path, and remediation hints are printed when the error message matches known patterns."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Ensure the frontend↔backend interface remains consistent by validating that all frontend actor method calls match the backend candid interface (including method names and parameter/return types) and that generated bindings are up-to-date as part of the publish-ready build.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-3"
+        ],
+        "quotes": [
+          "Fix n publish"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Frontend compiles with the current generated backend bindings, with no type/interface mismatch errors.",
+        "Runtime calls to `submitContactMessage` and `getContactMessages` succeed when the backend is deployed and the actor is initialized.",
+        "No console errors indicating missing actor methods (e.g., \"undefined is not a function\") during normal usage of the Contact panel queries/mutations."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend.immutablePaths (e.g., frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui/*).",
-    "Keep all backend logic in the single Motoko actor (backend/main.mo); no new backend services."
+    "Respect the single-actor backend architecture: keep Motoko logic in backend/main.mo.",
+    "Do not edit files under frontend/src/components/ui (read-only UI component sources).",
+    "Do not edit frontend immutable hook entrypoints listed in SYSTEM_CONTEXT (compose around them instead)."
   ],
   "nonGoals": [
-    "Do not add new authentication methods or external integrations.",
-    "Do not change unrelated scene lighting, navigation controls, or UI panels beyond what is needed to enlarge the label and glow the frame edge."
+    "Do not add new product features unrelated to resolving deployment/publish failures.",
+    "Do not introduce additional backend canisters, external databases, or third-party auth providers."
   ],
   "imageRequirements": {
     "required": [],
