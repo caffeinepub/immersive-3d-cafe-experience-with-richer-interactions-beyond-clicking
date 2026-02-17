@@ -43,40 +43,43 @@ export default function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <div className="app-viewport relative overflow-hidden bg-background">
-        {/* 3D Scene Background Layer */}
+        {/* 3D Scene Background Layer (or fallback) */}
         <HomeCafeCanvas />
 
-        {/* UI Layer - positioned above the 3D scene */}
+        {/* UI Layer - positioned above the 3D scene with proper z-index stacking */}
         <div className="pointer-events-none absolute inset-0 z-20">
           <div className="pointer-events-auto">
             <TopNav onOpenPanel={setActivePanel} />
           </div>
         </div>
 
-        {/* Menu Panel */}
-        <MenuPanel
-          open={activePanel === 'menu'}
-          onClose={() => setActivePanel(null)}
-          onNavigate={setActivePanel}
-        />
+        {/* Panel overlays - z-index above TopNav to ensure proper interaction */}
+        <div className="relative z-30">
+          {/* Menu Panel */}
+          <MenuPanel
+            open={activePanel === 'menu'}
+            onClose={() => setActivePanel(null)}
+            onNavigate={setActivePanel}
+          />
 
-        {/* About Panel */}
-        <AboutPanel
-          open={activePanel === 'about'}
-          onClose={() => setActivePanel(null)}
-        />
+          {/* About Panel */}
+          <AboutPanel
+            open={activePanel === 'about'}
+            onClose={() => setActivePanel(null)}
+          />
 
-        {/* Contact Panel */}
-        <ContactPanel
-          open={activePanel === 'contact'}
-          onClose={() => setActivePanel(null)}
-        />
+          {/* Contact Panel */}
+          <ContactPanel
+            open={activePanel === 'contact'}
+            onClose={() => setActivePanel(null)}
+          />
 
-        {/* Export Panel */}
-        <ExportPanel
-          open={activePanel === 'export'}
-          onClose={() => setActivePanel(null)}
-        />
+          {/* Export Panel */}
+          <ExportPanel
+            open={activePanel === 'export'}
+            onClose={() => setActivePanel(null)}
+          />
+        </div>
 
         {/* Toast notifications */}
         <Toaster />

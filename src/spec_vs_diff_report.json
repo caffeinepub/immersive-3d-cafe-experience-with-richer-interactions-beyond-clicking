@@ -1,30 +1,20 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-17T05:07:48.578Z",
-  "summary": "REQ-2 appears implemented in CafeEnvironment with duplicated seating sets on the right side; REQ-3 cannot be conclusively verified from the truncated BasicCafeRoomFallback diff. The diff also includes several non-requested scene/prop/UI elements in the fallback room.",
+  "generatedAt": "2026-02-17T05:53:27.604Z",
+  "summary": "Diff implements a selectable room layout variant ('standard' vs 'no-seating') via a Zustand store and TopNav toggle, conditionally hides table/chair meshes in both the full WebGL CafeEnvironment and the BasicCafeRoomFallback, and adds a counter-front \"Menu\" label rendered as bold white text with a green neon glow using a canvas texture plane attached to the Counter component (used in both environments).",
   "missing_requirements": [],
-  "hallucinated_features": [
-    {
-      "description": "Added/advertised fallback-room features unrelated to duplicating seating sets (e.g., very large \"Seven Balance\" label text and neon green frame glow on the menu board).",
-      "reason": "BuildRequest non-goals explicitly exclude changes beyond duplicating the existing table+chair components; these UI/visual additions are not requested.",
-      "evidence": [
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx (header comment mentions large label text and neon green frame glow; imports WallFrameLabel and MenuBoardFrameGlow)"
-      ]
-    },
-    {
-      "description": "Added/advertised additional props in the fallback environment (CommercialEspressoMachine and a coffee grinder mesh group on the counter).",
-      "reason": "BuildRequest scope is limited to duplicating existing table + wooden chair seating sets; adding other props is not requested.",
-      "evidence": [
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx (imports CommercialEspressoMachine; renders <CommercialEspressoMachine .../> and a \"Coffee Grinder\" mesh group)"
-      ]
-    }
-  ],
-  "confidence": 0.56,
+  "hallucinated_features": [],
+  "confidence": 0.78,
   "changed_files": [
     "frontend-file-summaries.txt",
+    "frontend/src/components/nav/TopNav.tsx",
+    "frontend/src/scene/components/NeonCanvasLabel.tsx",
     "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
     "frontend/src/scene/environment/CafeEnvironment.tsx",
+    "frontend/src/scene/environment/CafeFurniture.tsx",
+    "frontend/src/scene/ui/NonWebGLFallback.tsx",
+    "frontend/src/state/roomLayoutStore.ts",
     "project_state.json"
   ]
 }

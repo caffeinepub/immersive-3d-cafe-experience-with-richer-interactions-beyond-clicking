@@ -2,10 +2,32 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-the-full-caf-environment-frontend-src-scene-environment-cafeenvironment-tsx-duplicate-the-existing-table-4-chair-seating-set-and-add-3-additional-identical-sets-placed-in-the-right-side-area-of-the-room-positive-x-side-ensuring-each-set-has-a-clear-gap-from-walls-and-from-other-furniture-and-does-not-overlap-other-seating-sets",
-      "featureTitle": "In the full café environment (frontend/src/scene/environment/CafeEnvironment.tsx), duplicate the existing table + 4-chair seating set and add 3 additional identical sets placed in the right-side area of the room (positive X side), ensuring each set has a clear gap from walls and from other furniture and does not overlap other seating sets.",
+      "featureId": "feature-add-an-alternate-caf-room-layout-variant-that-contains-no-chairs-and-no-tables-while-keeping-the-rest-of-the-room-walls-floor-counter-and-other-non-seating-props-intact",
+      "featureTitle": "Add an alternate café room layout variant that contains no chairs and no tables, while keeping the rest of the room (walls, floor, counter, and other non-seating props) intact.",
       "files": [
-        "frontend/src/scene/environment/CafeEnvironment.tsx"
+        "frontend/src/components/nav/TopNav.tsx",
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+        "frontend/src/scene/environment/CafeEnvironment.tsx",
+        "frontend/src/state/roomLayoutStore.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-render-the-word-menu-on-the-counter-front-face-in-the-3d-scene-styled-as-bold-white-text-with-a-green-neon-glow-shadow-effect-using-a-font-size-equivalent-to-70px",
+      "featureTitle": "Render the word \"Menu\" on the counter front face in the 3D scene, styled as bold white text with a green neon glow/shadow effect, using a font size equivalent to 70px.",
+      "files": [
+        "frontend/src/scene/components/NeonCanvasLabel.tsx",
+        "frontend/src/scene/environment/CafeFurniture.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -20,10 +42,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-in-the-fallback-environment-frontend-src-scene-environment-basiccaferoomfallback-tsx-duplicate-the-existing-table-4-chair-seating-set-and-add-the-same-3-additional-identical-sets-placed-in-the-right-side-area-positive-x-side-keeping-chair-rotations-facing-their-table",
-      "featureTitle": "In the fallback environment (frontend/src/scene/environment/BasicCafeRoomFallback.tsx), duplicate the existing table + 4-chair seating set and add the same 3 additional identical sets placed in the right-side area (positive X side), keeping chair rotations facing their table.",
+      "featureId": "feature-apply-the-alternate-no-seating-layout-and-the-menu-counter-front-label-consistently-in-both-the-webgl-enabled-room-and-the-non-webgl-basic-fallback-room-implementation",
+      "featureTitle": "Apply the alternate no-seating layout and the \"Menu\" counter-front label consistently in both the WebGL-enabled room and the non-WebGL/basic fallback room implementation.",
       "files": [
-        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+        "frontend/src/scene/ui/NonWebGLFallback.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",

@@ -1,37 +1,88 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Duplicate table+chair seating set 3x on the right side in both full and fallback 3D cafe scenes",
+  "title": "Contour Cafe: layout variant toggle + neon 'Menu' counter label across WebGL and fallback rooms",
   "requirements": [
     {
-      "id": "REQ-2",
-      "summary": "Add 3 duplicated table+4-chair seating sets to the right side (positive X) of the full CafeEnvironment scene without overlaps and with chairs facing their table.",
+      "id": "REQ-1",
+      "summary": "Add a user-selectable alternate café layout variant that removes all tables/chairs while preserving the rest of the room.",
       "acceptanceCriteria": [
-        "CafeEnvironment renders the original seating set plus 3 additional duplicated seating sets (total 4 table+chair sets).",
-        "All 3 new seating sets are placed on the right side of the room (positive X) and are visibly separated (no z-fighting/overlap) from each other and from existing props.",
-        "For each new seating set, all 4 chairs are rotated to face toward their corresponding table (matching the current orientation behavior of the original set)."
+        "A user can switch between the current café layout and an alternate layout.",
+        "In the alternate layout, no table meshes and no chair meshes are rendered in the room.",
+        "The alternate layout still renders the counter and the rest of the room so the scene does not feel empty."
       ],
       "file_operations": [
         {
+          "path": "frontend/src/state/roomLayoutStore.ts",
+          "operation": "create",
+          "description": "Create a small Zustand store to hold the active room layout variant (standard vs no-seating) and expose actions to set/toggle it so both WebGL scene and fallback UI can stay in sync."
+        },
+        {
+          "path": "frontend/src/components/nav/TopNav.tsx",
+          "operation": "modify",
+          "description": "Add a layout toggle control to the top navigation (e.g., standard vs no-seating) wired to the new room layout store so users can switch layouts at runtime without adding new pages. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
+          "operation": "modify",
+          "description": "Read the selected layout variant from the room layout store and conditionally omit all CafeTable and WoodenChair instances (and any other seating elements if added later) when the no-seating variant is active, while keeping walls/floor/counter/props intact."
+        },
+        {
           "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
           "operation": "modify",
-          "description": "Duplicate the existing CafeTable + 4 WoodenChair arrangement three times and place the new sets on the positive-X (right) side of the room (e.g., tables around x≈5–6 with spaced z positions), ensuring clear gaps from the right wall (x=8 wall mesh), from the existing center seating set, and from other props (e.g., wall art at x≈7.85, z≈3) to avoid overlap/z-fighting; keep chair positions relative to each table and preserve rotations (front chairs rotation=0, back chairs rotation=Math.PI) so all chairs face their corresponding table."
+          "description": "Plumb the selected layout variant into the full environment (even if currently not mounted) and conditionally omit all table/chair seating groups and bar stools when the no-seating variant is active, preserving counter and non-seating props."
+        },
+        {
+          "path": "frontend/src/scene/CafeScene.tsx",
+          "operation": "modify",
+          "description": "Wire the room layout selection into the scene composition by passing (or reading) the active layout variant so the rendered room reflects the user's selection in the WebGL experience."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Render bold white 'Menu' text with a green neon glow on the counter front face at a ~70px styling intent.",
+      "acceptanceCriteria": [
+        "The counter has a visible \"Menu\" label on its front face (not floating in space or placed on a wall/menu board).",
+        "The \"Menu\" label appears bold, white, and includes a green neon glow/shadow effect.",
+        "The label size matches the requested 70px styling intent (visually comparable to ~70px UI text at typical viewing distance), and remains legible."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/scene/components/NeonCanvasLabel.tsx",
+          "operation": "create",
+          "description": "Create a reusable 3D label component that draws text to a high-resolution canvas texture with bold white glyphs and a green neon glow/shadow effect (via canvas shadow settings and/or multi-pass drawing), configurable for fontSize (set to intent-equivalent 70px), and mounts it on a plane mesh."
+        },
+        {
+          "path": "frontend/src/scene/environment/CafeFurniture.tsx",
+          "operation": "modify",
+          "description": "Update the Counter component to mount the new NeonCanvasLabel on the counter’s front face (flush to the front panel, not floating), with text=\"Menu\", bold styling, white fill, green glow/shadow, and a visually legible size aligned to the 70px intent."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Add 3 duplicated table+4-chair seating sets to the right side (positive X) of the BasicCafeRoomFallback scene without overlaps and with chairs facing their table.",
+      "summary": "Ensure both WebGL room rendering and the non-WebGL/basic fallback experience reflect the selected layout variant and show the 'Menu' counter label.",
       "acceptanceCriteria": [
-        "BasicCafeRoomFallback renders the original seating set plus 3 additional duplicated seating sets (total 4 table+chair sets).",
-        "All 3 new seating sets are placed on the right side of the fallback room (positive X) with no visible overlaps.",
-        "For each new seating set, all 4 chairs face toward their corresponding table."
+        "When WebGL is supported, the selected room layout (standard vs alternate) is reflected in the rendered 3D room.",
+        "When WebGL is not supported and the non-WebGL/basic room experience is shown, the same selected layout (standard vs alternate) is reflected (including no chairs/tables in the alternate layout).",
+        "The \"Menu\" counter-front label appears in both the WebGL-supported experience and the fallback/basic room."
       ],
       "file_operations": [
         {
+          "path": "frontend/src/scene/HomeCafeCanvas.tsx",
+          "operation": "modify",
+          "description": "Ensure the WebGL-supported path continues to render the 3D room that reads the shared room layout store; ensure retry/recheck flows do not reset the user’s chosen layout variant."
+        },
+        {
+          "path": "frontend/src/scene/ui/NonWebGLFallback.tsx",
+          "operation": "modify",
+          "description": "Augment the non-WebGL fallback experience with a basic room representation that reflects the same selected layout variant (standard vs no-seating) and includes a clearly visible 'Menu' label on the counter area using bold white text and a green neon-like glow (e.g., via text-shadow), without introducing new routes."
+        },
+        {
           "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Duplicate the existing CafeTable + 4 WoodenChair arrangement three times and place the new sets on the positive-X (right) side of the fallback room (e.g., tables around x≈6–7 with spaced z positions), ensuring clear gaps from the right wall (x=10 wall mesh), from the existing center seating set, and from counter-area objects to avoid visible overlaps; keep chair offsets relative to each table and preserve rotations (front chairs rotation=0, back chairs rotation=Math.PI) so all chairs face their corresponding table."
+          "description": "Confirm the 'Menu' label appears in the WebGL basic room (via the shared Counter component change) and that the no-seating layout removes all tables/chairs in this room as well."
         }
       ]
     }

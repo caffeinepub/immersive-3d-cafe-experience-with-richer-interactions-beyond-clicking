@@ -1,22 +1,30 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
+  "summary": "3D cafe/room experience with WebGL support, including alternate UI layout and styled 'Menu' signage on the counter.",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-in-the-full-caf-environment-frontend-src-scene-environment-cafeenvironment-tsx-duplicate-the-existing-table-4-chair-seating-set-and-add-3-additional-identical-sets-placed-in-the-right-side-area-of-the-room-positive-x-side-ensuring-each-set-has-a-clear-gap-from-walls-and-from-other-furniture-and-does-not-overlap-other-seating-sets",
-      "title": "In the full café environment (frontend/src/scene/environment/CafeEnvironment.tsx), duplicate the existing table + 4-chair seating set and add 3 additional identical sets placed in the right-side area of the room (positive X side), ensuring each set has a clear gap from walls and from other furniture and does not overlap other seating sets.",
+      "id": "feature-add-an-alternate-caf-room-layout-variant-that-contains-no-chairs-and-no-tables-while-keeping-the-rest-of-the-room-walls-floor-counter-and-other-non-seating-props-intact",
+      "title": "Add an alternate café room layout variant that contains no chairs and no tables, while keeping the rest of the room (walls, floor, counter, and other non-seating props) intact.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-render-the-word-menu-on-the-counter-front-face-in-the-3d-scene-styled-as-bold-white-text-with-a-green-neon-glow-shadow-effect-using-a-font-size-equivalent-to-70px",
+      "title": "Render the word \"Menu\" on the counter front face in the 3D scene, styled as bold white text with a green neon glow/shadow effect, using a font size equivalent to 70px.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-in-the-fallback-environment-frontend-src-scene-environment-basiccaferoomfallback-tsx-duplicate-the-existing-table-4-chair-seating-set-and-add-the-same-3-additional-identical-sets-placed-in-the-right-side-area-positive-x-side-keeping-chair-rotations-facing-their-table",
-      "title": "In the fallback environment (frontend/src/scene/environment/BasicCafeRoomFallback.tsx), duplicate the existing table + 4-chair seating set and add the same 3 additional identical sets placed in the right-side area (positive X side), keeping chair rotations facing their table.",
+      "id": "feature-apply-the-alternate-no-seating-layout-and-the-menu-counter-front-label-consistently-in-both-the-webgl-enabled-room-and-the-non-webgl-basic-fallback-room-implementation",
+      "title": "Apply the alternate no-seating layout and the \"Menu\" counter-front label consistently in both the WebGL-enabled room and the non-WebGL/basic fallback room implementation.",
       "reqIds": [
         "REQ-3"
       ],
@@ -26,12 +34,19 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Duplicate the existing chair-table set and place 3 copies in the right-side area",
+      "summary": "Add alternate cafe UI/layout version with no chairs or table.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add 'Menu' text on counter front face (70px, bold white, green neon shadow) in both alternate cafe UI and normal 3D room (WebGL).",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "3D Cafe",
+  "gameProjectType": "3d",
+  "projectName": "Contour Cafe",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

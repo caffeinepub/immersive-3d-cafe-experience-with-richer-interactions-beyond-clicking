@@ -1,56 +1,86 @@
 {
   "kind": "build_request",
-  "title": "Duplicate chair-table set 3 times on the right side of the 3D cafe scene",
-  "projectName": "3D Cafe",
+  "title": "Add alternate no-seating cafe layout and neon 'Menu' counter text in both WebGL and fallback rooms",
+  "projectName": "Contour Cafe",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-2",
-      "text": "In the full café environment (frontend/src/scene/environment/CafeEnvironment.tsx), duplicate the existing table + 4-chair seating set and add 3 additional identical sets placed in the right-side area of the room (positive X side), ensuring each set has a clear gap from walls and from other furniture and does not overlap other seating sets.",
+      "id": "REQ-1",
+      "text": "Add an alternate café room layout variant that contains no chairs and no tables, while keeping the rest of the room (walls, floor, counter, and other non-seating props) intact.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "Good now simply copy this chair table set and paste 3 just like these in the right side area"
+          "same just add a alternate UI with no chairs or table in the cafe"
         ]
       },
       "acceptanceCriteria": [
-        "CafeEnvironment renders the original seating set plus 3 additional duplicated seating sets (total 4 table+chair sets).",
-        "All 3 new seating sets are placed on the right side of the room (positive X) and are visibly separated (no z-fighting/overlap) from each other and from existing props.",
-        "For each new seating set, all 4 chairs are rotated to face toward their corresponding table (matching the current orientation behavior of the original set)."
+        "A user can switch between the current café layout and an alternate layout.",
+        "In the alternate layout, no table meshes and no chair meshes are rendered in the room.",
+        "The alternate layout still renders the counter and the rest of the room so the scene does not feel empty."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Render the word \"Menu\" on the counter front face in the 3D scene, styled as bold white text with a green neon glow/shadow effect, using a font size equivalent to 70px.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "also add the word Menu written on the counter frontface and make it font size 70px and font color white bold and green neon shoadow"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The counter has a visible \"Menu\" label on its front face (not floating in space or placed on a wall/menu board).",
+        "The \"Menu\" label appears bold, white, and includes a green neon glow/shadow effect.",
+        "The label size matches the requested 70px styling intent (visually comparable to ~70px UI text at typical viewing distance), and remains legible."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "In the fallback environment (frontend/src/scene/environment/BasicCafeRoomFallback.tsx), duplicate the existing table + 4-chair seating set and add the same 3 additional identical sets placed in the right-side area (positive X side), keeping chair rotations facing their table.",
+      "text": "Apply the alternate no-seating layout and the \"Menu\" counter-front label consistently in both the WebGL-enabled room and the non-WebGL/basic fallback room implementation.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "Good now simply copy this chair table set and paste 3 just like these in the right side area"
+          "do same for normal 3d room with web GL"
         ]
       },
       "acceptanceCriteria": [
-        "BasicCafeRoomFallback renders the original seating set plus 3 additional duplicated seating sets (total 4 table+chair sets).",
-        "All 3 new seating sets are placed on the right side of the fallback room (positive X) with no visible overlaps.",
-        "For each new seating set, all 4 chairs face toward their corresponding table."
+        "When WebGL is supported, the selected room layout (standard vs alternate) is reflected in the rendered 3D room.",
+        "When WebGL is not supported and the non-WebGL/basic room experience is shown, the same selected layout (standard vs alternate) is reflected (including no chairs/tables in the alternate layout).",
+        "The \"Menu\" counter-front label appears in both the WebGL-supported experience and the fallback/basic room."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any backend Motoko canister code for this change.",
-    "Do not edit files under frontend/src/components/ui or other immutable paths listed in SYSTEM_CONTEXT."
+    "Do not edit files under frontend/src/components/ui (Shadcn UI components are read-only).",
+    "Do not modify immutable hook entrypoints listed in SYSTEM_CONTEXT (compose around them instead).",
+    "Backend architecture must remain a single Motoko actor; no backend changes are required for this request."
   ],
   "nonGoals": [
-    "Adding new furniture models beyond duplicating the existing table and wooden chair components.",
-    "Changing materials, lighting, textures, or navigation controls."
+    "Adding new backend endpoints or persistence for this change.",
+    "Adding or changing the food/drink menu content in the UI panels (this request is only about 3D room layout/signage).",
+    "Adding new 3D characters, animations, physics interactions, or real-time multiplayer features."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

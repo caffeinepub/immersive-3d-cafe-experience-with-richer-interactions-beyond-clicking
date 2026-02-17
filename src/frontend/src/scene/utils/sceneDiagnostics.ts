@@ -37,25 +37,25 @@ export function logSceneFailure(
   // Log additional context based on stage
   switch (stage) {
     case 'webgl-init':
-      console.error('WebGL initialization failed. Check browser compatibility and GPU drivers.');
+      console.error('[webgl-init] WebGL detection/initialization failed. Check browser compatibility and GPU drivers.');
       break;
     case 'texture-load':
-      console.error('Texture loading failed. Check asset paths and network connectivity.');
+      console.error('[texture-load] Texture loading failed. Check asset paths and network connectivity.');
       break;
     case 'environment-load':
-      console.error('Environment preset failed to load. Scene will render with basic lighting.');
+      console.error('[environment-load] Environment preset failed to load. Scene will render with basic lighting.');
       break;
     case 'scene-render':
-      console.error('Scene rendering error. Check component hierarchy and Three.js setup.');
+      console.error('[scene-render] Scene rendering error. Check component hierarchy and Three.js setup.');
       break;
     case 'asset-load':
-      console.error('Asset loading failed. Check file paths and formats.');
+      console.error('[asset-load] Asset loading failed. Check file paths and formats.');
       break;
     case 'startup-timeout':
-      console.error('Scene startup timeout. First render did not occur within expected time.');
+      console.error('[startup-timeout] Scene startup timeout. First render did not occur within expected time.');
       break;
     case 'full-environment-timeout':
-      console.error('Full environment mount timeout. Only fallback room rendered within expected time.');
+      console.error('[full-environment-timeout] Full environment mount timeout. Only fallback room rendered within expected time.');
       break;
   }
 

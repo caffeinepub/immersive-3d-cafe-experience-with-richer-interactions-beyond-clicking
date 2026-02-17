@@ -1,163 +1,174 @@
-import { Texture } from 'three';
+import type { Texture } from 'three';
+import NeonCanvasLabel from '../components/NeonCanvasLabel';
 
 interface FurnitureProps {
+  position?: [number, number, number];
+  rotation?: number;
   contourTexture?: Texture;
 }
 
-// Counter with multi-part construction and beige contour texture on prominent surfaces
-export function Counter({ contourTexture }: FurnitureProps) {
+export function Counter({ contourTexture }: { contourTexture?: Texture }) {
   return (
-    <group position={[0, 0, -5]}>
-      {/* Main counter body - beige with contour texture */}
+    <group position={[0, 0, -6]}>
+      {/* Counter base */}
       <mesh position={[0, 0.9, 0]} castShadow receiveShadow>
         <boxGeometry args={[6, 1.8, 1.2]} />
-        <meshStandardMaterial 
+        <meshStandardMaterial color="#4a3a2a" roughness={0.7} metalness={0.1} />
+      </mesh>
+
+      {/* Counter top with contour texture */}
+      <mesh position={[0, 1.86, 0]} castShadow receiveShadow>
+        <boxGeometry args={[6.2, 0.1, 1.3]} />
+        <meshStandardMaterial
           map={contourTexture}
-          color="#c4a882" 
-          roughness={0.7} 
+          color="#d4b896"
+          roughness={0.5}
+          metalness={0.05}
         />
       </mesh>
-      
-      {/* Counter top with contour texture - distinct beige surface */}
-      <mesh position={[0, 1.82, 0]} castShadow receiveShadow>
-        <boxGeometry args={[6.2, 0.08, 1.3]} />
-        <meshStandardMaterial 
-          map={contourTexture}
-          color="#d4b896" 
-          roughness={0.5} 
-          metalness={0.1}
-        />
+
+      {/* Front panel */}
+      <mesh position={[0, 0.9, 0.65]} castShadow receiveShadow>
+        <boxGeometry args={[6, 1.8, 0.05]} />
+        <meshStandardMaterial color="#3a2a1a" roughness={0.6} />
       </mesh>
-      
-      {/* Front panel detail - beige with contour texture */}
-      <mesh position={[0, 0.5, 0.61]} castShadow>
-        <boxGeometry args={[5.8, 1.4, 0.02]} />
-        <meshStandardMaterial 
-          map={contourTexture}
-          color="#b89968" 
-          roughness={0.8} 
-        />
+
+      {/* Neon "Menu" label on counter front face */}
+      <NeonCanvasLabel
+        text="Menu"
+        fontSize={70}
+        position={[0, 1.2, 0.68]}
+        width={2.5}
+        height={0.6}
+        textColor="#ffffff"
+        glowColor="#00ff00"
+        glowBlur={25}
+      />
+
+      {/* Side panels */}
+      <mesh position={[-3, 0.9, 0]} rotation={[0, Math.PI / 2, 0]} castShadow receiveShadow>
+        <boxGeometry args={[1.2, 1.8, 0.05]} />
+        <meshStandardMaterial color="#3a2a1a" roughness={0.6} />
       </mesh>
-      
-      {/* Decorative trim */}
-      <mesh position={[0, 0.05, 0.62]} castShadow>
-        <boxGeometry args={[6, 0.1, 0.05]} />
-        <meshStandardMaterial color="#5a4a3a" roughness={0.6} metalness={0.3} />
+      <mesh position={[3, 0.9, 0]} rotation={[0, Math.PI / 2, 0]} castShadow receiveShadow>
+        <boxGeometry args={[1.2, 1.8, 0.05]} />
+        <meshStandardMaterial color="#3a2a1a" roughness={0.6} />
+      </mesh>
+
+      {/* Footrest bar */}
+      <mesh position={[0, 0.3, 0.4]} castShadow>
+        <boxGeometry args={[5.5, 0.08, 0.08]} />
+        <meshStandardMaterial color="#2a1a0a" roughness={0.4} metalness={0.3} />
       </mesh>
     </group>
   );
 }
 
-// Cafe table with pedestal base and beige contour texture on top
-export function CafeTable({ position, contourTexture }: { position: [number, number, number] } & FurnitureProps) {
+export function CafeTable({ position = [0, 0, 0], contourTexture }: FurnitureProps) {
   return (
     <group position={position}>
-      {/* Table top - beige with contour texture */}
+      {/* Table top with contour texture */}
       <mesh position={[0, 0.75, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.65, 0.65, 0.05, 12]} />
-        <meshStandardMaterial 
+        <cylinderGeometry args={[0.6, 0.6, 0.05, 16]} />
+        <meshStandardMaterial
           map={contourTexture}
-          color="#d4b896" 
+          color="#d4b896"
           roughness={0.5}
+          metalness={0.05}
         />
       </mesh>
-      
-      {/* Pedestal */}
-      <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.08, 0.12, 0.7, 8]} />
-        <meshStandardMaterial color="#3d3228" roughness={0.7} />
+
+      {/* Central pedestal */}
+      <mesh position={[0, 0.375, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.08, 0.12, 0.75, 8]} />
+        <meshStandardMaterial color="#4a3a2a" roughness={0.6} metalness={0.1} />
       </mesh>
-      
+
       {/* Base */}
-      <mesh position={[0, 0.05, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.4, 0.4, 0.1, 12]} />
-        <meshStandardMaterial color="#2a2420" roughness={0.8} metalness={0.2} />
+      <mesh position={[0, 0.02, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.35, 0.35, 0.04, 16]} />
+        <meshStandardMaterial color="#3a2a1a" roughness={0.7} metalness={0.2} />
       </mesh>
     </group>
   );
 }
 
-// Wooden chair with back and beige contour texture on seat/back
-export function WoodenChair({ position, rotation = 0, contourTexture }: { position: [number, number, number]; rotation?: number } & FurnitureProps) {
+export function WoodenChair({ position = [0, 0, 0], rotation = 0, contourTexture }: FurnitureProps) {
   return (
     <group position={position} rotation={[0, rotation, 0]}>
-      {/* Seat - beige with contour texture */}
+      {/* Seat with contour texture */}
       <mesh position={[0, 0.45, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.4, 0.05, 0.4]} />
-        <meshStandardMaterial 
+        <boxGeometry args={[0.45, 0.05, 0.45]} />
+        <meshStandardMaterial
           map={contourTexture}
-          color="#d4b896" 
-          roughness={0.6} 
+          color="#c4a882"
+          roughness={0.6}
+          metalness={0.05}
         />
       </mesh>
-      
-      {/* Back rest - beige with contour texture */}
-      <mesh position={[0, 0.75, -0.18]} castShadow receiveShadow>
-        <boxGeometry args={[0.38, 0.5, 0.04]} />
-        <meshStandardMaterial 
+
+      {/* Backrest with contour texture */}
+      <mesh position={[0, 0.75, -0.2]} castShadow receiveShadow>
+        <boxGeometry args={[0.45, 0.55, 0.05]} />
+        <meshStandardMaterial
           map={contourTexture}
-          color="#d4b896" 
-          roughness={0.6} 
+          color="#c4a882"
+          roughness={0.6}
+          metalness={0.05}
         />
       </mesh>
-      
-      {/* Legs - front left */}
-      <mesh position={[-0.15, 0.22, 0.15]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.02, 0.025, 0.44, 6]} />
-        <meshStandardMaterial color="#3d3228" roughness={0.7} />
+
+      {/* Legs */}
+      <mesh position={[-0.18, 0.225, -0.18]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.025, 0.025, 0.45, 8]} />
+        <meshStandardMaterial color="#4a3a2a" roughness={0.5} metalness={0.1} />
       </mesh>
-      
-      {/* Legs - front right */}
-      <mesh position={[0.15, 0.22, 0.15]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.02, 0.025, 0.44, 6]} />
-        <meshStandardMaterial color="#3d3228" roughness={0.7} />
+      <mesh position={[0.18, 0.225, -0.18]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.025, 0.025, 0.45, 8]} />
+        <meshStandardMaterial color="#4a3a2a" roughness={0.5} metalness={0.1} />
       </mesh>
-      
-      {/* Legs - back left */}
-      <mesh position={[-0.15, 0.45, -0.15]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.02, 0.025, 0.9, 6]} />
-        <meshStandardMaterial color="#3d3228" roughness={0.7} />
+      <mesh position={[-0.18, 0.225, 0.18]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.025, 0.025, 0.45, 8]} />
+        <meshStandardMaterial color="#4a3a2a" roughness={0.5} metalness={0.1} />
       </mesh>
-      
-      {/* Legs - back right */}
-      <mesh position={[0.15, 0.45, -0.15]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.02, 0.025, 0.9, 6]} />
-        <meshStandardMaterial color="#3d3228" roughness={0.7} />
+      <mesh position={[0.18, 0.225, 0.18]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.025, 0.025, 0.45, 8]} />
+        <meshStandardMaterial color="#4a3a2a" roughness={0.5} metalness={0.1} />
       </mesh>
     </group>
   );
 }
 
-// Bar stool with beige contour texture on seat
-export function BarStool({ position, contourTexture }: { position: [number, number, number] } & FurnitureProps) {
+export function BarStool({ position = [0, 0, 0], contourTexture }: FurnitureProps) {
   return (
     <group position={position}>
-      {/* Seat - beige with contour texture */}
-      <mesh position={[0, 0.65, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.2, 0.18, 0.08, 8]} />
-        <meshStandardMaterial 
+      {/* Seat with contour texture */}
+      <mesh position={[0, 0.7, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.2, 0.18, 0.05, 16]} />
+        <meshStandardMaterial
           map={contourTexture}
-          color="#d4b896" 
-          roughness={0.6} 
+          color="#c4a882"
+          roughness={0.6}
+          metalness={0.05}
         />
       </mesh>
-      
-      {/* Center post */}
+
+      {/* Central pole */}
       <mesh position={[0, 0.35, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.04, 0.05, 0.6, 8]} />
-        <meshStandardMaterial color="#3d3228" roughness={0.7} metalness={0.2} />
+        <cylinderGeometry args={[0.04, 0.04, 0.7, 8]} />
+        <meshStandardMaterial color="#3a3a3a" roughness={0.3} metalness={0.6} />
       </mesh>
-      
+
       {/* Footrest ring */}
       <mesh position={[0, 0.25, 0]} castShadow receiveShadow>
-        <torusGeometry args={[0.15, 0.015, 6, 8]} />
-        <meshStandardMaterial color="#5a4a3a" roughness={0.6} metalness={0.3} />
+        <torusGeometry args={[0.15, 0.02, 8, 16]} />
+        <meshStandardMaterial color="#3a3a3a" roughness={0.3} metalness={0.6} />
       </mesh>
-      
+
       {/* Base */}
-      <mesh position={[0, 0.03, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.25, 0.25, 0.06, 8]} />
-        <meshStandardMaterial color="#2a2420" roughness={0.8} metalness={0.2} />
+      <mesh position={[0, 0.02, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.25, 0.25, 0.04, 16]} />
+        <meshStandardMaterial color="#2a2a2a" roughness={0.4} metalness={0.5} />
       </mesh>
     </group>
   );
