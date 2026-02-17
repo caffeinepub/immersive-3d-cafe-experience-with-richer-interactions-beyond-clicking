@@ -1,127 +1,26 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Contour Cafe: Fix GLB path, remove humans, add seating + dogs, add MENU counter label, warm overlay theme",
+  "title": "3D Cafe — Rotate chairs to face the table",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Ensure the table/chair GLB is present and served at /assets/models/furniture/table-chair-set.glb (or update code to an existing correct path) to stop HTML/Unexpected token errors and keep fallbacks working.",
+      "summary": "Adjust chair Y-rotations in both CafeEnvironment and BasicCafeRoomFallback so all four chairs face toward the table at [0, 0, 2] without changing positions or assets.",
       "acceptanceCriteria": [
-        "Loading the café scene no longer triggers the \"Unexpected token '<'\" error for `/assets/models/furniture/table-chair-set.glb`.",
-        "The furniture GLB request to `/assets/models/furniture/table-chair-set.glb` returns `model/gltf-binary` (or a valid GLB download) instead of an HTML page.",
-        "Tables/chairs render using the GLB model when available; if the model fails to load, the existing primitive fallbacks in `frontend/src/scene/environment/FurnitureModels.tsx` render without crashing the scene."
+        "In CafeEnvironment, the two chairs positioned at z=1.3 (in front of the table) are rotated to face +Z (toward the table), and the two chairs positioned at z=2.7 (behind the table) are rotated to face -Z (toward the table).",
+        "In BasicCafeRoomFallback, the chair rotations match the full environment so all four chairs face toward the table.",
+        "Visual check: when viewing the scene, each chair’s backrest is oriented away from the table and the seat opening faces the table."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/models/furniture/table-chair-set.glb",
-          "operation": "create",
-          "description": "Add the missing furniture GLB file so requests to `/assets/models/furniture/table-chair-set.glb` resolve to a real binary asset instead of falling back to an HTML document."
-        },
-        {
-          "path": "frontend/src/scene/environment/FurnitureModels.tsx",
+          "path": "frontend/src/scene/environment/CafeEnvironment.tsx",
           "operation": "modify",
-          "description": "Confirm the GLB path used by TableModel/ChairModel matches the intended public asset location under `frontend/public/assets/models/furniture/` (keep `/assets/models/furniture/table-chair-set.glb` if the file is added there, or update to the correct existing file name/path). Preserve current primitive fallbacks so scene rendering remains resilient if GLB loading fails."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Remove humans from the active scene composition so only dogs and non-character props render.",
-      "acceptanceCriteria": [
-        "No human models render in the scene (no instances from `frontend/src/scene/characters/CafeHumans.tsx`).",
-        "Dogs and other scene props still render normally."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/scene/characters/CafeCharacters.tsx",
-          "operation": "modify",
-          "description": "Update the character aggregator to stop rendering `CafeHumans` and only include `CafeDogs`, ensuring humans are skipped in the active scene wiring."
+          "description": "Update the four <WoodenChair> instances around the table at [0, 0, 2] so both chairs at z=1.3 use a rotation that makes the seat opening face +Z, and both chairs at z=2.7 use a rotation that makes the seat opening face -Z; do not change any chair/table positions or materials."
         },
         {
           "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Verify the room-first active scene continues to mount characters via `CafeCharacters` (dogs only after the aggregator change), and does not directly render `CafeHumans` anywhere."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Place at least two additional static table-and-chair clusters in the active (room-first) café scene without overlaps and at y=0.",
-      "acceptanceCriteria": [
-        "At least 2 additional table-and-chair clusters are visible in the active scene (the one rendered in `roomFirstMode`).",
-        "New tables/chairs do not intersect the counter or walls and are placed on the floor plane at y=0."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
-          "operation": "modify",
-          "description": "Add at least two more `CafeTable` + `WoodenChair` clusters at sensible open-floor coordinates (y=0), ensuring they do not overlap the counter/walls and do not block the default camera start area."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Add at least two more static dogs near the new seating areas using the existing DogModel pattern.",
-      "acceptanceCriteria": [
-        "At least 2 additional dogs are visible in the active scene in addition to the current dogs defined in `frontend/src/scene/characters/CafeDogs.tsx`.",
-        "All dogs are static (no per-frame animation/movement logic added)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/scene/characters/CafeDogs.tsx",
-          "operation": "modify",
-          "description": "Add at least two additional `DogModel` instances positioned near some of the newly added seating areas. Keep them static (no per-frame updates or movement logic)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Add an in-scene 3D 'MENU' label on/near the counter front with bold styling and beige color, readable from the default camera angle.",
-      "acceptanceCriteria": [
-        "The text \"MENU\" appears on/near the counter in the 3D scene.",
-        "The label uses a bold visual weight and a beige color consistent with the scene palette.",
-        "The label is legible at typical viewing distance (not clipped into the counter mesh)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/scene/components/WallFrameLabel.tsx",
-          "operation": "modify",
-          "description": "Extend the label component to support a bold visual weight option suitable for an in-scene counter sign (e.g., configurable font weight/style in the canvas text render), while keeping existing label usages unchanged."
-        },
-        {
-          "path": "frontend/src/scene/environment/CafeFurniture.tsx",
-          "operation": "modify",
-          "description": "Add a `WallFrameLabel` instance reading \"MENU\" positioned slightly in front of the counter’s front panel (beige color, bold weight, and a small surface offset) so it is clearly readable from the default camera angle and not clipped into the mesh."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Apply a cohesive warm café theme to UI overlays (loading/error/menus) with cream/beige surfaces, espresso-brown accents, and subtle neon-green highlights; keep all user-facing text in English.",
-      "acceptanceCriteria": [
-        "Overlays and panels use a consistent warm café palette (cream/beige + espresso-brown) with restrained neon-green accents; no default mismatched colors.",
-        "All overlay/panel user-facing text remains in English."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Adjust the global CSS color variables to better reflect a warm café palette (cream/beige surfaces and espresso-brown accents) and introduce/align a restrained neon-green accent token used by Tailwind color mappings, without changing user-facing text content."
-        },
-        {
-          "path": "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
-          "operation": "modify",
-          "description": "Update overlay styling classes to consistently use the warm café palette and add subtle neon-green accents (e.g., highlight spinner/accent elements) while keeping all displayed text in English."
-        },
-        {
-          "path": "frontend/src/scene/ui/SceneErrorOverlay.tsx",
-          "operation": "modify",
-          "description": "Update error overlay styling classes to match the same warm café theme (cream/beige + espresso-brown) and add restrained neon-green highlights where appropriate, without changing the English copy."
-        },
-        {
-          "path": "frontend/src/components/layout/ContourFrame.tsx",
-          "operation": "modify",
-          "description": "Refine panel frame background/opacity/border styling so overlay panels feel cohesive with the warm café theme and existing contour texture treatment, while keeping existing layout behavior intact."
+          "description": "Mirror the same chair rotation fixes as CafeEnvironment for the four <WoodenChair> instances around the table at [0, 0, 2], ensuring the fallback scene matches the full environment (no repositioning, geometry, or material changes)."
         }
       ]
     }

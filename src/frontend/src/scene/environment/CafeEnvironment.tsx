@@ -12,10 +12,6 @@ interface CafeEnvironmentProps {
   onMounted?: () => void;
 }
 
-/**
- * Full café environment with contour-textured floor and furniture surfaces, green world-map textured walls, model-backed furniture, seating clusters, ambient lighting, scene dressing props, and matching ceiling.
- * All furniture now uses GLB models with graceful primitive fallbacks.
- */
 export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
   const { floorVariant, furnitureVariant } = useContourTexture();
   const wallMapTexture = useWallMapTexture();
@@ -98,37 +94,19 @@ export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
         />
       </mesh>
 
-      {/* UPGRADED FURNITURE - now model-backed with fallbacks */}
+      {/* UPGRADED FURNITURE */}
       
       {/* Counter with detailed construction */}
       <Counter contourTexture={furnitureVariant} />
 
-      {/* Left table with chairs */}
-      <CafeTable position={[-3, 0, 2]} contourTexture={furnitureVariant} />
-      <WoodenChair position={[-3.7, 0, 1.3]} rotation={0} contourTexture={furnitureVariant} />
-      <WoodenChair position={[-2.3, 0, 1.3]} rotation={Math.PI} contourTexture={furnitureVariant} />
-      <WoodenChair position={[-3.7, 0, 2.7]} rotation={0} contourTexture={furnitureVariant} />
-      <WoodenChair position={[-2.3, 0, 2.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
-
-      {/* Right table with chairs */}
-      <CafeTable position={[3, 0, 2]} contourTexture={furnitureVariant} />
-      <WoodenChair position={[3.7, 0, 1.3]} rotation={0} contourTexture={furnitureVariant} />
-      <WoodenChair position={[2.3, 0, 1.3]} rotation={Math.PI} contourTexture={furnitureVariant} />
-      <WoodenChair position={[3.7, 0, 2.7]} rotation={0} contourTexture={furnitureVariant} />
-      <WoodenChair position={[2.3, 0, 2.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
-
-      {/* NEW: Back corner cozy nook - additional seating cluster */}
-      <CafeTable position={[-5.5, 0, -4.5]} contourTexture={furnitureVariant} />
-      <WoodenChair position={[-6.2, 0, -5.2]} rotation={Math.PI / 4} contourTexture={furnitureVariant} />
-      <WoodenChair position={[-4.8, 0, -5.2]} rotation={-Math.PI / 4} contourTexture={furnitureVariant} />
-      <WoodenChair position={[-6.2, 0, -3.8]} rotation={Math.PI * 3 / 4} contourTexture={furnitureVariant} />
-
-      {/* NEW: Right side window table - additional seating cluster */}
-      <CafeTable position={[6, 0, 4]} contourTexture={furnitureVariant} />
-      <WoodenChair position={[6.7, 0, 3.3]} rotation={0} contourTexture={furnitureVariant} />
-      <WoodenChair position={[5.3, 0, 3.3]} rotation={Math.PI} contourTexture={furnitureVariant} />
-      <WoodenChair position={[6.7, 0, 4.7]} rotation={0} contourTexture={furnitureVariant} />
-      <WoodenChair position={[5.3, 0, 4.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
+      {/* Single table with four chairs - all facing toward the table */}
+      <CafeTable position={[0, 0, 2]} contourTexture={furnitureVariant} />
+      {/* Front chairs (z=1.3) facing +Z toward table */}
+      <WoodenChair position={[0.7, 0, 1.3]} rotation={0} contourTexture={furnitureVariant} />
+      <WoodenChair position={[-0.7, 0, 1.3]} rotation={0} contourTexture={furnitureVariant} />
+      {/* Back chairs (z=2.7) facing -Z toward table */}
+      <WoodenChair position={[0.7, 0, 2.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
+      <WoodenChair position={[-0.7, 0, 2.7]} rotation={Math.PI} contourTexture={furnitureVariant} />
 
       {/* Bar stools at counter */}
       <BarStool position={[-0.8, 0, -3.8]} contourTexture={furnitureVariant} />
@@ -185,7 +163,7 @@ export default function CafeEnvironment({ onMounted }: CafeEnvironmentProps) {
 
       {/* Rug under seating area - beige with contour texture */}
       <mesh position={[0, 0.01, 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[8, 3]} />
+        <planeGeometry args={[3, 3]} />
         <meshStandardMaterial 
           map={furnitureVariant}
           color="#d4b896" 

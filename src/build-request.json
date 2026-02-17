@@ -1,120 +1,34 @@
 {
   "kind": "build_request",
-  "title": "Fix GLB loading failure and update café scene (remove humans, add tables/chairs + dogs, add beige MENU counter text)",
-  "projectName": "Contour Cafe",
-  "priority": "high",
+  "title": "Rotate the four chairs to face toward the table",
+  "projectName": "3D Cafe",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Fix the 3D scene load failure caused by the furniture model path `/assets/models/furniture/table-chair-set.glb` returning HTML (\"Unexpected token '<' ... is not valid JSON\") by ensuring the GLB file is present and served as a static asset at that exact path, or by updating the code to reference the correct existing furniture GLB path under `frontend/public/assets/models/furniture/`.",
+      "text": "Update the 3D cafe scene so that all four chairs placed around the single table are rotated to face toward the table at position [0, 0, 2], in both the full environment and the fallback environment.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-4"
         ],
         "quotes": [
-          "Could not load /assets/models/furniture/table-chair-set.glb: Unexpected token '<', \"<html lang\"... is not valid JSON"
+          "Fix the direction of the 4 chairs they should be facing towards the table"
         ]
       },
       "acceptanceCriteria": [
-        "Loading the café scene no longer triggers the \"Unexpected token '<'\" error for `/assets/models/furniture/table-chair-set.glb`.",
-        "The furniture GLB request to `/assets/models/furniture/table-chair-set.glb` returns `model/gltf-binary` (or a valid GLB download) instead of an HTML page.",
-        "Tables/chairs render using the GLB model when available; if the model fails to load, the existing primitive fallbacks in `frontend/src/scene/environment/FurnitureModels.tsx` render without crashing the scene."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Remove/skip all human characters from the café scene so that only dogs (and non-character props) appear; do not render `CafeHumans` anywhere in the active scene composition.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "Skip the humans"
-        ]
-      },
-      "acceptanceCriteria": [
-        "No human models render in the scene (no instances from `frontend/src/scene/characters/CafeHumans.tsx`).",
-        "Dogs and other scene props still render normally."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Add more table-and-chair sets to the café scene by placing additional `CafeTable` + `WoodenChair` clusters (static, no animation) in open areas without overlapping existing furniture or blocking the camera start position.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "add more table chairs"
-        ]
-      },
-      "acceptanceCriteria": [
-        "At least 2 additional table-and-chair clusters are visible in the active scene (the one rendered in `roomFirstMode`).",
-        "New tables/chairs do not intersect the counter or walls and are placed on the floor plane at y=0."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Add more dogs to the café scene by placing additional static dog models (using the existing `DogModel` pattern) at sensible positions near some of the new seating areas.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "and dogs in the Cafe"
-        ]
-      },
-      "acceptanceCriteria": [
-        "At least 2 additional dogs are visible in the active scene in addition to the current dogs defined in `frontend/src/scene/characters/CafeDogs.tsx`.",
-        "All dogs are static (no per-frame animation/movement logic added)."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Add the word \"MENU\" on the café counter as an in-scene 3D label using bold styling and a beige color; position it clearly on/near the counter front so it is readable from the default camera angle.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "write word menu on he counter in full bold font in beige color"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The text \"MENU\" appears on/near the counter in the 3D scene.",
-        "The label uses a bold visual weight and a beige color consistent with the scene palette.",
-        "The label is legible at typical viewing distance (not clipped into the counter mesh)."
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Apply a cohesive warm café visual theme across UI overlays (loading/error/menus) that matches the scene: warm cream/beige surfaces, espresso-brown accents, and subtle neon-green highlights to complement the existing menu-board glow; keep all user-facing text in English.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Overlays and panels use a consistent warm café palette (cream/beige + espresso-brown) with restrained neon-green accents; no default mismatched colors.",
-        "All overlay/panel user-facing text remains in English."
+        "In CafeEnvironment, the two chairs positioned at z=1.3 (in front of the table) are rotated to face +Z (toward the table), and the two chairs positioned at z=2.7 (behind the table) are rotated to face -Z (toward the table).",
+        "In BasicCafeRoomFallback, the chair rotations match the full environment so all four chairs face toward the table.",
+        "Visual check: when viewing the scene, each chair’s backrest is oriented away from the table and the seat opening faces the table."
       ]
     }
   ],
   "constraints": [
-    "Do not edit any files under `frontend/src/components/ui` (read-only UI components).",
-    "Do not edit files in `frontend/immutablePaths` (e.g., `frontend/src/hooks/useInternetIdentity.ts(x)`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`).",
-    "Keep characters/props static (no animation/movement logic)."
+    "Do not modify files under frontend/src/components/ui or any other immutablePaths listed in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Adding multiplayer, real-time features, or chat.",
-    "Adding external asset hosting/CDNs or external databases.",
-    "Changing authentication (Internet Identity only)."
+    "Repositioning the table or chairs (only fix chair direction/rotation).",
+    "Changing chair geometry/materials/textures or adding new furniture."
   ],
   "imageRequirements": {
     "required": [],
@@ -123,9 +37,7 @@
   "userProfileUpdate": {
     "goalsToAdd": [],
     "goalsToRemove": [],
-    "preferencesToAdd": [
-      "Use English for any user-facing text."
-    ],
+    "preferencesToAdd": [],
     "preferencesToRemove": [],
     "miscToAdd": [],
     "miscToRemove": [],

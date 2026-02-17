@@ -198,3 +198,74 @@ export function isBuildArtifactError(error: unknown): boolean {
     message.includes('cannot find module')
   );
 }
+
+/**
+ * Infer deployment step from error message and context
+ */
+export function inferDeploymentStep(error: unknown, module?: string): DeploymentStep {
+  const errorMessage = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
+
+  // Backend deploy indicators
+  if (
+    errorMessage.includes('canister') ||
+    errorMessage.includes('deploy') ||
+    errorMessage.includes('motoko') ||
+    (module === 'backend' && errorMessage.includes('compile'))
+  ) {
+    return 'backend-deploy';
+  }
+
+  // Frontend build indicators
+  if (
+    errorMessage.includes('module not found') ||
+    errorMessage.includes('cannot find module') ||
+    errorMessage.includes('build') ||
+    errorMessage.includes('webpack') ||
+    errorMessage.includes('vite') ||
+    isBuildArtifactError(error)
+  ) {
+    return 'frontend-build';
+  }
+
+  // Default to runtime
+  return 'runtime';
+}
+
+/**
+ * Normalize unknown error values into a copyable diagnostic object
+ */
+export function normalizeErrorForDiagnostics(error: unknown): {
+  message: string;
+  stack?: string;
+  context: Record<string, unknown>;
+} {
+  if (error instanceof Error) {
+    return {
+      message: error.message,
+      stack: error.stack,
+      context: {
+        name: error.name,
+        ...(error.cause ? { cause: String(error.cause) } : {}),
+      },
+    };
+  }
+
+  if (typeof error === 'string') {
+    return {
+      message: error,
+      context: {},
+    };
+  }
+
+  if (typeof error === 'object' && error !== null) {
+    return {
+      message: JSON.stringify(error),
+      context: { rawError: error },
+    };
+  }
+
+  return {
+    message: String(error),
+    context: { type: typeof error },
+  };
+}

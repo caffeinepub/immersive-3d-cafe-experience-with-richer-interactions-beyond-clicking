@@ -1,13 +1,7 @@
-import CafeDogs from './CafeDogs';
-
 /**
- * Aggregator component that composes cafe characters (dogs only, humans removed).
- * Provides a single mount point for the basic room scene to reduce wiring complexity.
+ * Aggregator component that previously composed all cafe characters (humans + dogs).
+ * Now returns null to ensure no character groups are mounted in the scene graph.
  */
 export default function CafeCharacters() {
-  return (
-    <group>
-      <CafeDogs />
-    </group>
-  );
+  return null;
 }

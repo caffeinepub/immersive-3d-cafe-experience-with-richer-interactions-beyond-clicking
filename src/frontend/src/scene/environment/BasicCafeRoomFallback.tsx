@@ -5,10 +5,9 @@ import { createContourOverlayMaterial } from '../materials/contourStyle';
 import CommercialEspressoMachine from './CommercialEspressoMachine';
 import WallFrameLabel from '../components/WallFrameLabel';
 import MenuBoardFrameGlow from '../components/MenuBoardFrameGlow';
-import CafeCharacters from '../characters/CafeCharacters';
 
 /**
- * Minimal always-available fallback room with very large "Seven Balance" label text, neon green frame glow on the menu board, dog characters (no humans), additional seating clusters, MENU counter label, and primitive furniture.
+ * Minimal always-available fallback room with very large "Seven Balance" label text, neon green frame glow on the menu board, and a single table-and-chairs set.
  * Renders immediately without any Suspense or Physics dependencies to ensure the user always sees some 3D geometry even if other scene elements fail.
  */
 export default function BasicCafeRoomFallback() {
@@ -85,21 +84,6 @@ export default function BasicCafeRoomFallback() {
       {/* Counter behind back wall */}
       <Counter contourTexture={contourTexture} />
 
-      {/* MENU label on counter front */}
-      <WallFrameLabel
-        text="MENU"
-        width={1.8}
-        height={0.5}
-        fontSize={180}
-        color="#d4b896"
-        position={[0, 1.3, -4.3]}
-        surfaceOffset={0.02}
-        canvasWidth={2048}
-        canvasHeight={512}
-        padding={60}
-        fontWeight="bold"
-      />
-
       {/* Commercial Espresso Machine on counter */}
       <CommercialEspressoMachine position={[2, 2.16, -5]} contourTexture={contourTexture} />
 
@@ -175,7 +159,6 @@ export default function BasicCafeRoomFallback() {
           canvasWidth={3072}
           canvasHeight={1024}
           padding={80}
-          fontWeight="bold"
         />
       </group>
 
@@ -199,33 +182,14 @@ export default function BasicCafeRoomFallback() {
         </mesh>
       </group>
 
-      {/* Original seating area - tables and chairs */}
-      <CafeTable position={[-3, 0, 0]} contourTexture={contourTexture} />
-      <WoodenChair position={[-3.5, 0, 0.5]} rotation={Math.PI / 4} contourTexture={contourTexture} />
-      <WoodenChair position={[-2.5, 0, 0.5]} rotation={-Math.PI / 4} contourTexture={contourTexture} />
-
-      <CafeTable position={[3, 0, 0]} contourTexture={contourTexture} />
-      <WoodenChair position={[3.5, 0, 0.5]} rotation={Math.PI / 4} contourTexture={contourTexture} />
-      <WoodenChair position={[2.5, 0, 0.5]} rotation={-Math.PI / 4} contourTexture={contourTexture} />
-
-      <CafeTable position={[0, 0, 3]} contourTexture={contourTexture} />
-      <WoodenChair position={[0.5, 0, 3.5]} rotation={Math.PI / 2} contourTexture={contourTexture} />
-      <WoodenChair position={[-0.5, 0, 3.5]} rotation={-Math.PI / 2} contourTexture={contourTexture} />
-
-      {/* Additional seating cluster 1 - right front area */}
-      <CafeTable position={[5.5, 0, 1.5]} contourTexture={contourTexture} />
-      <WoodenChair position={[6, 0, 2]} rotation={Math.PI / 4} contourTexture={contourTexture} />
-      <WoodenChair position={[5, 0, 2]} rotation={-Math.PI / 4} contourTexture={contourTexture} />
-      <WoodenChair position={[5.5, 0, 0.8]} rotation={Math.PI} contourTexture={contourTexture} />
-
-      {/* Additional seating cluster 2 - left back area */}
-      <CafeTable position={[-5.5, 0, -2]} contourTexture={contourTexture} />
-      <WoodenChair position={[-6, 0, -1.5]} rotation={Math.PI / 3} contourTexture={contourTexture} />
-      <WoodenChair position={[-5, 0, -1.5]} rotation={-Math.PI / 3} contourTexture={contourTexture} />
-      <WoodenChair position={[-5.5, 0, -2.7]} rotation={0} contourTexture={contourTexture} />
-
-      {/* Characters - dogs only (humans removed) */}
-      <CafeCharacters />
+      {/* Single seating area - one table with four chairs all facing toward the table */}
+      <CafeTable position={[0, 0, 2]} contourTexture={contourTexture} />
+      {/* Front chairs (z=1.3) facing +Z toward table */}
+      <WoodenChair position={[0.7, 0, 1.3]} rotation={0} contourTexture={contourTexture} />
+      <WoodenChair position={[-0.7, 0, 1.3]} rotation={0} contourTexture={contourTexture} />
+      {/* Back chairs (z=2.7) facing -Z toward table */}
+      <WoodenChair position={[0.7, 0, 2.7]} rotation={Math.PI} contourTexture={contourTexture} />
+      <WoodenChair position={[-0.7, 0, 2.7]} rotation={Math.PI} contourTexture={contourTexture} />
     </group>
   );
 }

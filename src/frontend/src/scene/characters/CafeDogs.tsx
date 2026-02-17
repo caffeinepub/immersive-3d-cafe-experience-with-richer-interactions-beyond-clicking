@@ -1,42 +1,27 @@
-import DogModel from './DogModel';
+import DogCharacter from './DogCharacter';
 
 /**
- * Placement component for static dog characters in the cafe with additional dogs near new seating areas.
- * All dogs are static (no idle animation) and use bundled GLB models with primitive fallbacks.
+ * Placement component for dog characters in the cafe.
+ * Positions: (1) dog near seated human at table, (2) dog near counter-waiting human.
+ * Scale and Y offsets tuned to avoid sinking below floor.
  */
 export default function CafeDogs() {
   return (
     <group>
-      {/* Dog near left table */}
-      <DogModel
+      {/* Dog near seated customer at left table */}
+      <DogCharacter
         position={[-3.5, 0, -0.3]}
         rotation={Math.PI / 3}
-        modelPath="/assets/models/dogs/dog-01.glb"
+        furColor="golden"
         scale={1.2}
       />
 
-      {/* Dog near counter */}
-      <DogModel
+      {/* Dog near counter-waiting customer */}
+      <DogCharacter
         position={[-2.2, 0, -3.5]}
         rotation={Math.PI * 0.8}
-        modelPath="/assets/models/dogs/dog-02.glb"
+        furColor="brown"
         scale={1}
-      />
-
-      {/* Additional dog near right-front table */}
-      <DogModel
-        position={[5.5, 0, 2.5]}
-        rotation={-Math.PI / 4}
-        modelPath="/assets/models/dogs/dog-01.glb"
-        scale={1.1}
-      />
-
-      {/* Additional dog near back-left table */}
-      <DogModel
-        position={[-5.2, 0, -2.8]}
-        rotation={Math.PI / 2}
-        modelPath="/assets/models/dogs/dog-02.glb"
-        scale={1.15}
       />
     </group>
   );

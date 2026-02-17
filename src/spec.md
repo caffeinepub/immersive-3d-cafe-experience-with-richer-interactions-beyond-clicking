@@ -1,15 +1,10 @@
 # Specification
 
 ## Summary
-**Goal:** Restore reliable 3D café scene loading and refresh the scene layout/theme by removing humans, adding more seating and dogs, and adding a beige “MENU” counter label.
+**Goal:** Rotate the four chairs in the 3D cafe so each chair faces toward the table at position [0, 0, 2] in both the full and fallback environments.
 
 **Planned changes:**
-- Fix the GLB loading failure for `/assets/models/furniture/table-chair-set.glb` by ensuring the asset is served at that exact path or updating the code to reference the correct existing GLB under `frontend/public/assets/models/furniture/`.
-- Ensure tables/chairs render from the GLB when available, and fall back to existing primitive furniture without crashing if the GLB fails to load.
-- Remove/skip rendering of all human characters (do not render `CafeHumans` in the active scene composition).
-- Add at least two additional static table + chair clusters in open areas on the floor plane (y=0), avoiding intersections and not blocking the camera start position.
-- Add at least two additional static dogs near some of the new seating areas using the existing `DogModel` pattern.
-- Add an in-scene 3D “MENU” label in bold with a beige color on/near the counter front, positioned for readability from the default camera.
-- Update UI overlays (loading/error/menus) to use a cohesive warm café palette (cream/beige surfaces, espresso-brown accents, subtle neon-green highlights) while keeping all user-facing text in English.
+- Update chair rotation values in `CafeEnvironment` so the two chairs at z=1.3 face +Z toward the table and the two chairs at z=2.7 face -Z toward the table.
+- Update chair rotation values in `BasicCafeRoomFallback` to match the full environment so all four chairs face toward the table.
 
-**User-visible outcome:** The café scene loads without the GLB path error, shows no humans, includes more seating and more dogs, displays a readable beige “MENU” label on the counter, and has warm-themed UI overlays that match the café aesthetic.
+**User-visible outcome:** In both the full cafe scene and the fallback scene, all four chairs around the table are oriented correctly, with their seat openings facing the table and backrests facing away.

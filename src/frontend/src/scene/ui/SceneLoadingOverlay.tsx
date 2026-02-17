@@ -41,7 +41,7 @@ export default function SceneLoadingOverlay({
             </p>
           </div>
 
-          <Button onClick={onRetry} variant="default" size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+          <Button onClick={onRetry} variant="default" size="lg" className="w-full">
             Retry Loading
           </Button>
 
@@ -56,7 +56,7 @@ export default function SceneLoadingOverlay({
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-background/80 backdrop-blur-sm">
       <div className="flex flex-col items-center gap-4 text-foreground">
-        <Loader2 className="h-12 w-12 animate-spin text-accent" />
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
         <p className="text-lg font-medium">
           {roomFirstMode ? 'Loading room...' : 'Loading café scene...'}
         </p>

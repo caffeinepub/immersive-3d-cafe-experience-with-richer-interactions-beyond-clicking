@@ -14,11 +14,10 @@ interface WallFrameLabelProps {
   canvasWidth?: number;
   canvasHeight?: number;
   padding?: number;
-  fontWeight?: 'normal' | 'bold';
 }
 
 /**
- * Reusable 3D text label component that renders text as a canvas-generated texture on a thin plane with improved resolution, sizing, and bold font weight support for large, crisp text rendering.
+ * Reusable 3D text label component that renders text as a canvas-generated texture on a thin plane with improved resolution and sizing for large, crisp text rendering.
  * Designed to be placed on wall frames or surfaces with minimal z-fighting via surface offset and depth settings.
  */
 export default function WallFrameLabel({
@@ -34,7 +33,6 @@ export default function WallFrameLabel({
   canvasWidth = 2048,
   canvasHeight = 512,
   padding = 40,
-  fontWeight = 'normal',
 }: WallFrameLabelProps) {
   const meshRef = useRef<Mesh>(null);
 
@@ -55,9 +53,9 @@ export default function WallFrameLabel({
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    // Draw text with padding and configurable font weight
+    // Draw text with padding
     ctx.fillStyle = color;
-    ctx.font = `${fontWeight} ${fontSize * scale}px "Space Grotesk", "Inter", sans-serif`;
+    ctx.font = `bold ${fontSize * scale}px "Space Grotesk", "Inter", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     
@@ -72,7 +70,7 @@ export default function WallFrameLabel({
     canvasTexture.needsUpdate = true;
 
     return canvasTexture;
-  }, [text, fontSize, color, backgroundColor, canvasWidth, canvasHeight, padding, fontWeight]);
+  }, [text, fontSize, color, backgroundColor, canvasWidth, canvasHeight, padding]);
 
   useEffect(() => {
     return () => {

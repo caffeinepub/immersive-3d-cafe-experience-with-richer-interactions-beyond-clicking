@@ -1,89 +1,26 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-17T00:31:53.482Z",
+  "generatedAt": "2026-02-17T05:01:59.801Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 6,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Fix the 3D scene load failure caused by the furniture model path `/assets/models/furniture/table-chair-set.glb` returning HTML (\"Unexpected token '<' ... is not valid JSON\") by ensuring the GLB file is present and served as a static asset at that exact path, or by updating the code to reference the correct existing furniture GLB path under `frontend/public/assets/models/furniture/`.",
+        "summary": "Update the 3D cafe scene so that all four chairs placed around the single table are rotated to face toward the table at position [0, 0, 2], in both the full environment and the fallback environment.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/models/furniture/table-chair-set.glb",
-          "frontend/src/scene/environment/FurnitureModels.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/scene/environment/FurnitureModels.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Remove/skip all human characters from the café scene so that only dogs (and non-character props) appear; do not render `CafeHumans` anywhere in the active scene composition.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/scene/characters/CafeCharacters.tsx",
+          "frontend/src/scene/environment/CafeEnvironment.tsx",
           "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/scene/characters/CafeCharacters.tsx",
+          "frontend/src/scene/environment/CafeEnvironment.tsx",
           "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Add more table-and-chair sets to the café scene by placing additional `CafeTable` + `WoodenChair` clusters (static, no animation) in open areas without overlapping existing furniture or blocking the camera start position.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
-        ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Add more dogs to the café scene by placing additional static dog models (using the existing `DogModel` pattern) at sensible positions near some of the new seating areas.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/scene/characters/CafeDogs.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/scene/characters/CafeDogs.tsx"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Add the word \"MENU\" on the café counter as an in-scene 3D label using bold styling and a beige color; position it clearly on/near the counter front so it is readable from the default camera angle.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/scene/components/WallFrameLabel.tsx",
-          "frontend/src/scene/environment/CafeFurniture.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/scene/components/WallFrameLabel.tsx"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Apply a cohesive warm café visual theme across UI overlays (loading/error/menus) that matches the scene: warm cream/beige surfaces, espresso-brown accents, and subtle neon-green highlights to complement the existing menu-board glow; keep all user-facing text in English.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/index.css",
-          "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
-          "frontend/src/scene/ui/SceneErrorOverlay.tsx",
-          "frontend/src/components/layout/ContourFrame.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/index.css",
-          "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
-          "frontend/src/scene/ui/SceneErrorOverlay.tsx",
-          "frontend/src/components/layout/ContourFrame.tsx"
         ]
       }
     ]
@@ -93,16 +30,8 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/layout/ContourFrame.tsx",
-    "frontend/src/index.css",
-    "frontend/src/scene/characters/CafeCharacters.tsx",
-    "frontend/src/scene/characters/CafeDogs.tsx",
-    "frontend/src/scene/components/WallFrameLabel.tsx",
     "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
-    "frontend/src/scene/environment/FurnitureModels.tsx",
-    "frontend/src/scene/ui/SceneErrorOverlay.tsx",
-    "frontend/src/scene/ui/SceneLoadingOverlay.tsx",
-    "frontend/tailwind.config.js",
+    "frontend/src/scene/environment/CafeEnvironment.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
