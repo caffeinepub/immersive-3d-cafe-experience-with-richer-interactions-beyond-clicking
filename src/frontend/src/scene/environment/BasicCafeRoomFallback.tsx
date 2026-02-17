@@ -5,9 +5,10 @@ import { createContourOverlayMaterial } from '../materials/contourStyle';
 import CommercialEspressoMachine from './CommercialEspressoMachine';
 import WallFrameLabel from '../components/WallFrameLabel';
 import MenuBoardFrameGlow from '../components/MenuBoardFrameGlow';
+import CafeCharacters from '../characters/CafeCharacters';
 
 /**
- * Minimal always-available fallback room with very large "Seven Balance" label text and neon green frame glow on the menu board.
+ * Minimal always-available fallback room with very large "Seven Balance" label text, neon green frame glow on the menu board, and human/dog characters.
  * Renders immediately without any Suspense or Physics dependencies to ensure the user always sees some 3D geometry even if other scene elements fail.
  */
 export default function BasicCafeRoomFallback() {
@@ -194,6 +195,9 @@ export default function BasicCafeRoomFallback() {
       <CafeTable position={[0, 0, 3]} contourTexture={contourTexture} />
       <WoodenChair position={[0.5, 0, 3.5]} rotation={Math.PI / 2} contourTexture={contourTexture} />
       <WoodenChair position={[-0.5, 0, 3.5]} rotation={-Math.PI / 2} contourTexture={contourTexture} />
+
+      {/* Characters - humans and dogs */}
+      <CafeCharacters />
     </group>
   );
 }

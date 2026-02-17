@@ -1,108 +1,86 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Contour Cafe — Publish/Deploy Stabilization (Frontend-only)",
+  "title": "Contour Cafe — Add lightweight human + dog characters to the basic 3D cafe room",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Fix frontend build/runtime issues that block successful publish flow (frontend build completes and app renders without fatal crash).",
+      "summary": "Add at least three distinct 3D human characters (seated, counter-waiting, and walking) to the basic cafe scene with subtle continuous animation.",
       "acceptanceCriteria": [
-        "Running `dfx deploy backend` completes successfully without Motoko compilation or candid generation errors.",
-        "Running `npm run build` completes successfully without TypeScript or bundler errors.",
-        "After deployment, the app loads in the browser and renders the main UI without a crash (no white screen / uncaught exception blocking render)."
+        "When the scene loads, at least three distinct human characters are visible in the cafe.",
+        "At least one human is positioned to appear seated at an existing table/chair cluster.",
+        "At least one human is positioned near the counter area to appear as waiting at the counter.",
+        "At least one human has a subtle walking/idle animation (e.g., looped step cycle or small positional movement) that runs continuously without user input.",
+        "Characters are placed so they do not block the camera spawn/typical navigation path or clip heavily into the floor/furniture."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Wire all existing panels used for publish validation (including Contact) into the main UI overlay flow so runtime paths are exercised without causing a render-blocking crash; ensure no new top-level routes/pages are introduced."
+          "path": "frontend/src/scene/characters/HumanCharacter.tsx",
+          "operation": "create",
+          "description": "Create a lightweight, low-poly HumanCharacter React Three Fiber component (built from simple primitives) supporting variants (colors/props), seated pose option, and subtle idle/walk animation via useFrame. Optimize for reuse (shared geometries/materials) to keep render cost low."
         },
         {
-          "path": "frontend/src/state/uiOverlayStore.ts",
-          "operation": "modify",
-          "description": "Ensure the UI overlay state supports all panels that must be reachable during publish validation (e.g., menu/about/contact/export) and that setting/clearing panels cannot throw at runtime."
+          "path": "frontend/src/scene/characters/CafeHumans.tsx",
+          "operation": "create",
+          "description": "Create a CafeHumans placement component that instantiates: (1) a seated customer positioned at an existing table/chair cluster, (2) a waiting customer positioned near the counter, and (3) a walking customer following a small looping path through open floor space. Ensure placements avoid the camera’s typical navigation corridor and minimize clipping."
         },
         {
-          "path": "frontend/src/components/nav/TopNav.tsx",
+          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Add/adjust navigation triggers so the Contact panel (and other existing panels) can be opened during runtime validation; continue using existing shadcn-ui Button component patterns (Verify the component's usage instructions before implementing)."
-        },
-        {
-          "path": "frontend/src/pages/MenuPanel.tsx",
-          "operation": "modify",
-          "description": "Add lightweight in-panel navigation actions/links to open About/Contact/Export panels from the existing Menu panel (no new features beyond making existing panels reachable); continue using existing shadcn-ui components (Verify the component's usage instructions before implementing)."
-        },
-        {
-          "path": "frontend/src/scene/HomeCafeCanvas.tsx",
-          "operation": "modify",
-          "description": "Harden runtime initialization to avoid a fatal white-screen scenario by ensuring scene errors reliably fall back to existing overlays and do not propagate uncaught exceptions that block React render."
-        },
-        {
-          "path": "frontend/src/main.tsx",
-          "operation": "modify",
-          "description": "Add a top-level runtime guard for initialization failures (e.g., unexpected exceptions during provider setup) so the app still renders a minimal fallback UI instead of crashing; keep using the core-infrastructure-provided React entry-point pattern (Verify the component's usage instructions before implementing)."
+          "description": "Wire the new CafeHumans component into the always-available basic room scene so the seated/waiting/walking humans render on default load (room-first mode)."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Standardize and harden diagnostics so failures clearly identify the failing step (frontend-build vs runtime), module/operation, and remediation hints.",
+      "summary": "Add at least two 3D pet dog characters near the humans with subtle continuous idle motion.",
       "acceptanceCriteria": [
-        "When a runtime error is triggered during actor initialization or React Query calls, the console output follows the standardized format and includes the deployment step label.",
-        "When a frontend-build related failure is detected/handled, diagnostics specify the step as \"frontend-build\" (not just \"runtime\").",
-        "Diagnostics include module and operation fields for the failing path, and remediation hints are printed when the error message matches known patterns."
+        "When the scene loads, at least two dog characters are visible.",
+        "At least one dog is placed near a seated human and at least one dog is placed near a standing/waiting human (counter area or walking path).",
+        "Dogs have a subtle idle animation (e.g., tail wag, head bob, or breathing) that runs continuously without user input.",
+        "Dog scale and placement are visually consistent with the cafe environment (not oversized, not below the floor)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/utils/deploymentDiagnostics.ts",
-          "operation": "modify",
-          "description": "Extend diagnostics utilities to better classify and label failures as \"frontend-build\" vs \"runtime\" (e.g., known build-artifact missing patterns), while preserving the existing standardized output format."
+          "path": "frontend/src/scene/characters/DogCharacter.tsx",
+          "operation": "create",
+          "description": "Create a lightweight DogCharacter React Three Fiber component (simple primitives, low segment counts) with subtle idle animation (tail wag / head bob / breathing) driven by useFrame. Share geometries/materials across instances for performance."
         },
         {
-          "path": "frontend/src/hooks/useActor.ts",
-          "operation": "modify",
-          "description": "Wrap actor creation/refresh logic with the existing deployment diagnostics utilities so actor initialization failures log module/operation and an explicit step label; avoid changing auth behavior and only improve error visibility."
+          "path": "frontend/src/scene/characters/CafeDogs.tsx",
+          "operation": "create",
+          "description": "Create a CafeDogs placement component that positions at least two dogs: one near the seated human/table area and one near the counter-waiting human or along the walking human’s path. Tune scale and Y offsets to avoid sinking below the floor."
         },
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Ensure React Query call diagnostics consistently include correct module/operation fields and improve step labeling when failures match known build/bindings patterns (e.g., missing generated bindings); keep existing behavior intact aside from diagnostics."
-        },
-        {
-          "path": "frontend/src/main.tsx",
-          "operation": "modify",
-          "description": "Add a small publish preflight check at startup that, when detecting missing build-time artifacts/config needed for runtime (e.g., missing canister config or incompatible bindings signals), logs via deployment diagnostics with step \"frontend-build\" and actionable remediation hints (Verify the component's usage instructions before implementing)."
+          "description": "Wire the new CafeDogs component into the basic room scene alongside the humans so dogs render by default and appear near the intended human positions."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Keep frontend actor calls and generated bindings consistent with the backend candid interface; prevent missing-method/type mismatch failures in Contact flows.",
+      "summary": "Ensure humans and dogs render in the default basic room scene and keep performance stable with no new runtime errors.",
       "acceptanceCriteria": [
-        "Frontend compiles with the current generated backend bindings, with no type/interface mismatch errors.",
-        "Runtime calls to `submitContactMessage` and `getContactMessages` succeed when the backend is deployed and the actor is initialized.",
-        "No console errors indicating missing actor methods (e.g., \"undefined is not a function\") during normal usage of the Contact panel queries/mutations."
+        "Humans and dogs appear in the basic room experience that currently renders by default.",
+        "No runtime errors are introduced in the 3D scene (console remains free of new scene-related exceptions during load and during animation loops).",
+        "Character geometry/material complexity is kept lightweight enough to avoid noticeable frame drops compared to before the change."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add a lightweight runtime assertion/guard (with standardized diagnostics) that the initialized actor exposes the required contact methods before invoking them; on mismatch, fail with a clear remediation path (e.g., regenerate bindings) rather than throwing an ambiguous error."
+          "path": "frontend/src/scene/characters/characterMaterials.ts",
+          "operation": "create",
+          "description": "Add shared, memo-friendly material/geometry helpers for character primitives (humans + dogs) to minimize allocations and keep draw calls/material count low (e.g., reuse a small palette of materials)."
         },
         {
-          "path": "frontend/src/pages/ContactPanel.tsx",
-          "operation": "modify",
-          "description": "Ensure the Contact panel uses the validated query/mutation hooks and surfaces non-fatal failures cleanly (e.g., toast + diagnostics) without causing render crashes; continue using shadcn-ui form components already in use (Verify the component's usage instructions before implementing)."
+          "path": "frontend/src/scene/characters/CafeCharacters.tsx",
+          "operation": "create",
+          "description": "Create a single CafeCharacters aggregator that composes CafeHumans and CafeDogs, centralizes placement constants, and provides a single mount point for the basic room scene to reduce wiring complexity and avoid accidental omissions."
         },
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/scene/environment/BasicCafeRoomFallback.tsx",
           "operation": "modify",
-          "description": "Ensure Contact panel is reachable during normal usage so the `submitContactMessage` and `getContactMessages` flows can be exercised after deploy; do not add new pages/routes."
-        },
-        {
-          "path": "frontend/src/backend.d.ts",
-          "operation": "modify",
-          "description": "Verify/refresh the frontend-visible backend interface typings to match the current candid-generated contract (method names and parameter/return types) and ensure frontend compilation stays aligned for publish-ready builds."
+          "description": "Mount CafeCharacters inside the basic fallback room group and verify placements don’t intersect major furniture volumes, don’t block the typical navigation path, and keep shadows/segments conservative to maintain stable performance."
         }
       ]
     }

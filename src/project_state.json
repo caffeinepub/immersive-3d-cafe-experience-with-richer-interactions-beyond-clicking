@@ -3,37 +3,42 @@
   "projectStateVersion": 3,
   "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [
-    "Deployment/build did not complete (deployment error)."
-  ],
-  "isFixRequest": true,
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-identify-and-fix-the-root-cause-s-of-the-deployment-failure-so-that-the-full-three-step-flow-completes-successfully-1-backend-deploy-dfx-deploy-backend-2-frontend-build-npm-run-build-and-3-runtime-loads-in-the-browser-without-a-fatal-error",
-      "title": "Identify and fix the root cause(s) of the deployment failure so that the full three-step flow completes successfully: (1) backend deploy (dfx deploy backend), (2) frontend build (npm run build), and (3) runtime loads in the browser without a fatal error.",
+      "id": "feature-add-3d-human-characters-to-the-cafe-scene-including-at-least-a-seated-customers-at-tables-b-a-customer-waiting-at-the-counter-and-c-a-walking-customer-moving-through-the-cafe",
+      "title": "Add 3D human characters to the cafe scene, including at least: (a) seated customers at tables, (b) a customer waiting at the counter, and (c) a walking customer moving through the cafe.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-harden-build-deploy-diagnostics-so-that-if-backend-deploy-frontend-build-or-runtime-initialization-fails-the-error-output-clearly-indicates-which-step-failed-and-includes-actionable-context-module-operation-and-remediation-hints-using-the-existing-deployment-diagnostics-utilities",
-      "title": "Harden build/deploy diagnostics so that if backend deploy, frontend build, or runtime initialization fails, the error output clearly indicates which step failed and includes actionable context (module, operation, and remediation hints) using the existing deployment diagnostics utilities.",
+      "id": "feature-add-3d-pet-dog-characters-accompanying-the-humans-in-the-cafe-scene-e-g-sitting-standing-near-seated-humans-and-near-the-counter-with-simple-idle-motion",
+      "title": "Add 3D pet dog characters accompanying the humans in the cafe scene (e.g., sitting/standing near seated humans and near the counter), with simple idle motion.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-ensure-the-frontend-backend-interface-remains-consistent-by-validating-that-all-frontend-actor-method-calls-match-the-backend-candid-interface-including-method-names-and-parameter-return-types-and-that-generated-bindings-are-up-to-date-as-part-of-the-publish-ready-build",
-      "title": "Ensure the frontend↔backend interface remains consistent by validating that all frontend actor method calls match the backend candid interface (including method names and parameter/return types) and that generated bindings are up-to-date as part of the publish-ready build.",
+      "id": "feature-ensure-the-added-humans-and-dogs-render-in-the-currently-active-cafe-scene-path-the-always-available-basic-room-fallback-scene-and-keep-performance-stable-on-typical-devices",
+      "title": "Ensure the added humans and dogs render in the currently active cafe scene path (the always-available basic room/fallback scene), and keep performance stable on typical devices.",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     }
   ],
-  "new_feature_requests": [],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Add humans to the cafe scene (sitting, waiting at counter, walking) and include pet dogs with them",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
   "projectName": "Contour Cafe",
   "clarification_mode": "instant",
   "clarification_rounds": 0

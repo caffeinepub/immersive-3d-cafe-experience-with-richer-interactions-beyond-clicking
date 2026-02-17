@@ -1,72 +1,72 @@
 {
   "kind": "build_request",
-  "title": "Fix deployment failure and publish successfully",
+  "title": "Add humans and pet dogs to the 3D cafe scene",
   "projectName": "Contour Cafe",
-  "priority": "high",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Identify and fix the root cause(s) of the deployment failure so that the full three-step flow completes successfully: (1) backend deploy (dfx deploy backend), (2) frontend build (npm run build), and (3) runtime loads in the browser without a fatal error.",
-      "target": "both",
+      "text": "Add 3D human characters to the cafe scene, including at least: (a) seated customers at tables, (b) a customer waiting at the counter, and (c) a walking customer moving through the cafe.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-4"
         ],
         "quotes": [
-          "Fix n publish"
+          "Add humans into the cafe sitting or waiting at counter or walking, also add pet dogs with them"
         ]
       },
       "acceptanceCriteria": [
-        "Running `dfx deploy backend` completes successfully without Motoko compilation or candid generation errors.",
-        "Running `npm run build` completes successfully without TypeScript or bundler errors.",
-        "After deployment, the app loads in the browser and renders the main UI without a crash (no white screen / uncaught exception blocking render)."
+        "When the scene loads, at least three distinct human characters are visible in the cafe.",
+        "At least one human is positioned to appear seated at an existing table/chair cluster.",
+        "At least one human is positioned near the counter area to appear as waiting at the counter.",
+        "At least one human has a subtle walking/idle animation (e.g., looped step cycle or small positional movement) that runs continuously without user input.",
+        "Characters are placed so they do not block the camera spawn/typical navigation path or clip heavily into the floor/furniture."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Harden build/deploy diagnostics so that if backend deploy, frontend build, or runtime initialization fails, the error output clearly indicates which step failed and includes actionable context (module, operation, and remediation hints) using the existing deployment diagnostics utilities.",
+      "text": "Add 3D pet dog characters accompanying the humans in the cafe scene (e.g., sitting/standing near seated humans and near the counter), with simple idle motion.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-4"
         ],
         "quotes": [
-          "Fix n publish"
+          "...also add pet dogs with them"
         ]
       },
       "acceptanceCriteria": [
-        "When a runtime error is triggered during actor initialization or React Query calls, the console output follows the standardized format and includes the deployment step label.",
-        "When a frontend-build related failure is detected/handled, diagnostics specify the step as \"frontend-build\" (not just \"runtime\").",
-        "Diagnostics include module and operation fields for the failing path, and remediation hints are printed when the error message matches known patterns."
+        "When the scene loads, at least two dog characters are visible.",
+        "At least one dog is placed near a seated human and at least one dog is placed near a standing/waiting human (counter area or walking path).",
+        "Dogs have a subtle idle animation (e.g., tail wag, head bob, or breathing) that runs continuously without user input.",
+        "Dog scale and placement are visually consistent with the cafe environment (not oversized, not below the floor)."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Ensure the frontend↔backend interface remains consistent by validating that all frontend actor method calls match the backend candid interface (including method names and parameter/return types) and that generated bindings are up-to-date as part of the publish-ready build.",
-      "target": "both",
+      "text": "Ensure the added humans and dogs render in the currently active cafe scene path (the always-available basic room/fallback scene), and keep performance stable on typical devices.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "Fix n publish"
+          "msg-4"
         ]
       },
       "acceptanceCriteria": [
-        "Frontend compiles with the current generated backend bindings, with no type/interface mismatch errors.",
-        "Runtime calls to `submitContactMessage` and `getContactMessages` succeed when the backend is deployed and the actor is initialized.",
-        "No console errors indicating missing actor methods (e.g., \"undefined is not a function\") during normal usage of the Contact panel queries/mutations."
+        "Humans and dogs appear in the basic room experience that currently renders by default.",
+        "No runtime errors are introduced in the 3D scene (console remains free of new scene-related exceptions during load and during animation loops).",
+        "Character geometry/material complexity is kept lightweight enough to avoid noticeable frame drops compared to before the change."
       ]
     }
   ],
   "constraints": [
-    "Respect the single-actor backend architecture: keep Motoko logic in backend/main.mo.",
-    "Do not edit files under frontend/src/components/ui (read-only UI component sources).",
-    "Do not edit frontend immutable hook entrypoints listed in SYSTEM_CONTEXT (compose around them instead)."
+    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or any files under frontend/src/components/ui (compose instead of editing if needed).",
+    "Keep all changes within the existing single-frontend React Three Fiber scene architecture; no new backend services."
   ],
   "nonGoals": [
-    "Do not add new product features unrelated to resolving deployment/publish failures.",
-    "Do not introduce additional backend canisters, external databases, or third-party auth providers."
+    "Adding character customization UI (choosing outfits, breeds, names, etc.).",
+    "Adding dialogue, quests, or interactive NPC behavior beyond simple idle/walk animations.",
+    "Adding physics-based collisions for characters."
   ],
   "imageRequirements": {
     "required": [],

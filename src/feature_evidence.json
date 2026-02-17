@@ -2,14 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-identify-and-fix-the-root-cause-s-of-the-deployment-failure-so-that-the-full-three-step-flow-completes-successfully-1-backend-deploy-dfx-deploy-backend-2-frontend-build-npm-run-build-and-3-runtime-loads-in-the-browser-without-a-fatal-error",
-      "featureTitle": "Identify and fix the root cause(s) of the deployment failure so that the full three-step flow completes successfully: (1) backend deploy (dfx deploy backend), (2) frontend build (npm run build), and (3) runtime loads in the browser without a fatal error.",
+      "featureId": "feature-add-3d-human-characters-to-the-cafe-scene-including-at-least-a-seated-customers-at-tables-b-a-customer-waiting-at-the-counter-and-c-a-walking-customer-moving-through-the-cafe",
+      "featureTitle": "Add 3D human characters to the cafe scene, including at least: (a) seated customers at tables, (b) a customer waiting at the counter, and (c) a walking customer moving through the cafe.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/nav/TopNav.tsx",
-        "frontend/src/pages/MenuPanel.tsx",
-        "frontend/src/scene/HomeCafeCanvas.tsx",
-        "frontend/src/state/uiOverlayStore.ts"
+        "frontend/src/scene/characters/CafeHumans.tsx",
+        "frontend/src/scene/characters/HumanCharacter.tsx",
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -24,11 +22,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-harden-build-deploy-diagnostics-so-that-if-backend-deploy-frontend-build-or-runtime-initialization-fails-the-error-output-clearly-indicates-which-step-failed-and-includes-actionable-context-module-operation-and-remediation-hints-using-the-existing-deployment-diagnostics-utilities",
-      "featureTitle": "Harden build/deploy diagnostics so that if backend deploy, frontend build, or runtime initialization fails, the error output clearly indicates which step failed and includes actionable context (module, operation, and remediation hints) using the existing deployment diagnostics utilities.",
+      "featureId": "feature-add-3d-pet-dog-characters-accompanying-the-humans-in-the-cafe-scene-e-g-sitting-standing-near-seated-humans-and-near-the-counter-with-simple-idle-motion",
+      "featureTitle": "Add 3D pet dog characters accompanying the humans in the cafe scene (e.g., sitting/standing near seated humans and near the counter), with simple idle motion.",
       "files": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/utils/deploymentDiagnostics.ts"
+        "frontend/src/scene/characters/CafeDogs.tsx",
+        "frontend/src/scene/characters/DogCharacter.tsx",
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -43,11 +42,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-the-frontend-backend-interface-remains-consistent-by-validating-that-all-frontend-actor-method-calls-match-the-backend-candid-interface-including-method-names-and-parameter-return-types-and-that-generated-bindings-are-up-to-date-as-part-of-the-publish-ready-build",
-      "featureTitle": "Ensure the frontend↔backend interface remains consistent by validating that all frontend actor method calls match the backend candid interface (including method names and parameter/return types) and that generated bindings are up-to-date as part of the publish-ready build.",
+      "featureId": "feature-ensure-the-added-humans-and-dogs-render-in-the-currently-active-cafe-scene-path-the-always-available-basic-room-fallback-scene-and-keep-performance-stable-on-typical-devices",
+      "featureTitle": "Ensure the added humans and dogs render in the currently active cafe scene path (the always-available basic room/fallback scene), and keep performance stable on typical devices.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/useQueries.ts"
+        "frontend/src/scene/characters/CafeCharacters.tsx",
+        "frontend/src/scene/characters/characterMaterials.ts",
+        "frontend/src/scene/environment/BasicCafeRoomFallback.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
